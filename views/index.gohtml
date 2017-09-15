@@ -2,18 +2,10 @@
 <html>
 {{template "header.gohtml" .}}
 <body>
+	{{template "navbar.gohtml" .}}
 
-	<h3>Heres a list of users</h3>
+	<div id='render-hook'></div>
 
-	<ul>
-		{{range .Users}}
-			<li>
-				<a href='{{GetLink "profile" "name" .Username}}'>
-					<span>{{.Name | html}}</span>
-					(<span style='color: #888;'>@{{.Username | html}}</span>)
-				</a>
-			</li>
-		{{end}}
-	</ul>
+	{{template "footer.gohtml" .}}
 </body>
 </html>

@@ -17,6 +17,7 @@ func init() {
 
 	TemplateHelpers = template.FuncMap{
 		"GetLink": GetLink,
+		"Static":  GetStaticURL,
 	}
 }
 
@@ -82,4 +83,35 @@ func GetLink(routeName string, fields ...string) string {
 	}
 
 	return url.String()
+}
+
+// GetStaticURL - Get the link to the public directory
+//
+// params
+// -- routeName {string}  Router name to craft the link for
+// -- fields {...string}  A flat map of all fields and values to pass to the router
+//
+// returns
+// -- {string}  The url
+//
+func GetStaticURL(contentType string, pathNames ...string) string {
+
+	baseURL := "/public/"
+
+	switch contentType {
+	case "css":
+		baseURL += "css"
+	case "js":
+		baseURL += "js"
+	case "img":
+		baseURL += "img"
+	default:
+		baseURL += contentType
+	}
+
+	for _, pathname := range pathNames {
+		baseURL += "/" + pathname
+	}
+
+	return baseURL
 }

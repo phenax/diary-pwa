@@ -1,17 +1,35 @@
+
 {
     "env": {
         "browser": true,
         "commonjs": true,
-        "es6": true
+        "es6": true,
+        "node": true
     },
-    "extends": "eslint:recommended",
+    "extends": [
+        "eslint:recommended",
+        "plugin:flowtype/recommended"
+    ],
+    "parser": "babel-eslint",
+    "plugins": [
+        "flowtype",
+        "react"
+    ],
+    "settings": {
+        "react": {
+            "pragma": "h"
+        }
+    },
     "parserOptions": {
         "sourceType": "module"
     },
     "rules": {
+        "strict": 0,
+        "no-unused-vars": [ 1, { "varsIgnorePattern": "^h$" } ],
         "indent": [
             "error",
-            "tab"
+            "tab",
+            { "SwitchCase": 1 }
         ],
         "linebreak-style": [
             "error",
@@ -24,6 +42,10 @@
         "semi": [
             "error",
             "always"
+        ],
+        "no-console": [
+            "warn",
+            { "allow": [ "warn", "error" ] }
         ]
     }
 }
