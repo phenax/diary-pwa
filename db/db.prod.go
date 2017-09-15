@@ -12,7 +12,7 @@ func GetProdConfig() *mgo.DialInfo {
 
 		Addrs:    []string{"localhost"},
 		Timeout:  60 * time.Second,
-		Database: "idiotic",
+		Database: "diary",
 		Username: "",
 		Password: "",
 	}

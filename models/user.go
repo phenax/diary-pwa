@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/phenax/idiotic/db"
+	"github.com/phenax/diary/db"
 	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
 	// "fmt"

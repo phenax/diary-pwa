@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	_ "github.com/phenax/idiotic/routes"
+	_ "github.com/phenax/diary/routes"
 )
 
 const (

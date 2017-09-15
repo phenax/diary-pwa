@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	ctrlr "github.com/phenax/idiotic/controllers"
-	libs "github.com/phenax/idiotic/libs"
+	ctrlr "github.com/phenax/diary/controllers"
+	libs "github.com/phenax/diary/libs"
 )
 
 // Initialize the routes

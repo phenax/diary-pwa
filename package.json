@@ -1,7 +1,7 @@
 {
-  "name": "idiotic",
+  "name": "diary",
   "version": "0.0.0",
-  "description": "I am an idiot",
+  "description": "Diary web app",
   "main": "_",
   "scripts": {
     "test": "__"

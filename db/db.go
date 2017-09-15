@@ -20,7 +20,7 @@ func GetConfig() *mgo.DialInfo {
 	return &mgo.DialInfo{
 		Addrs:    []string{"localhost"},
 		Timeout:  60 * time.Second,
-		Database: "idiotic",
+		Database: "diary",
 	}
 }
 

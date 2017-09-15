@@ -4,7 +4,7 @@ import (
 	"errors"
 	// "fmt"
 
-	"github.com/phenax/idiotic/models"
+	"github.com/phenax/diary/models"
 	"labix.org/v2/mgo/bson"
 )
 

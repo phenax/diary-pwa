@@ -14,7 +14,7 @@ package db
 
 // 		Timeout:  60 * time.Second,
 
-// 		Database: "idiotic",
+// 		Database: "diary",
 
 // 		Username: "",
 // 		Password: "",
