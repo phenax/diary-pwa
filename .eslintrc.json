@@ -11,6 +11,7 @@
         "plugin:flowtype/recommended"
     ],
     "parser": "babel-eslint",
+    "installedESLint": true,
     "plugins": [
         "flowtype",
         "react"
@@ -21,6 +22,10 @@
         }
     },
     "parserOptions": {
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true,
+            "jsx": true
+        },
         "sourceType": "module"
     },
     "rules": {
