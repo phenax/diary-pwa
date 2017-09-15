@@ -1,0 +1,14 @@
+<head>
+	<title>
+		{{- with $title := .Title -}}
+			{{- (print $title " ") | html -}} - 
+		{{- end -}}
+		{{ " Awesomeness" -}}
+	</title>
+
+	<style>
+		html, body {
+			color: #333;
+		}
+	</style>
+</head>

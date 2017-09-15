@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+{{template "header.gohtml" .}}
+<body>
+
+	<h3>Heres a list of users</h3>
+
+	<ul>
+		{{range .Users}}
+			<li>
+				<a href='{{GetLink "profile" "name" .Username}}'>
+					<span>{{.Name | html}}</span>
+					(<span style='color: #888;'>@{{.Username | html}}</span>)
+				</a>
+			</li>
+		{{end}}
+	</ul>
+</body>
+</html>
