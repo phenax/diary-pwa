@@ -2790,6 +2790,10 @@ preact:
   version "8.2.5"
   resolved "https://registry.yarnpkg.com/preact/-/preact-8.2.5.tgz#cbfa3962a8012768159f6d01d46f9c1eb3213c0a"
 
+preact-router:
+  version "2.5.7"
+  resolved "https://registry.yarnpkg.com/preact-router/-/preact-router-2.5.7.tgz#571fa585472fb2b9918e8610d8ef8526cf2ee263"
+
 preserve@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"

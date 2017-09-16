@@ -441,3 +441,23 @@
   @media (max-width: 400px) {
     .siimple-grid-col {
       width: 98% !important; } }
+
+
+
+
+.siimple-shadow--1 {
+  box-shadow: 1px 1px 5px 1px rgba(0,0,0,.15);
+}
+
+.siimple-shadow--2 {
+  box-shadow: 1px 1px 5px 1px rgba(0,0,0,.3);
+}
+
+.siimple-shadow--3 {
+  box-shadow: 2px 2px 5px 2px rgba(0,0,0,.4);
+}
+
+.siimple-shadow--4 {
+  box-shadow: 2px 2px 6px 2px rgba(0,0,0,.5);
+}
+
