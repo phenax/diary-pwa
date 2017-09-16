@@ -3,18 +3,23 @@ import { h } from 'preact';
 
 import { Navbar } from '../components/Navbar';
 
-const styles = {
 
+
+const VARS = {
+	navbarMinHeight: '50px',
+};
+
+const styles = {
 	wrapper: {
-		padding: '1em',
-		border: '2px solid red',
+		marginTop: VARS.navbarMinHeight,
 	},
 };
+
 
 export default ({ children, withNavbar = true }) => (
 	<div>
 		<div style={styles.wrapper}>
-			{withNavbar? <Navbar />: null}
+			{withNavbar? <Navbar minHeight={VARS.navbarMinHeight} />: null}
 			{children}
 		</div>
 	</div>

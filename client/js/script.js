@@ -1,28 +1,23 @@
 
 import { h, render } from 'preact';
+import { loadCSS } from 'fg-loadcss';
 
 import RootWrapper from './layouts/RootWrapper';
 import HomePage from './layouts/HomePage';
 
-render(
-	(
-		<RootWrapper>
-			<HomePage />
-		</RootWrapper>
-	),
-	document.getElementById('render-hook')
+
+
+// Load the stylesheet asynchronously
+requestAnimationFrame(() => loadCSS(window.staticLink('css/style.css')));
+
+
+
+// The component at the root scope
+const rootComponent = (
+	<RootWrapper>
+		<HomePage />
+	</RootWrapper>
 );
 
-// import ModuleLazyLoader from './components/ModuleLazyLoader';
-// const Loadd = () => <div>Loading...</div>;
-
-// const onComponentLoad = cb =>
-// 	require.ensure([], () => {
-// 		const HomePage = require('./layouts/HomePage').default;
-// 		cb(<HomePage />);
-// 	});
-
-// render(
-// 	<ModuleLazyLoader onComponentLoad={onComponentLoad} loader={<Loadd />} />,
-// 	document.getElementById('render-hook')
-// );
+// Render root component to hook
+render(rootComponent, document.getElementById('render-hook'));

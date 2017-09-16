@@ -1,5 +1,6 @@
 
 import { h, Component } from 'preact';
+import assign from 'object-assign';
 
 
 export class Navbar extends Component {
@@ -29,10 +30,9 @@ export class Navbar extends Component {
 	}
 
 	render() {
-
 		return (
 			<div style={Navbar.styles.navbarWrapper}>
-				<div style={Navbar.styles.navbar}>
+				<div style={assign({}, Navbar.styles.navbar, { minHeight: this.props.minHeight })}>
 					Hello
 				</div>
 			</div>

@@ -32,3 +32,18 @@ export default class ModuleLazyLoader extends Component {
 	render() { return this.state.Component; }
 }
 
+
+// import ModuleLazyLoader from './components/ModuleLazyLoader';
+// const Loadd = () => <div>Loading...</div>;
+
+// const onComponentLoad = cb =>
+// 	require.ensure([], () => {
+// 		const HomePage = require('./layouts/HomePage').default;
+// 		cb(<HomePage />);
+// 	});
+
+// render(
+// 	<ModuleLazyLoader onComponentLoad={onComponentLoad} loader={<Loadd />} />,
+// 	document.getElementById('render-hook')
+// );
+

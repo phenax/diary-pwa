@@ -1,0 +1,13 @@
+
+html, html body {
+	color: #333;
+	font-size: 16px;
+	line-height: 1.5rem;
+	font-family: 'Roboto', 'Helvetica', 'sans-serif';
+
+	&, body * {
+		box-sizing: border-box;
+	}
+}
+
+

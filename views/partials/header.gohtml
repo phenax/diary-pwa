@@ -1,4 +1,11 @@
+
 <head>
+	<meta charset="UTF-8" />
+	<meta name="description" content="Diary stuff" />
+	<meta name="keywords" content="diary" />
+	<meta name="author" content="Akshay Nair <phenax5@gmail.com>" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
 	<title>
 		{{- with $title := .Title -}}
 			{{- (print $title " ") | html -}} - 
@@ -6,9 +13,8 @@
 		{{ " Diary" -}}
 	</title>
 
-	<style>
-		html, body {
-			color: #333;
-		}
-	</style>
+	<style>{{template "inline-styles.gohtml" .}}</style>
+	<script>
+		window.staticLink = function(path) { return '{{Static ""}}' + path; };
+	</script>
 </head>

@@ -10,8 +10,8 @@ const fileSize = require('gulp-size');
 
 
 // Directory paths
-const SOURCE_DIR= './static';
-const BUILD_DIR= './webroot';
+const SOURCE_DIR= './client';
+const BUILD_DIR= './public';
 
 
 /**
@@ -22,7 +22,7 @@ const BUILD_DIR= './webroot';
 const buildCSS= source$ =>
 	source$
 		.pipe(sass())
-		.pipe(autoprefix({ browsers: [ 'last 4 versions' ] }));
+		.pipe(autoprefix({ browsers: [ 'last 5 versions' ] }));
 
 
 /**
@@ -31,8 +31,8 @@ const buildCSS= source$ =>
  */
 const buildAndSave= (transform=(s => s)) => {
 
-	const styleCSS$= gulp.src(path.resolve(SOURCE_DIR, 'css/yocket.scss'));
-	const inlineCSS$= gulp.src(path.resolve(SOURCE_DIR, 'css/inline-styles.scss'));
+	const styleCSS$= gulp.src(path.resolve(SOURCE_DIR, 'scss/style.scss'));
+	const inlineCSS$= gulp.src(path.resolve(SOURCE_DIR, 'scss/inline-styles.scss'));
 
 	transform(buildCSS(styleCSS$))
 		.pipe(rename('style.css'))
@@ -40,9 +40,9 @@ const buildAndSave= (transform=(s => s)) => {
 		.pipe(gulp.dest(path.resolve(BUILD_DIR, 'css')));
 
 	transform(buildCSS(inlineCSS$))
-		.pipe(rename('inline-styles.ctp'))
+		.pipe(rename('inline-styles.gohtml'))
 		.pipe(fileSize())
-		.pipe(gulp.dest(path.resolve('src', 'Template', 'Element')));
+		.pipe(gulp.dest(path.resolve('views', 'partials')));
 };
 
 
@@ -57,4 +57,4 @@ gulp.task('prod:css', () => buildAndSave(stream$ => stream$.pipe(minify())));
 
 // Watch css task
 gulp.task('watch:css', [ 'build:css' ],
-	() => gulp.watch(path.join(SOURCE_DIR, '/css/**/*.scss'), [ 'build:css' ]));
+	() => gulp.watch(path.join(SOURCE_DIR, '/scss/**/*.scss'), [ 'build:css' ]));
