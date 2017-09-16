@@ -20,7 +20,6 @@ export class Navbar extends Component {
 			top: '0',
 			width: '100%',
 			minHeight: '50px',
-			backgroundColor: '#51e980',
 			padding: '.5em 1em',
 		},
 	};
@@ -30,10 +29,13 @@ export class Navbar extends Component {
 	}
 
 	render() {
+
+		const navbarStyles = assign({}, Navbar.styles.navbar, { minHeight: this.props.minHeight });
+
 		return (
 			<div style={Navbar.styles.navbarWrapper}>
-				<div style={assign({}, Navbar.styles.navbar, { minHeight: this.props.minHeight })}>
-					Hello
+				<div class='siimple-bg--navy siimple-color--grey' style={navbarStyles}>
+					<strong>Diarya</strong>
 				</div>
 			</div>
 		);
