@@ -6,25 +6,29 @@ import { h, Component } from 'preact';
  * Component to lazy load preact component
  *
  * @property {Function}   onComponentLoad  Function to pass the load handler callback to
- * @property {Component}  loader           Component to render before load
+ * @property {?VDomNode}  loader           Component to render before load
+ * @property {?Number}    delay            Delay the loading of component (ms)
  */
 export default class ModuleLazyLoader extends Component {
 
 	state = {
-		onComponentLoad: this.props.onComponentLoad,
 		Component: this.props.loader || (() => <div>Loading...</div>),
 		isLoaded: false,
 	};
 
+	// Load the component
+	_loadComponent() {
+		this.props.onComponentLoad(_Component =>
+			this.setState({ Component: _Component, isLoaded: false, }));
+	}
+
 	componentDidMount() {
 		// If load is not complete
 		if(!this.state.isLoaded) {
-
-			this.state.onComponentLoad(_Component =>
-				this.setState({ Component: _Component, isLoaded: false, }));
+			setTimeout(() => this._loadComponent(), this.props.delay || 0);
 		}
 	}
 
-	render() { return <this.state.Component />; }
+	render() { return this.state.Component; }
 }
 
