@@ -25,8 +25,8 @@ func GetGraphQLSchema() *graphql.Schema {
 
 		fields := graphql.Fields{
 			// User queries
-			"Users":   GraphQLUsersField,
-			"NewUser": GraphQLCreateUserField,
+			"UserPosts": GraphQLUsersField,
+			"NewUser":   GraphQLCreateUserField,
 
 			// Post  queries
 			"Posts":   GraphQLPostsField,

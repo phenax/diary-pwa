@@ -105,7 +105,18 @@ var GraphQLUser = graphql.NewObject(graphql.ObjectConfig{
 		"Name":     &graphql.Field{Type: graphql.String},
 		"Username": &graphql.Field{Type: graphql.String},
 		"Email":    &graphql.Field{Type: graphql.String},
-		"Posts":    &graphql.Field{Type: graphql.NewList(GraphQLPost)},
+	},
+})
+
+//
+// GraphQLUserPosts - User type for graphql
+//
+var GraphQLUserPosts = graphql.NewObject(graphql.ObjectConfig{
+	Name:        "UserPosts",
+	Description: "User and his posts",
+	Fields: graphql.Fields{
+		"User":  &graphql.Field{Type: GraphQLUser},
+		"Posts": &graphql.Field{Type: graphql.NewList(GraphQLPost)},
 	},
 })
 
@@ -122,7 +133,7 @@ var GraphQLCreateUserField *graphql.Field
 func init() {
 
 	GraphQLUsersField = &graphql.Field{
-		Type: GraphQLUser,
+		Type: GraphQLUserPosts,
 		Args: graphql.FieldConfigArgument{
 			"start": &graphql.ArgumentConfig{
 				Type:         graphql.Int,
@@ -139,33 +150,27 @@ func init() {
 		},
 		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 			var user UserWithPost
-			// args := params.Args
-			// libs.Log("GET Users params", args)
+			args := params.Args
 
-			// query := Users.Find(&bson.M{})
+			Users.Find(&bson.M{"uid": "59be56c65a421d74f9000001"}).One(&user.User)
 
-			query := Users.Pipe([]bson.M{
-				{
-					"$lookup": &bson.M{
-						"from":         PostCollectionName,
-						"localField":   "uid",
-						"foreignField": "user_id",
-						"as":           "Posts",
-					},
-				},
-			})
+			if user.User.ID != "" {
 
-			// if start, ok := args["start"].(int); ok && args["start"] != -1 {
-			// 	query.Skip(start)
-			// }
+				postQuery := Posts.Find(&bson.M{"user_id": user.User.ID})
 
-			// if count, ok := args["count"].(int); ok && args["count"] != -1 {
-			// 	query.Limit(count)
-			// }
+				if start, ok := args["start"].(int); ok && args["start"] != -1 {
+					postQuery.Skip(start)
+				}
+				if count, ok := args["count"].(int); ok && args["count"] != -1 {
+					postQuery.Limit(count)
+				}
 
-			query.One(&user)
+				postQuery.All(&user.Posts)
 
-			return user, nil
+				return user, nil
+			}
+
+			return nil, nil
 		},
 	}
 

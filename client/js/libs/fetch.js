@@ -14,9 +14,16 @@ const graphQLFetch = query => {
 	};
 
 	return fetch(API_ENDPOINT, config)
-		.then(resp => resp.json());
+		.then(resp => resp.json())
+		.then(resp => {
+			if(resp.error)
+				throw new Error(resp.error);
+			return resp.data;
+		});
 };
 export default graphQLFetch;
 
 
-export const fetchUserPosts = () => graphQLFetch(listPosts());
+export const fetchUserPosts = vars => graphQLFetch(listPosts(vars));
+
+window.fetchUserPosts = fetchUserPosts;
