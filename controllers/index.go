@@ -12,6 +12,11 @@ import (
 	// "github.com/gorilla/mux"
 )
 
+const (
+	// EncryptionKey - Key to use in the encryption algorithm
+	EncryptionKey = "98c36hby8iwnseho8qwy38ryuagnukdshxkvastcvw4"
+)
+
 //
 // HomePage - homepage controller
 //
@@ -27,10 +32,19 @@ func HomePage(ctx *Context) {
 	options := &map[string]interface{}{
 		"Ctx":   ctx,
 		"Users": users,
-		"Title": "Welcome to this shit",
+		"Title": "",
 	}
 
 	ctx.Render("index", options)
+}
+
+//
+// Encrypt - Encrypt and decrypt string
+func Encrypt(ctx *Context) {
+
+	response := map[string]string{}
+
+	ctx.JSON(response)
 }
 
 //

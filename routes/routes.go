@@ -3,7 +3,6 @@ package routes
 import (
 	"net/http"
 
-	"github.com/gorilla/mux"
 	ctrlr "github.com/phenax/diary/controllers"
 	libs "github.com/phenax/diary/libs"
 )
@@ -19,20 +18,14 @@ func init() {
 		Directory:  "./public",
 	})
 
-	indexRoutes(router)
-
-	// start with the base
-	http.Handle("/", router)
-
-}
-
-func indexRoutes(router *mux.Router) {
-
 	// json test
 	router.HandleFunc("/json", ctrlr.Call(ctrlr.JSONTest))
 
 	// gzip test
 	router.HandleFunc("/gzip", ctrlr.Call(ctrlr.GzipTest))
+
+	// gzip test
+	router.HandleFunc("/verify", ctrlr.Call(ctrlr.Encrypt))
 
 	// Graphql api endpoint
 	router.Handle("/graphql", ctrlr.GetGraphQLHandlerConfig())
@@ -41,4 +34,8 @@ func indexRoutes(router *mux.Router) {
 	router.
 		PathPrefix("/").
 		HandlerFunc(ctrlr.Call(ctrlr.HomePage))
+
+	// start with the base
+	http.Handle("/", router)
+
 }

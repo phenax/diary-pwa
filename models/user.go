@@ -12,11 +12,18 @@ import (
 // User type
 //
 type User struct {
-	ID       bson.ObjectId `bson:"_id,omitempty"`
+	OID      bson.ObjectId `bson:"_id,omitempty"`
+	ID       string        `bson:"uid,omitempty"`
 	Name     string        `bson:"name"`
 	Username string        `bson:"username"`
 	Email    string        `bson:"email"`
 	Password string        `bson:"password"`
+}
+
+// UserWithPost type (User with the posts inside)
+type UserWithPost struct {
+	User
+	Posts []Post `bson:"Posts"`
 }
 
 //
@@ -90,7 +97,17 @@ func (user *User) UniqueCheck() map[string]string {
 //
 // GraphQLUser - User type for graphql
 //
-var GraphQLUser *graphql.Object
+var GraphQLUser = graphql.NewObject(graphql.ObjectConfig{
+	Name:        "User",
+	Description: "User of this app",
+	Fields: graphql.Fields{
+		"ID":       &graphql.Field{Type: graphql.String},
+		"Name":     &graphql.Field{Type: graphql.String},
+		"Username": &graphql.Field{Type: graphql.String},
+		"Email":    &graphql.Field{Type: graphql.String},
+		"Posts":    &graphql.Field{Type: graphql.NewList(GraphQLPost)},
+	},
+})
 
 //
 // GraphQLUsersField - GraphQL Field information for user
@@ -103,19 +120,9 @@ var GraphQLUsersField *graphql.Field
 var GraphQLCreateUserField *graphql.Field
 
 func init() {
-	GraphQLUser = graphql.NewObject(graphql.ObjectConfig{
-		Name:        "User",
-		Description: "User of this app",
-		Fields: graphql.Fields{
-			"ID":       &graphql.Field{Type: graphql.String},
-			"Name":     &graphql.Field{Type: graphql.String},
-			"Username": &graphql.Field{Type: graphql.String},
-			"Email":    &graphql.Field{Type: graphql.String},
-		},
-	})
 
 	GraphQLUsersField = &graphql.Field{
-		Type: graphql.NewList(GraphQLUser),
+		Type: GraphQLUser,
 		Args: graphql.FieldConfigArgument{
 			"start": &graphql.ArgumentConfig{
 				Type:         graphql.Int,
@@ -125,25 +132,40 @@ func init() {
 				Type:         graphql.Int,
 				DefaultValue: -1,
 			},
+			"name": &graphql.ArgumentConfig{
+				Type:         graphql.String,
+				DefaultValue: "",
+			},
 		},
 		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-			var userList []User
-			args := params.Args
-			libs.Log("GET Users params", args)
+			var user UserWithPost
+			// args := params.Args
+			// libs.Log("GET Users params", args)
 
-			query := Users.Find(&bson.M{})
+			// query := Users.Find(&bson.M{})
 
-			if start, ok := args["start"].(int); ok && args["start"] != -1 {
-				query.Skip(start)
-			}
+			query := Users.Pipe([]bson.M{
+				{
+					"$lookup": &bson.M{
+						"from":         PostCollectionName,
+						"localField":   "uid",
+						"foreignField": "user_id",
+						"as":           "Posts",
+					},
+				},
+			})
 
-			if count, ok := args["count"].(int); ok && args["count"] != -1 {
-				query.Limit(count)
-			}
+			// if start, ok := args["start"].(int); ok && args["start"] != -1 {
+			// 	query.Skip(start)
+			// }
 
-			query.All(&userList)
+			// if count, ok := args["count"].(int); ok && args["count"] != -1 {
+			// 	query.Limit(count)
+			// }
 
-			return userList, nil
+			query.One(&user)
+
+			return user, nil
 		},
 	}
 
@@ -161,6 +183,7 @@ func init() {
 			libs.Log("POST Users params", args)
 
 			user := &User{
+				ID:       bson.NewObjectId().Hex(),
 				Name:     libs.Stringify(args["Name"]),
 				Email:    libs.Stringify(args["Email"]),
 				Username: libs.Stringify(args["Username"]),
@@ -211,7 +234,7 @@ func init() {
 	Users = dbObj.C(UserCollectionName)
 
 	index := mgo.Index{
-		Key:        []string{"email", "username"},
+		Key:        []string{"uid", "email", "username"},
 		Unique:     true,
 		DropDups:   true,
 		Background: true,

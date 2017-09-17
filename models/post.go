@@ -12,11 +12,18 @@ import (
 // Post type
 //
 type Post struct {
-	ID      bson.ObjectId `bson:"_id,omitempty"`
-	UserID  string        `bson:"user_id"`
+	OID     bson.ObjectId `bson:"_id,omitempty"`
+	ID      string        `bson:"pid,omitempty"`
+	UserID  string        `bson:"user_id,omitempty"`
 	Title   string        `bson:"title"`
 	Content string        `bson:"content"`
 	Rating  int           `bson:"rating"`
+}
+
+// PostWithUser type (post with the user)
+type PostWithUser struct {
+	Post,
+	Users []User `bson:"Users"`
 }
 
 //
@@ -39,7 +46,18 @@ func (post *Post) Validate() map[string]string {
 //
 // GraphQLPost - Post type for graphql
 //
-var GraphQLPost *graphql.Object
+var GraphQLPost = graphql.NewObject(graphql.ObjectConfig{
+	Name:        "Post",
+	Description: "An entry in the diary",
+	Fields: graphql.Fields{
+		"ID":      &graphql.Field{Type: graphql.String},
+		"Title":   &graphql.Field{Type: graphql.String},
+		"Content": &graphql.Field{Type: graphql.String},
+		"Rating":  &graphql.Field{Type: graphql.Int},
+		"UserID":  &graphql.Field{Type: graphql.String},
+		// "Users": &graphql.Field{ Type: graphql.NewList(GraphQLUser) },
+	},
+})
 
 //
 // GraphQLPostsField - GraphQL Field information for post
@@ -52,24 +70,6 @@ var GraphQLPostsField *graphql.Field
 var GraphQLCreatePostField *graphql.Field
 
 func init() {
-	GraphQLPost = graphql.NewObject(graphql.ObjectConfig{
-		Name:        "Post",
-		Description: "An entry in the diary",
-		Fields: graphql.Fields{
-			"ID":      &graphql.Field{Type: graphql.String},
-			"Title":   &graphql.Field{Type: graphql.String},
-			"Content": &graphql.Field{Type: graphql.String},
-			"Rating":  &graphql.Field{Type: graphql.Int},
-			"UserID":  &graphql.Field{Type: graphql.String},
-			"User": &graphql.Field{
-				Type: graphql.String,
-				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-					libs.Log("Graphql Post User params", params)
-					return "yoyo", nil
-				},
-			},
-		},
-	})
 
 	GraphQLPostsField = &graphql.Field{
 		Type: graphql.NewList(GraphQLPost),
@@ -84,23 +84,31 @@ func init() {
 			},
 		},
 		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-			var userList []Post
-			args := params.Args
-			libs.Log("GET Posts params", args)
+			var postList []Post
+			// args := params.Args
 
-			query := Posts.Find(&bson.M{})
+			query := Posts.Pipe([]bson.M{
+				{
+					"$lookup": &bson.M{
+						"from":         UserCollectionName,
+						"localField":   "user_id",
+						"foreignField": "uid",
+						"as":           "Users",
+					},
+				},
+			})
 
-			if start, ok := args["start"].(int); ok && args["start"] != -1 {
-				query.Skip(start)
-			}
+			// if start, ok := args["start"].(int); ok && args["start"] != -1 {
+			// 	query.Skip(start)
+			// }
 
-			if count, ok := args["count"].(int); ok && args["count"] != -1 {
-				query.Limit(count)
-			}
+			// if count, ok := args["count"].(int); ok && args["count"] != -1 {
+			// 	query.Limit(count)
+			// }
 
-			query.All(&userList)
+			query.All(&postList)
 
-			return userList, nil
+			return postList, nil
 		},
 	}
 
@@ -118,6 +126,7 @@ func init() {
 			libs.Log("POST Posts params", args)
 
 			post := &Post{
+				ID:      bson.NewObjectId().Hex(),
 				UserID:  libs.Stringify(args["UserID"]),
 				Title:   libs.Stringify(args["Title"]),
 				Content: libs.Stringify(args["Content"]),
@@ -160,6 +169,19 @@ func init() {
 
 	dbObj, _ := db.GetDB()
 
-	// Cache it on start
 	Posts = dbObj.C(PostCollectionName)
+
+	index := mgo.Index{
+		Key:        []string{"pid"},
+		Unique:     true,
+		DropDups:   true,
+		Background: true,
+		Sparse:     true,
+	}
+
+	err := Posts.EnsureIndex(index)
+
+	if err != nil {
+		panic(err)
+	}
 }

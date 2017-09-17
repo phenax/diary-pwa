@@ -39,7 +39,12 @@ const webpackConfig= {
 
 	devtool: 'source-map',
 
-	plugins: [ ],
+	plugins: [
+		new webpack.ProvidePlugin({
+			'Promise': 'es6-promise',
+			'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
+		}),
+	],
 };
 
 
