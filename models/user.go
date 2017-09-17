@@ -1,8 +1,6 @@
 package models
 
 import (
-	"fmt"
-
 	"github.com/graphql-go/graphql"
 	"github.com/phenax/diary/db"
 	"github.com/phenax/diary/libs"
@@ -68,13 +66,13 @@ func (user *User) UniqueCheck() map[string]string {
 	var oldUser User
 
 	Users.Find(&bson.M{
-		"$or": &bson.M{
-			"email":    user.Email,
-			"username": user.Username,
+		"$or": []bson.M{
+			{"email": user.Email},
+			{"username": user.Username},
 		},
 	}).One(&oldUser)
 
-	fmt.Printf("%+v\n", oldUser)
+	libs.Log("Unique user check", oldUser)
 
 	if oldUser.Username != "" {
 		return err("This user already exists")
@@ -131,7 +129,7 @@ func init() {
 		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 			var userList []User
 			args := params.Args
-			libs.Log("GET Users", args)
+			libs.Log("GET Users params", args)
 
 			query := Users.Find(&bson.M{})
 
@@ -160,7 +158,7 @@ func init() {
 		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 			args := params.Args
 
-			fmt.Printf("%+v\n", params.Args)
+			libs.Log("POST Users params", args)
 
 			user := &User{
 				Name:     libs.Stringify(args["Name"]),
@@ -172,18 +170,19 @@ func init() {
 			validation := user.Validate()
 			uniqueness := user.UniqueCheck()
 
-			fmt.Printf("%+v\n", validation)
-
-			if validation["IsValid"] != "1" || uniqueness["IsUnique"] != "1" {
+			if validation["IsValid"] != "1" {
 				return NewResponse(400, validation["Message"]), nil
+			}
+			if uniqueness["IsUnique"] != "1" {
+				return NewResponse(409, uniqueness["Message"]), nil
 			}
 
 			user.SetPassword(user.Password)
-			// err := Users.Insert(user)
+			err := Users.Insert(user)
 
-			// if err != nil {
-			// 	return NewResponse(500, "Something went wrong"), nil
-			// }
+			if err != nil {
+				return NewResponse(500, "Something went wrong"), nil
+			}
 
 			return NewResponse(200, "User saved successfully"), nil
 		},

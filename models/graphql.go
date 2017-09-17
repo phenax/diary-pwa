@@ -67,7 +67,7 @@ func init() {
 		Name:        "Response",
 		Description: "Standard graphql api response",
 		Fields: graphql.Fields{
-			"Status":  &graphql.Field{Type: graphql.String},
+			"Status":  &graphql.Field{Type: graphql.Int},
 			"Message": &graphql.Field{Type: graphql.String},
 		},
 	})
