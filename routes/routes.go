@@ -34,6 +34,9 @@ func indexRoutes(router *mux.Router) {
 	// gzip test
 	router.HandleFunc("/gzip", ctrlr.Call(ctrlr.GzipTest))
 
+	// Graphql api endpoint
+	router.Handle("/graphql", ctrlr.GetGraphQLHandlerConfig())
+
 	// Render all pages
 	router.
 		PathPrefix("/").

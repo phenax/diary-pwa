@@ -1,6 +1,7 @@
 package libs
 
 import (
+	"fmt"
 	"reflect"
 )
 
@@ -27,4 +28,22 @@ func GetField(config interface{}, key string, value string) string {
 	}
 
 	return value
+}
+
+//
+// Stringify -
+func Stringify(data interface{}) string {
+
+	if str, ok := data.(string); ok {
+		return str
+	}
+
+	return ""
+}
+
+//
+// Log stuff to console
+func Log(name string, variable interface{}) {
+	COLOR := "32"
+	fmt.Printf("\033[%sm%s:\033[0m %+v\n", COLOR, name, variable)
 }

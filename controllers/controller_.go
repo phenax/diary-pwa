@@ -9,6 +9,9 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	graphQLHandler "github.com/graphql-go/handler"
+
+	"github.com/phenax/diary/models"
 )
 
 //
@@ -54,6 +57,18 @@ func Call(ctrlrFn func(*Context)) func(http.ResponseWriter, *http.Request) {
 		// Call the controller
 		ctrlrFn(ctx)
 	}
+}
+
+//
+// GetGraphQLHandlerConfig - Getter for graphql handler configuration
+//
+func GetGraphQLHandlerConfig() *graphQLHandler.Handler {
+
+	return graphQLHandler.New(&graphQLHandler.Config{
+		Schema:   models.GetGraphQLSchema(),
+		Pretty:   true,
+		GraphiQL: true,
+	})
 }
 
 //

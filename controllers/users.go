@@ -22,8 +22,7 @@ func ProfilePage(ctx *Context) {
 	username := ctx.Params["name"]
 
 	// Get the user with that username
-	models.
-		Users.Find(bson.M{
+	models.Users.Find(bson.M{
 		"username": username,
 	}).One(&user)
 
