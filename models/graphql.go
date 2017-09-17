@@ -24,8 +24,13 @@ func GetGraphQLSchema() *graphql.Schema {
 	if graphQLSchema == nil {
 
 		fields := graphql.Fields{
+			// User queries
 			"Users":   GraphQLUsersField,
-			"NewUser": GraphQLCreateUsersField,
+			"NewUser": GraphQLCreateUserField,
+
+			// Post  queries
+			"Posts":   GraphQLPostsField,
+			"NewPost": GraphQLCreatePostField,
 		}
 
 		rootQuery := graphql.ObjectConfig{Name: "RootQuery", Fields: fields}

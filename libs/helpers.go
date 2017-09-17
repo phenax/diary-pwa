@@ -42,6 +42,17 @@ func Stringify(data interface{}) string {
 }
 
 //
+// Intify -
+func Intify(data interface{}) int {
+
+	if num, ok := data.(int); ok {
+		return num
+	}
+
+	return 0
+}
+
+//
 // Log stuff to console
 func Log(name string, variable interface{}) {
 	COLOR := "32"

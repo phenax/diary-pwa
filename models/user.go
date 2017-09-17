@@ -98,9 +98,9 @@ var GraphQLUser *graphql.Object
 var GraphQLUsersField *graphql.Field
 
 //
-// GraphQLCreateUsersField - GraphQL Field information for user
+// GraphQLCreateUserField - GraphQL Field information for user
 //
-var GraphQLCreateUsersField *graphql.Field
+var GraphQLCreateUserField *graphql.Field
 
 func init() {
 	GraphQLUser = graphql.NewObject(graphql.ObjectConfig{
@@ -147,7 +147,7 @@ func init() {
 		},
 	}
 
-	GraphQLCreateUsersField = &graphql.Field{
+	GraphQLCreateUserField = &graphql.Field{
 		Type: GraphQLResponseType,
 		Args: graphql.FieldConfigArgument{
 			"Name":     &graphql.ArgumentConfig{Type: graphql.String},
@@ -209,6 +209,20 @@ func init() {
 
 	// Cache it on start
 	Users = dbObj.C(UserCollectionName)
+
+	index := mgo.Index{
+		Key:        []string{"email", "username"},
+		Unique:     true,
+		DropDups:   true,
+		Background: true,
+		Sparse:     true,
+	}
+
+	err := Users.EnsureIndex(index)
+
+	if err != nil {
+		panic(err)
+	}
 }
 
 //
