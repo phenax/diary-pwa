@@ -60,9 +60,9 @@ var GraphQLPost = graphql.NewObject(graphql.ObjectConfig{
 })
 
 //
-// GraphQLPostsField - GraphQL Field information for post
+// GraphQLPostField - GraphQL Field information for post
 //
-var GraphQLPostsField *graphql.Field
+var GraphQLPostField *graphql.Field
 
 //
 // GraphQLCreatePostField - GraphQL Field information for post
@@ -71,44 +71,35 @@ var GraphQLCreatePostField *graphql.Field
 
 func init() {
 
-	GraphQLPostsField = &graphql.Field{
-		Type: graphql.NewList(GraphQLPost),
+	GraphQLPostField = &graphql.Field{
+		Type: GraphQLPost,
 		Args: graphql.FieldConfigArgument{
-			"start": &graphql.ArgumentConfig{
-				Type:         graphql.Int,
-				DefaultValue: -1,
-			},
-			"count": &graphql.ArgumentConfig{
-				Type:         graphql.Int,
+			"pageId": &graphql.ArgumentConfig{
+				Type:         graphql.String,
 				DefaultValue: -1,
 			},
 		},
 		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-			var postList []Post
-			// args := params.Args
+			var post Post
+			args := params.Args
 
-			query := Posts.Pipe([]bson.M{
-				{
-					"$lookup": &bson.M{
-						"from":         UserCollectionName,
-						"localField":   "user_id",
-						"foreignField": "uid",
-						"as":           "Users",
-					},
-				},
+			query := Posts.Find(&bson.M{
+				"pid": args["pageId"],
+				// "user_id":                // TODO: Add check for user post after auth
 			})
 
-			// if start, ok := args["start"].(int); ok && args["start"] != -1 {
-			// 	query.Skip(start)
-			// }
+			if n, err := query.Count(); n == 0 {
 
-			// if count, ok := args["count"].(int); ok && args["count"] != -1 {
-			// 	query.Limit(count)
-			// }
+				if err != nil {
+					return nil, err
+				}
 
-			query.All(&postList)
+				return nil, nil
+			}
 
-			return postList, nil
+			query.One(&post)
+
+			return post, nil
 		},
 	}
 

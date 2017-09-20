@@ -21,16 +21,16 @@ const styles = {
 export default ({ withNavbar = true }) => (
 	<div>
 		<div style={styles.wrapper}>
-			{withNavbar? <Navbar minHeight={VARS.navbarMinHeight} />: null}
+			{withNavbar?
+				<Navbar minHeight={VARS.navbarMinHeight}>
+					<Link class="siimple-btn siimple-btn--grey" activeClassName="siimple-btn--pink" href="/">Home</Link>
+					<Link class="siimple-btn siimple-btn--grey" activeClassName="siimple-btn--pink" href="/page/hello">Goto DiaryPage</Link>
+				</Navbar>:
+				null}
 			<Router>
 				<HomePage path='/' />
 				<DiaryPage path='/page/:pageId' />
 			</Router>
-
-			<div>
-				<Link activeClassName="active" href="/">Home</Link><br />
-				<Link activeClassName="active" href="/page/hello">Goto DiaryPage</Link>
-			</div>
 		</div>
 	</div>
 );

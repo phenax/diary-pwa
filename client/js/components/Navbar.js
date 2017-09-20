@@ -22,10 +22,15 @@ export class Navbar extends Component {
 			padding: '.5em 1em',
 		},
 
-		logo: {
+		navbar_logo: {
 			fontWeight: 'lighter',
 			fontSize: '1.3em',
 			color: '#fff',
+		},
+
+		navbar_links: {
+			textAlign: 'right',
+			width: '100%',
 		},
 	};
 
@@ -36,8 +41,12 @@ export class Navbar extends Component {
 		return (
 			<div style={Navbar.styles.navbarWrapper}>
 				<div class='vertical-center siimple-bg--navy siimple-shadow--2' style={navbarStyles}>
-					<div style={Navbar.styles.logo}>
+					<div style={Navbar.styles.navbar_logo}>
 						<span class='siimple-color--pink' style={{ fontWeight: 'bold' }}>A</span><span>Diary</span>
+					</div>
+
+					<div style={Navbar.styles.navbar_links}>
+						{this.props.children}
 					</div>
 				</div>
 			</div>

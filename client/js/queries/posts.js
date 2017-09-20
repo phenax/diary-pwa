@@ -13,10 +13,25 @@ export const listPosts = (variables = {}) => ({
 					Username
 				}
 				Posts {
+					ID
 					Title
 					Content
 					Rating
 				}
+			}
+		}
+	`,
+});
+
+
+export const getPost = (pageId) => ({
+	variables: { pageId },
+	query: `
+		query Posts($pageId: String) {
+			Post(pageId: $pageId) {
+				Title
+				Content
+				Rating
 			}
 		}
 	`,

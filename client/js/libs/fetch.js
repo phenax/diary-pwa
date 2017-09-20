@@ -1,6 +1,6 @@
 
 import { API_ENDPOINT } from '../config/graphql';
-import { listPosts } from '../queries/posts';
+import { listPosts, getPost } from '../queries/posts';
 
 const graphQLFetch = query => {
 
@@ -28,4 +28,6 @@ export const fetchUserPosts = vars =>
 	graphQLFetch(listPosts(vars))
 		.then(resp => resp.UserPosts);
 
-window.fetchUserPosts = fetchUserPosts;
+export const fetchPost = pageId =>
+	graphQLFetch(getPost(pageId))
+		.then(resp => resp.Post);

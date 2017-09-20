@@ -1,59 +1,46 @@
 
 import { h, Component } from 'preact';
-import { fetchUserPosts } from '../libs/fetch';
+import { fetchPost } from '../libs/fetch';
 
 import LoadingSpinner from '../components/LoadingSpinner';
+import DiaryPost from '../components/DiaryPost';
 
 export default class DiaryPage extends Component {
 
 	state = {
-		posts: [],
-		pageNumber: 0,
+		post: null,
+		isNotFound: false,
 	};
 
 	componentDidMount() {
-		// const postId = this.props.matches.pageId;
-
-		this.maxPosts = this.props.numberOfPostsPerPage;
-
-		this._fetchPosts();
+		const postId = this.props.matches.pageId;
+		this._fetchPost(postId);
 	}
 
-	_fetchPosts() {
-
-		const page = this.state.pageNumber;
-		const variables = {
-			count: this.maxPosts || 10,
-			start: page? (page - 1) * this.maxPosts: -1,
-		};
-
-		fetchUserPosts(variables)
-			.then(p => p.Posts)
-			.then(posts => {
-
-				if(this.props.isInfiniteScroll) {
-					posts = this.state.posts.concat(posts);
-				}
-
-				this.setState({ posts });
-			});
+	_fetchPost(postId) {
+		fetchPost(postId)
+			.then(post =>
+				post?
+					this.setState({ post, isNotFound: false }):
+					this.setState({ isNotFound: true })
+			);
 	}
 
 
 	render() {
+
+		let $renderEl = <LoadingSpinner />;
+
+		if(this.state.isNotFound)
+			$renderEl = <div>Not found soory bruh</div>;
+		if(this.state.post)
+			$renderEl = <DiaryPost post={this.state.post} />;
+
 		return (
 			<div>
 				Diary page ({this.props.matches.pageId})
 				<div>
-					{this.state.posts.length === 0?
-						<LoadingSpinner />:
-						this.state.posts.map(post => (
-							<div>
-								<div>{post.Title}</div>
-								<div>{post.Content}</div>
-							</div>
-						))
-					}
+					{$renderEl}
 				</div>
 			</div>
 		);
