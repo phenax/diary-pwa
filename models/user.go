@@ -1,6 +1,9 @@
 package models
 
 import (
+	"encoding/json"
+	"errors"
+
 	"github.com/graphql-go/graphql"
 	"github.com/phenax/diary/db"
 	"github.com/phenax/diary/libs"
@@ -18,6 +21,12 @@ type User struct {
 	Username string        `bson:"username"`
 	Email    string        `bson:"email"`
 	Password string        `bson:"password"`
+}
+
+// SessionUser - User type to be stored in session
+type SessionUser struct {
+	ID    string
+	Email string
 }
 
 // UserWithPost type (User with the posts inside)
@@ -156,9 +165,19 @@ func init() {
 		},
 		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 			var user UserWithPost
+			var authUser SessionUser
 			args := params.Args
 
-			Users.Find(&bson.M{"uid": "59be56c65a421d74f9000001"}).One(&user.User)
+			userSession := libs.GraphQLGetSession(params)
+
+			// User logged in checked
+			if userSession.Values["User"] == nil {
+				return nil, errors.New("Unauthorized")
+			}
+
+			json.Unmarshal(userSession.Values["User"].([]byte), &authUser)
+
+			Users.Find(&bson.M{"uid": authUser.ID}).One(&user.User)
 
 			if user.User.ID != "" {
 

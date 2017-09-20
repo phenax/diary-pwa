@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"context"
 	"net/http"
 
 	ctrlr "github.com/phenax/diary/controllers"
@@ -28,7 +29,14 @@ func init() {
 	router.HandleFunc("/verify", ctrlr.Call(ctrlr.Encrypt))
 
 	// Graphql api endpoint
-	router.Handle("/graphql", ctrlr.GetGraphQLHandlerConfig())
+	router.HandleFunc("/graphql", func(w http.ResponseWriter, r *http.Request) {
+
+		ctx := context.Background()
+		ctx = context.WithValue(ctx, "request", r)
+		ctx = context.WithValue(ctx, "response", w)
+
+		ctrlr.GetGraphQLHandlerConfig().ContextHandler(ctx, w, r)
+	})
 
 	// Render all pages
 	router.
