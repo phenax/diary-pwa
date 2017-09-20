@@ -24,6 +24,8 @@ const graphQLFetch = query => {
 export default graphQLFetch;
 
 
-export const fetchUserPosts = vars => graphQLFetch(listPosts(vars));
+export const fetchUserPosts = vars =>
+	graphQLFetch(listPosts(vars))
+		.then(resp => resp.UserPosts);
 
 window.fetchUserPosts = fetchUserPosts;

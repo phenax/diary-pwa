@@ -8,6 +8,6 @@ const styles = {
 
 export default ({ height }) => (
 	<div>
-	
+		Loading...
 	</div>
 );
