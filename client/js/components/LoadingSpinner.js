@@ -6,7 +6,7 @@ const styles = {
 
 };
 
-export default ({ height }) => (
+export default ({ height = 5 } = {}) => (
 	<div>
 		Loading...
 	</div>

@@ -24,7 +24,7 @@ export const listPosts = (variables = {}) => ({
 });
 
 
-export const getPost = (pageId) => ({
+export const getPost = (pageId = -1) => ({
 	variables: { pageId },
 	query: `
 		query Posts($pageId: String) {

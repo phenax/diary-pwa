@@ -12,7 +12,7 @@ import { h, Component } from 'preact';
 export default class ModuleLazyLoader extends Component {
 
 	state = {
-		Component: this.props.loader || (() => <div>Loading...</div>),
+		Component: this.props.loader || (<div>Loading...</div>),
 		isLoaded: false,
 	};
 

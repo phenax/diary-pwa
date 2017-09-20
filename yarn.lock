@@ -2812,6 +2812,10 @@ preact:
   version "8.2.5"
   resolved "https://registry.yarnpkg.com/preact/-/preact-8.2.5.tgz#cbfa3962a8012768159f6d01d46f9c1eb3213c0a"
 
+preact-async-route:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/preact-async-route/-/preact-async-route-2.0.0.tgz#5f438d66aabaa79cca119517d8bf8d82e83a9b8c"
+
 preact-router:
   version "2.5.7"
   resolved "https://registry.yarnpkg.com/preact-router/-/preact-router-2.5.7.tgz#571fa585472fb2b9918e8610d8ef8526cf2ee263"

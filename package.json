@@ -43,6 +43,7 @@
     "imports-loader": "^0.7.1",
     "object-assign": "^4.1.1",
     "preact": "^8.2.5",
+    "preact-async-route": "^2.0.0",
     "preact-router": "^2.5.7",
     "webpack": "1.14.0",
     "whatwg-fetch": "^2.0.3"

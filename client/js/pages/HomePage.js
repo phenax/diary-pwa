@@ -1,7 +1,7 @@
 
 import { h, Component } from 'preact';
 import { fetchUserPosts } from '../libs/fetch';
-import { Link } from 'preact-router';
+import { Link } from 'preact-router/match';
 
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -12,31 +12,35 @@ export default class HomePage extends Component {
 		pageNumber: 0,
 	};
 
-	componentDidMount() {
-		// const postId = this.props.matches.pageId;
+	MAX_POSTS = this.props.numberOfPostsPerPage;
 
-		this.maxPosts = this.props.numberOfPostsPerPage;
+	constructor(props) {
+		super(props);
 
-		this._fetchPosts();
+		this.fetchPosts = this.fetchPosts.bind(this);
 	}
 
-	_fetchPosts() {
+	componentDidMount() {
+		this.fetchPosts();
+	}
 
-		const page = this.state.pageNumber;
-		const variables = {
-			count: this.maxPosts || 10,
-			start: page? (page - 1) * this.maxPosts: -1,
+	fetchPosts(page=-1) {
+
+		const options = {
+			count: this.MAX_POSTS || 10,
+			start: page? (page - 1) * this.MAX_POSTS: -1,
 		};
 
-		fetchUserPosts(variables)
-			.then(p => p.Posts)
-			.then(posts => {
+		fetchUserPosts(options)
+			.then(p => {
+
+				let posts = p.Posts;
 
 				if(this.props.isInfiniteScroll) {
 					posts = this.state.posts.concat(posts);
 				}
 
-				this.setState({ posts });
+				this.setState({ posts, pageNumber: page });
 			});
 	}
 

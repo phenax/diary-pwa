@@ -23,7 +23,10 @@ type User struct {
 // UserWithPost type (User with the posts inside)
 type UserWithPost struct {
 	User
-	Posts []Post `bson:"Posts"`
+	Posts              []Post `bson:"Posts"`
+	TotalNumberOfPages int
+	IsLastPage         bool
+	IsFirstPage        bool
 }
 
 //
@@ -115,8 +118,11 @@ var GraphQLUserPosts = graphql.NewObject(graphql.ObjectConfig{
 	Name:        "UserPosts",
 	Description: "User and his posts",
 	Fields: graphql.Fields{
-		"User":  &graphql.Field{Type: GraphQLUser},
-		"Posts": &graphql.Field{Type: graphql.NewList(GraphQLPost)},
+		"User":               &graphql.Field{Type: GraphQLUser},
+		"Posts":              &graphql.Field{Type: graphql.NewList(GraphQLPost)},
+		"TotalNumberOfPages": &graphql.Field{Type: graphql.Int},
+		"IsLastPage":         &graphql.Field{Type: graphql.Boolean},
+		"IsFirstPage":        &graphql.Field{Type: graphql.Boolean},
 	},
 })
 
@@ -143,7 +149,7 @@ func init() {
 				Type:         graphql.Int,
 				DefaultValue: -1,
 			},
-			"name": &graphql.ArgumentConfig{
+			"search": &graphql.ArgumentConfig{
 				Type:         graphql.String,
 				DefaultValue: "",
 			},
@@ -158,11 +164,33 @@ func init() {
 
 				postQuery := Posts.Find(&bson.M{"user_id": user.User.ID})
 
-				if start, ok := args["start"].(int); ok && args["start"] != -1 {
+				numberOfPages, err := postQuery.Count()
+				if err != nil {
+					return nil, err
+				}
+				user.TotalNumberOfPages = numberOfPages
+
+				start, _ := args["start"].(int)
+				count, _ := args["count"].(int)
+
+				if start >= 0 {
 					postQuery.Skip(start)
 				}
-				if count, ok := args["count"].(int); ok && args["count"] != -1 {
+				if count >= 0 {
 					postQuery.Limit(count)
+				}
+
+				user.IsFirstPage = true
+				if start >= 0 && count >= 0 {
+					user.IsFirstPage = start <= count
+				}
+
+				user.IsLastPage = true
+				if postCount, err := postQuery.Count(); count >= 0 {
+					if err != nil {
+						return nil, err
+					}
+					user.IsLastPage = postCount < count
 				}
 
 				postQuery.All(&user.Posts)
