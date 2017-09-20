@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 
+	"github.com/gorilla/sessions"
 	"github.com/graphql-go/graphql"
 	"github.com/phenax/diary/db"
 	"github.com/phenax/diary/libs"
@@ -145,6 +146,11 @@ var GraphQLUsersField *graphql.Field
 //
 var GraphQLCreateUserField *graphql.Field
 
+//
+// GraphQLLoginUserField - GraphQL Field for loggin in a user
+//
+var GraphQLLoginUserField *graphql.Field
+
 func init() {
 
 	GraphQLUsersField = &graphql.Field{
@@ -166,8 +172,8 @@ func init() {
 		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 			var user UserWithPost
 			var authUser SessionUser
-			args := params.Args
 
+			args := params.Args
 			userSession := libs.GraphQLGetSession(params)
 
 			// User logged in checked
@@ -179,45 +185,45 @@ func init() {
 
 			Users.Find(&bson.M{"uid": authUser.ID}).One(&user.User)
 
-			if user.User.ID != "" {
+			// Session exists but user invalid
+			if user.User.ID == "" {
+				return nil, errors.New("Unauthorized")
+			}
 
-				postQuery := Posts.Find(&bson.M{"user_id": user.User.ID})
+			postQuery := Posts.Find(&bson.M{"user_id": user.User.ID})
 
-				numberOfPages, err := postQuery.Count()
+			numberOfPages, err := postQuery.Count()
+			if err != nil {
+				return nil, err
+			}
+			user.TotalNumberOfPages = numberOfPages
+
+			start, _ := args["start"].(int)
+			count, _ := args["count"].(int)
+
+			if start >= 0 {
+				postQuery.Skip(start)
+			}
+			if count >= 0 {
+				postQuery.Limit(count)
+			}
+
+			user.IsFirstPage = true
+			if start >= 0 && count >= 0 {
+				user.IsFirstPage = start <= count
+			}
+
+			user.IsLastPage = true
+			if postCount, err := postQuery.Count(); count >= 0 {
 				if err != nil {
 					return nil, err
 				}
-				user.TotalNumberOfPages = numberOfPages
-
-				start, _ := args["start"].(int)
-				count, _ := args["count"].(int)
-
-				if start >= 0 {
-					postQuery.Skip(start)
-				}
-				if count >= 0 {
-					postQuery.Limit(count)
-				}
-
-				user.IsFirstPage = true
-				if start >= 0 && count >= 0 {
-					user.IsFirstPage = start <= count
-				}
-
-				user.IsLastPage = true
-				if postCount, err := postQuery.Count(); count >= 0 {
-					if err != nil {
-						return nil, err
-					}
-					user.IsLastPage = postCount < count
-				}
-
-				postQuery.All(&user.Posts)
-
-				return user, nil
+				user.IsLastPage = postCount < count
 			}
 
-			return nil, nil
+			postQuery.All(&user.Posts)
+
+			return user, nil
 		},
 	}
 
@@ -262,6 +268,52 @@ func init() {
 			return NewResponse(200, "User saved successfully"), nil
 		},
 	}
+
+	GraphQLLoginUserField = &graphql.Field{
+		Type: GraphQLResponseType,
+		Args: graphql.FieldConfigArgument{
+			"Username": &graphql.ArgumentConfig{Type: graphql.String},
+			"Password": &graphql.ArgumentConfig{Type: graphql.String},
+		},
+		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+			args := params.Args
+
+			var user User
+
+			username := libs.Stringify(args["Username"])
+			password := libs.Stringify(args["Password"])
+
+			if len(username) < 4 {
+				return NewResponse(400, "Username is too short"), nil
+			}
+			if len(password) < 4 {
+				return NewResponse(400, "Password is too short"), nil
+			}
+
+			query := &bson.M{
+				"$or": []bson.M{
+					{"email": username},
+					{"username": username},
+				},
+				"password": password,
+			}
+
+			Users.Find(query).One(&user)
+
+			if user.ID == "" {
+				return NewResponse(401, "Unauthorized"), nil
+			}
+
+			libs.GraphQLSetSession(params, func(session *sessions.Session) *sessions.Session {
+				userDetails, _ := json.Marshal(&SessionUser{ID: user.ID, Email: user.Email})
+				session.Values["User"] = userDetails
+				return session
+			})
+
+			return NewResponse(200, "You have been logged in"), nil
+		},
+	}
+
 }
 
 //

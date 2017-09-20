@@ -28,6 +28,8 @@ func GetGraphQLSchema() *graphql.Schema {
 			"UserPosts": GraphQLUsersField,
 			"NewUser":   GraphQLCreateUserField,
 
+			"Login": GraphQLLoginUserField,
+
 			// Post  queries
 			"Post":    GraphQLPostField,
 			"NewPost": GraphQLCreatePostField,
@@ -56,14 +58,23 @@ func GetGraphQLSchema() *graphql.Schema {
 type GQLResponse struct {
 	Status  int
 	Message string
+	Data    map[string]string
 }
 
 //
 // NewResponse -
-func NewResponse(status int, message string) *GQLResponse {
+func NewResponse(status int, message string, dataList ...map[string]string) *GQLResponse {
+
+	var data map[string]string
+
+	if len(dataList) != 0 {
+		data = dataList[0]
+	}
+
 	return &GQLResponse{
 		Status:  status,
 		Message: message,
+		Data:    data,
 	}
 }
 
@@ -74,6 +85,7 @@ func init() {
 		Fields: graphql.Fields{
 			"Status":  &graphql.Field{Type: graphql.Int},
 			"Message": &graphql.Field{Type: graphql.String},
+			"Data":    &graphql.Field{Type: graphql.String},
 		},
 	})
 }
