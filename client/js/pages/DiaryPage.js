@@ -38,8 +38,7 @@ export default class DiaryPage extends Component {
 
 		return (
 			<div>
-				Diary page ({this.props.matches.pageId})
-				<div>
+				<div class='center-wrapper'>
 					{$renderEl}
 				</div>
 			</div>

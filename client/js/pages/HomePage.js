@@ -1,8 +1,10 @@
 
 import { h, Component } from 'preact';
-import { fetchUserPosts } from '../libs/fetch';
 import { Link } from 'preact-router/match';
 
+import { fetchUserPosts } from '../libs/fetch';
+
+import { Card, CardTitle, CardContent } from '../components/Card';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 export default class HomePage extends Component {
@@ -47,15 +49,21 @@ export default class HomePage extends Component {
 
 	render() {
 		return (
-			<div>
-				Diary page ({this.props.matches.pageId})
-				<div>
+			<div class='center-wrapper'>
+				<br />
+				<h2 class='siimple-h2'>
+					<div>My Diary</div>
+				</h2>
+				<div style={{ padding: '1em 0' }}>
 					{this.state.posts.length === 0?
 						<LoadingSpinner />:
 						this.state.posts.map(post => (
 							<div>
-								<Link href={`/page/${post.ID}`}>
-									{post.Title}
+								<Link href={`/page/${post.ID}`} style={{ textDecoration: 'none' }}>
+									<Card>
+										<CardTitle>{post.Title}</CardTitle>
+										<CardContent>{post.Content.slice(0, 100)}{post.Content.length > 100? '...': ''}</CardContent>
+									</Card>
 								</Link>
 							</div>
 						))
