@@ -1,14 +1,22 @@
 
-export const listUsers = variables => ({
+
+export const login = variables => ({
 	variables,
 	query: `
-		query User($name: String) {
-			Users(name: $name) {
-				Name
-				Username
-				Email
+		query LoginUser($username: String, $password: String) {
+			Login(Username: $username, Password: $password) {
+				Status,
+				Message,
+			}
+			UserPosts {
+				User {
+					ID,
+					Name,
+					Email,
+					Username,
+				}
 			}
 		}
-	`,
+	`
 });
 
