@@ -2,7 +2,7 @@
 import { h, Component } from 'preact';
 import { Link } from 'preact-router/match';
 
-import { fetchUserPosts } from '../libs/fetch';
+import { fetchUserPosts, UnauthorizedError } from '../libs/fetch';
 
 import { Card, CardTitle, CardContent } from '../components/Card';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -36,18 +36,12 @@ export default class HomePage extends Component {
 		};
 
 		fetchUserPosts(options)
-			.then(p => {
-
-				let posts = p.Posts;
-
-				if(this.props.isInfiniteScroll) {
-					posts = this.state.posts.concat(posts);
-				}
-
-				this.setState({ posts, pageNumber: page, isLoggedIn: true, isLoaded: true });
-			})
+			.then(({ posts }) =>
+				this.props.isInfiniteScroll? this.state.posts.concat(posts): posts)              // Infinite scroll
+			.then(posts =>
+				this.setState({ posts, pageNumber: page, isLoggedIn: true, isLoaded: true }))    // Update component state
 			.catch(error => {
-				if(error.isUnauthorizedException) {
+				if(error instanceof UnauthorizedError) {
 					this.setState({ posts: [], isLoggedIn: false, isLoaded: true });
 				}
 			});

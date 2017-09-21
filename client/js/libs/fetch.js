@@ -2,10 +2,19 @@
 import { API_ENDPOINT } from '../config/graphql';
 import { listPosts, getPost } from '../queries/posts';
 import { login } from '../queries/users';
+import { Extendable } from '../libs/utils';
 
 
-export class UnauthorizedException extends Error {
-	isUnauthorizedException = true;
+// Unauthorized exception
+export class UnauthorizedError extends Extendable(Error) {
+	isUnauthorizedError = true;
+	name = 'UnauthorizedError';
+	errors = [];
+
+	constructor(message, errors) {
+		super(message);
+		if(errors) this.errors = errors;
+	}
 }
 
 
@@ -24,7 +33,7 @@ const graphQLFetch = query => {
 		.then(resp => resp.json())
 		.then(resp => {
 			if(resp.errors.length) {
-				throw new UnauthorizedException(resp.errors[0].message);
+				throw new UnauthorizedError(resp.errors[0].message, resp.errors);
 			}
 			return resp.data;
 		});
