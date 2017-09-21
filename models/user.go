@@ -181,7 +181,7 @@ func init() {
 				return nil, errors.New("Unauthorized")
 			}
 
-			json.Unmarshal(userSession.Values["User"].([]byte), &authUser)
+			json.Unmarshal([]byte(userSession.Values["User"].(string)), &authUser)
 
 			Users.Find(&bson.M{"uid": authUser.ID}).One(&user.User)
 
@@ -306,7 +306,8 @@ func init() {
 
 			libs.GraphQLSetSession(params, func(session *sessions.Session) *sessions.Session {
 				userDetails, _ := json.Marshal(&SessionUser{ID: user.ID, Email: user.Email})
-				session.Values["User"] = userDetails
+				libs.Log("Saving session", string(userDetails))
+				session.Values["User"] = string(userDetails)
 				return session
 			})
 

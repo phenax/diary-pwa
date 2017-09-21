@@ -41,6 +41,7 @@ export default class HomePage extends Component {
 			.then(posts =>        // Update component state
 				this.setState({ posts, pageNumber: page, isLoggedIn: true, isLoaded: true }))
 			.catch(error => {
+				console.error(error);
 				if(error instanceof UnauthorizedError) {
 					this.setState({ isLoggedIn: false, isLoaded: true });
 				}

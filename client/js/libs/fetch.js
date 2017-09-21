@@ -17,7 +17,7 @@ export class UnauthorizedError extends Extendable(Error) {
 	}
 }
 
-
+// Fetch the graphql api with the passed query
 const graphQLFetch = query => {
 
 	const config = {
@@ -27,12 +27,13 @@ const graphQLFetch = query => {
 			'Accept': 'applications/json',
 			'Content-Type': 'applications/json',
 		},
+		credentials: 'same-origin',
 	};
 
 	return fetch(API_ENDPOINT, config)
 		.then(resp => resp.json())
 		.then(resp => {
-			if(resp.errors.length) {
+			if(resp.errors && resp.errors.length) {
 				throw new UnauthorizedError(resp.errors[0].message, resp.errors);
 			}
 			return resp.data;

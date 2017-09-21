@@ -41,9 +41,22 @@
 	}
 }
 
-.center-wrapper {
-	max-width: 900px;
-	padding: 1em;
-	margin: 0 auto;
+.megacheckbox {
+
+	$this: &;
+
+	&--text {
+		color: $siimple-purple-0;
+	}
+
+	&--radio {
+		// visibility: hidden;
+		display: none;
+
+		&:checked ~ #{$this}--text {
+			background-color: $siimple-purple-0;
+			color: #fff;
+		}
+	}
 }
 
