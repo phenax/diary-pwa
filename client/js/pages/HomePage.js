@@ -12,6 +12,8 @@ export default class HomePage extends Component {
 	state = {
 		posts: [],
 		pageNumber: 0,
+		isLoaded: false,
+		isLoggedIn: true,
 	};
 
 	MAX_POSTS = this.props.numberOfPostsPerPage;
@@ -42,33 +44,61 @@ export default class HomePage extends Component {
 					posts = this.state.posts.concat(posts);
 				}
 
-				this.setState({ posts, pageNumber: page });
+				this.setState({ posts, pageNumber: page, isLoggedIn: true, isLoaded: true });
+			})
+			.catch(error => {
+				if(error.isUnauthorizedException) {
+					this.setState({ posts: [], isLoggedIn: false, isLoaded: true });
+				}
 			});
 	}
 
 
 	render() {
+
+		let $component = <LoadingSpinner height={'60vh'} />;
+
+		// If the posts was loaded
+		if(this.state.isLoaded) {
+			if(this.state.isLoggedIn) {
+				$component = (
+					<div>
+						<h2 class='siimple-h2'>
+							<div>My Diary</div>
+						</h2>
+						<div style={{ padding: '1em 0' }}>
+							{this.state.posts.length === 0?
+								(<div><em>No posts found</em></div>):
+								this.state.posts.map(post => (
+									<div>
+										<Link href={`/page/${post.ID}`} style={{ textDecoration: 'none' }}>
+											<Card>
+												<CardTitle>{post.Title}</CardTitle>
+												<CardContent>{post.Content.slice(0, 100)}{post.Content.length > 100? '...': ''}</CardContent>
+											</Card>
+										</Link>
+									</div>
+								))
+							}
+						</div>
+					</div>
+				);
+			} else {
+				$component = (
+					<div>
+						<h2 class='siimple-h2'>
+							Not logged in. Login to continue
+						</h2>
+					</div>
+				);
+			}
+		}
+
+
 		return (
 			<div class='center-wrapper'>
 				<br />
-				<h2 class='siimple-h2'>
-					<div>My Diary</div>
-				</h2>
-				<div style={{ padding: '1em 0' }}>
-					{this.state.posts.length === 0?
-						<LoadingSpinner />:
-						this.state.posts.map(post => (
-							<div>
-								<Link href={`/page/${post.ID}`} style={{ textDecoration: 'none' }}>
-									<Card>
-										<CardTitle>{post.Title}</CardTitle>
-										<CardContent>{post.Content.slice(0, 100)}{post.Content.length > 100? '...': ''}</CardContent>
-									</Card>
-								</Link>
-							</div>
-						))
-					}
-				</div>
+				{$component}
 			</div>
 		);
 	}

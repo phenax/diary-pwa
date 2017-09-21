@@ -7,71 +7,6 @@
 
 @import '../../siimple-colors/scss/colors';
 
-.siimple-color--navy {
-  color: $siimple-navy; }
-
-.siimple-color--green {
-  color: $siimple-green; }
-
-.siimple-color--teal {
-  color: $siimple-teal; }
-
-.siimple-color--blue {
-  color: $siimple-blue; }
-
-.siimple-color--purple {
-  color: $siimple-purple; }
-
-.siimple-color--pink {
-  color: $siimple-pink; }
-
-.siimple-color--red {
-  color: $siimple-red; }
-
-.siimple-color--orange {
-  color: $siimple-orange; }
-
-.siimple-color--yellow {
-  color: $siimple-yellow; }
-
-.siimple-color--grey {
-  color: $siimple-grey; }
-
-.siimple-color--white {
-  color: $siimple-white; }
-
-.siimple-background--navy, .siimple-bg--navy {
-  background-color: $siimple-navy; }
-
-.siimple-background--green, .siimple-bg--green {
-  background-color: $siimple-green; }
-
-.siimple-background--teal, .siimple-bg--teal {
-  background-color: $siimple-teal; }
-
-.siimple-background--blue, .siimple-bg--blue {
-  background-color: $siimple-blue; }
-
-.siimple-background--purple, .siimple-bg--purple {
-  background-color: $siimple-purple; }
-
-.siimple-background--pink, .siimple-bg--pink {
-  background-color: $siimple-pink; }
-
-.siimple-background--red, .siimple-bg--red {
-  background-color: $siimple-red; }
-
-.siimple-background--orange, .siimple-bg--orange {
-  background-color: $siimple-orange; }
-
-.siimple-background--yellow, .siimple-bg--yellow {
-  background-color: $siimple-yellow; }
-
-.siimple-background--grey, .siimple-bg--grey {
-  background-color: $siimple-grey; }
-
-.siimple-background--white, .siimple-bg--white {
-  background-color: $siimple-white; }
 
 .siimple-blockquote {
   display: block;
@@ -234,65 +169,47 @@
     background-color: $siimple-blue !important;
     color: $siimple-white !important; }
 
-.siimple-btn {
-  display: inline-block;
-  height: 30px;
-  transition: opacity 0.3s;
-  line-height: 30px;
-  text-align: center;
-  text-decoration: none;
-  cursor: pointer;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 14px;
-  font-weight: bold;
-  padding-left: 10px;
-  padding-right: 10px;
-  border-radius: 5px;
-  border: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none; }
-  .siimple-btn:hover {
-    opacity: 0.8;
-    text-decoration: none; }
-  .siimple-btn--disabled {
-    background-color: $siimple-grey-0 !important;
-    color: $siimple-navy !important;
-    cursor: not-allowed !important; }
-  .siimple-btn--navy {
-    background-color: $siimple-navy;
-    color: $siimple-white; }
-  .siimple-btn--green {
-    background-color: $siimple-green;
-    color: $siimple-white; }
-  .siimple-btn--teal {
-    background-color: $siimple-teal;
-    color: $siimple-white; }
-  .siimple-btn--blue {
-    background-color: $siimple-blue;
-    color: $siimple-white; }
-  .siimple-btn--purple {
-    background-color: $siimple-purple;
-    color: $siimple-white; }
-  .siimple-btn--pink {
-    background-color: $siimple-pink;
-    color: $siimple-white; }
-  .siimple-btn--red {
-    background-color: $siimple-red;
-    color: $siimple-white; }
-  .siimple-btn--orange {
-    background-color: $siimple-orange;
-    color: $siimple-white; }
-  .siimple-btn--yellow {
-    background-color: $siimple-yellow;
-    color: $siimple-white; }
-  .siimple-btn--grey {
-    background-color: $siimple-grey;
-    color: $siimple-navy; }
-  .siimple-btn--white {
-    background-color: $siimple-white;
-    color: $siimple-navy; }
+
+.siimple-btn:hover {
+  opacity: 0.8;
+  text-decoration: none; }
+.siimple-btn--disabled {
+  background-color: $siimple-grey-0 !important;
+  color: $siimple-navy !important;
+  cursor: not-allowed !important; }
+.siimple-btn--navy {
+  background-color: $siimple-navy;
+  color: $siimple-white; }
+.siimple-btn--green {
+  background-color: $siimple-green;
+  color: $siimple-white; }
+.siimple-btn--teal {
+  background-color: $siimple-teal;
+  color: $siimple-white; }
+.siimple-btn--blue {
+  background-color: $siimple-blue;
+  color: $siimple-white; }
+.siimple-btn--purple {
+  background-color: $siimple-purple;
+  color: $siimple-white; }
+.siimple-btn--pink {
+  background-color: $siimple-pink;
+  color: $siimple-white; }
+.siimple-btn--red {
+  background-color: $siimple-red;
+  color: $siimple-white; }
+.siimple-btn--orange {
+  background-color: $siimple-orange;
+  color: $siimple-white; }
+.siimple-btn--yellow {
+  background-color: $siimple-yellow;
+  color: $siimple-white; }
+.siimple-btn--grey {
+  background-color: $siimple-grey;
+  color: $siimple-navy; }
+.siimple-btn--white {
+  background-color: $siimple-white;
+  color: $siimple-navy; }
 
 .siimple-checkbox {
   display: inline-block;

@@ -15,5 +15,12 @@ stylesheets.map(href =>
 	requestAnimationFrame(() => loadCSS(href)));
 
 
+const $renderHook = document.getElementById('render-hook');
+
+// Empty div
+while($renderHook.firstChild) {
+	$renderHook.removeChild($renderHook.firstChild);
+}
+
 // Render root component to hook
-render(<RootWrapper />, document.getElementById('render-hook'));
+render(<RootWrapper />, $renderHook);

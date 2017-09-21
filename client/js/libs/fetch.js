@@ -4,6 +4,11 @@ import { listPosts, getPost } from '../queries/posts';
 import { login } from '../queries/users';
 
 
+export class UnauthorizedException extends Error {
+	isUnauthorizedException = true;
+}
+
+
 const graphQLFetch = query => {
 
 	const config = {
@@ -18,8 +23,9 @@ const graphQLFetch = query => {
 	return fetch(API_ENDPOINT, config)
 		.then(resp => resp.json())
 		.then(resp => {
-			if(resp.error)
-				throw new Error(resp.error);
+			if(resp.errors.length) {
+				throw new UnauthorizedException(resp.errors[0].message);
+			}
 			return resp.data;
 		});
 };
@@ -37,5 +43,6 @@ export const fetchPost = pageId =>
 		.then(resp => resp.Post);
 
 
+// Login a user
 export const loginUser = (username, password) =>
 	graphQLFetch(login({ username, password }));

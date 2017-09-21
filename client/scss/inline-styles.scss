@@ -1,4 +1,6 @@
 
+@import 'components/siimple-colors/scss/colors';
+
 html, html body {
 	color: #333;
 	font-size: 16px;
@@ -10,4 +12,149 @@ html, html body {
 	}
 }
 
+.vertical-center {
+	display: flex;
+	align-items: center;
+}
 
+
+$pinkColor: $siimple-pink-3;
+$innerBallSize: 50px;
+$outerBallSize: 50px;
+
+
+@keyframes spinnerInner {
+	0% { transform: scale(1); }
+	50% { transform: scale(0.01); }
+	100% { transform: scale(1); }
+}
+
+.spinner {
+	position: relative;
+
+	&__center {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+	}
+
+	&::after, &::before {
+		content: ' ';
+		position: absolute;
+		left: 50%;
+		top: 50%;
+
+		opacity: .5;
+		border-radius: 50%;
+	}
+
+	&::after {
+		width: $innerBallSize;
+		height: $innerBallSize;
+		margin-left: - $innerBallSize / 2;
+		margin-top: - $innerBallSize / 2;
+
+		background-color: $pinkColor;
+		animation: spinnerInner 1.2s linear infinite;
+	}
+
+	&::before {
+		width: $outerBallSize;
+		height: $outerBallSize;
+		margin-left: - $outerBallSize / 2;
+		margin-top: - $outerBallSize / 2;
+
+		background-color: $pinkColor;
+		animation: spinnerInner 1.2s .6s linear infinite;
+	}
+}
+
+
+
+.siimple-color--navy {
+  color: $siimple-navy; }
+
+.siimple-color--green {
+  color: $siimple-green; }
+
+.siimple-color--teal {
+  color: $siimple-teal; }
+
+.siimple-color--blue {
+  color: $siimple-blue; }
+
+.siimple-color--purple {
+  color: $siimple-purple; }
+
+.siimple-color--pink {
+  color: $siimple-pink; }
+
+.siimple-color--red {
+  color: $siimple-red; }
+
+.siimple-color--orange {
+  color: $siimple-orange; }
+
+.siimple-color--yellow {
+  color: $siimple-yellow; }
+
+.siimple-color--grey {
+  color: $siimple-grey; }
+
+.siimple-color--white {
+  color: $siimple-white; }
+
+.siimple-background--navy, .siimple-bg--navy {
+  background-color: $siimple-navy; }
+
+.siimple-background--green, .siimple-bg--green {
+  background-color: $siimple-green; }
+
+.siimple-background--teal, .siimple-bg--teal {
+  background-color: $siimple-teal; }
+
+.siimple-background--blue, .siimple-bg--blue {
+  background-color: $siimple-blue; }
+
+.siimple-background--purple, .siimple-bg--purple {
+  background-color: $siimple-purple; }
+
+.siimple-background--pink, .siimple-bg--pink {
+  background-color: $siimple-pink; }
+
+.siimple-background--red, .siimple-bg--red {
+  background-color: $siimple-red; }
+
+.siimple-background--orange, .siimple-bg--orange {
+  background-color: $siimple-orange; }
+
+.siimple-background--yellow, .siimple-bg--yellow {
+  background-color: $siimple-yellow; }
+
+.siimple-background--grey, .siimple-bg--grey {
+  background-color: $siimple-grey; }
+
+.siimple-background--white, .siimple-bg--white {
+  background-color: $siimple-white; }
+
+.siimple-btn {
+  display: inline-block;
+  height: 30px;
+  transition: opacity 0.3s;
+  line-height: 30px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 5px;
+  border: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}

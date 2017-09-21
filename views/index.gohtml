@@ -2,7 +2,11 @@
 <html>
 {{template "header.gohtml" .}}
 <body>
-	<div id='render-hook'></div>
+	<div id='render-hook'>
+		<div style='position: relative; height: 60vh;'>
+			<div class='spinner spinner__center'></div>
+		</div>
+	</div>
 
 	{{template "footer.gohtml" .}}
 </body>
