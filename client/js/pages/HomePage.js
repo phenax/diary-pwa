@@ -36,13 +36,13 @@ export default class HomePage extends Component {
 		};
 
 		fetchUserPosts(options)
-			.then(({ posts }) =>
-				this.props.isInfiniteScroll? this.state.posts.concat(posts): posts)              // Infinite scroll
-			.then(posts =>
-				this.setState({ posts, pageNumber: page, isLoggedIn: true, isLoaded: true }))    // Update component state
+			.then(({ Posts }) =>  // Infinite scroll
+				this.props.isInfiniteScroll? this.state.posts.concat(Posts): Posts)
+			.then(posts =>        // Update component state
+				this.setState({ posts, pageNumber: page, isLoggedIn: true, isLoaded: true }))
 			.catch(error => {
 				if(error instanceof UnauthorizedError) {
-					this.setState({ posts: [], isLoggedIn: false, isLoaded: true });
+					this.setState({ isLoggedIn: false, isLoaded: true });
 				}
 			});
 	}

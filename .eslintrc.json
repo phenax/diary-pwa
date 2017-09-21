@@ -29,6 +29,7 @@
         "sourceType": "module"
     },
     "rules": {
+        "react/jsx-uses-vars": [2],
         "strict": 0,
         "no-unused-vars": [ 1, { "varsIgnorePattern": "^h$" } ],
         "indent": [

@@ -1,8 +1,17 @@
 
 import { h } from 'preact';
 
-export default () => (
-	<div>
-		<h3 class='siimple-h3'>404 Page Not Found</h3>
+const styles = {
+	title: {
+		// textAlign: 'center',
+	}
+};
+
+export default ({ message = 'Page Not Found' }) => (
+	<div class='center-wrapper'>
+		<br />
+		<h2 class='siimple-h2' style={styles.title}>
+			{message}
+		</h2>
 	</div>
 );
