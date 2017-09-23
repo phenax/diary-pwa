@@ -78,7 +78,7 @@ input:focus {
 
 @keyframes slideInY {
 	0% {
-		transform: translateY(50px);
+		transform: translateY(40px);
 		opacity: 0;
 	}
 	100% {
@@ -91,5 +91,5 @@ input:focus {
 	transform: translateX(80px);
 	opacity: 0;
 	will-change: opacity, transform;
-	animation: slideInY .3s ease-in-out forwards;
+	animation: slideInY .7s ease-in-out forwards;
 }
