@@ -1,7 +1,8 @@
 
 import { h, Component } from 'preact';
+import { route } from 'preact-router';
 
-import { loginUser, UnauthorizedError } from '../libs/fetch';
+import { loginUser, findUser, UnauthorizedError, NotFoundError } from '../libs/fetch';
 
 import Title from '../components/Title';
 
@@ -33,7 +34,7 @@ export default class LoginPage extends Component {
 
 
 	state = {
-		email: null,
+		user: null,
 		error: null,
 	};
 
@@ -59,27 +60,71 @@ export default class LoginPage extends Component {
 		e.preventDefault();
 
 		const $form = e.currentTarget;
+
+		// TODO: Get a FormData polyfill
 		const data = new FormData($form);
 
 		if(this.isLoginPage) {
-			if(!this.state.email) {
-				// TODO: Make a call to user find
-				this.setState({ email: data.get('email') });
+			if(!this.state.user) {
+				// Find the user with email/username
+				this.findUser(data.get('email'));
 			} else {
-				// TODO: Get a FormData polyfill
-				loginUser(data.get('email'), data.get('password'))
-					.then(data => console.log(data))
-					.catch(e => {
-						if(e instanceof UnauthorizedError) {
-							this.setState({ error: 'Password you entered was incorrect' });
-						}
-					});
+				// Login the user
+				this.authenticate(data.get('email'), data.get('password'));
 			}
 		} else {
+			// TODO: Signup
 			console.log('Signup');
 		}
 
 		return false;
+	}
+
+	findUser(username) {
+		return findUser(username)
+			.then(data => {
+				if(!data.UserPosts || !data.UserPosts.User)
+					throw new NotFoundError();
+				return data.UserPosts.User;
+			})
+			.then(user => this.setState({ user, error: null }))
+			.catch(e => {
+				console.log(e);
+
+				let errorMessage = 'Something went wrong';
+				if(e instanceof NotFoundError) {
+					errorMessage = 'Couldn\'t find your account';
+				}
+
+				this.setState({ error: errorMessage });
+			});
+	}
+
+
+	authenticate(username, password) {
+		return loginUser(username, password)
+			.then(data => {
+				switch(data.Login.Status) {
+					case 200: // Take the user to dashboard
+						return route('/', false);
+					case 400:
+						throw new Error(data.Login.Message);
+					case 401:
+						throw new UnauthorizedError(data.Login.Message, []);
+					default:
+						throw new Error(data.Login.Message);
+				}
+			})
+			.catch(e => {
+				console.log(e);
+
+				let errorMessage = e.message;
+				if(e instanceof UnauthorizedError) {
+					errorMessage = 'Password you entered was incorrect';
+				}
+
+				this.setState({ error: errorMessage || 'Something went wrong' });
+			});
 	}
 
 
@@ -98,7 +143,7 @@ export default class LoginPage extends Component {
 							<div class='flexy-col flexy-col--6 vertical-center'>
 								<div style={{ padding: '1.5em', width: '100%' }}>
 									<form onSubmit={this.onFormSubmit} style={{ display: 'block', width: '100%' }}>
-										{this.isLoginPage? <LoginForm email={this.state.email} ctx={this} />: <SignupForm />}
+										{this.isLoginPage? <LoginForm user={this.state.user} ctx={this} />: <SignupForm />}
 										{this.state.error? <div class='siimple-color--red-1'>{this.state.error}</div>: null}
 									</form>
 								</div>
@@ -112,12 +157,12 @@ export default class LoginPage extends Component {
 }
 
 
-export const LoginForm = ({ email = null, ctx }) => (
+export const LoginForm = ({ user = null, ctx }) => (
 	<div>
 		<Title>Log in to your account</Title>
 
 		<div>
-			<div class='slide-in' style={{ display: (email? 'none': 'block') }}>
+			<div class='slide-in' style={{ display: (user? 'none': 'block') }}>
 				<h4 class='siimple-h4'>
 					Login
 				</h4>
@@ -137,12 +182,19 @@ export const LoginForm = ({ email = null, ctx }) => (
 					</button>
 				</div>
 			</div>
-			<div class='slide-in' style={{ display: (email? 'block': 'none') }}>
+			<div class='slide-in' style={{ display: (user? 'block': 'none') }}>
 				<h4 class='siimple-h4' style={{ textAlign: 'center' }}>
-					<div>{email}</div>
+					<div>{user? (
+						<div>
+							<div>Hi, {user.Name}!</div>
+							<div>
+								<small class='siimple-small' style={{ opacity: '.6' }}>@{user.Username}</small>
+							</div>
+						</div>
+					): null}</div>
 					<div style={{ textAlign: 'right' }}>
 						<button
-							onClick={() => ctx.setState({ email: null })}
+							onClick={() => ctx.setState({ user: null, error: null })}
 							class='siimple-a'
 							style={{ backgroundColor: 'transparent', border: 'none', outline: 'none' }}
 							type='button'>

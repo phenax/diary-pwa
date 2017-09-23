@@ -20,3 +20,19 @@ export const login = variables => ({
 	`
 });
 
+
+export const findUser = ({ username }) => ({
+	variables: { username },
+	query: `
+		query UserFind($username:String) {
+			UserPosts(username:$username) {
+				User {
+					Name
+					Username
+					Email
+				}
+			}
+		}
+	`,
+});
+

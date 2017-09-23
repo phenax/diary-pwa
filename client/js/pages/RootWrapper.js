@@ -1,6 +1,6 @@
 
 import { h } from 'preact';
-import {Promise} from 'es6-promise';
+import { Promise } from 'es6-promise';
 import { Router } from 'preact-router';
 import { Link } from 'preact-router/match';
 import AsyncRoute from 'preact-async-route';
@@ -36,7 +36,12 @@ const asyncComponents = {
 
 
 export const NavLink = ({ children, href }) =>
-	<Link class="siimple-btn siimple-color--grey" activeClassName="siimple-btn--pink" href={href}>{children}</Link>;
+	<Link
+		class="siimple-btn siimple-color--grey"
+		activeClassName="siimple-btn--pink"
+		href={href}>
+		{children}
+	</Link>;
 
 export default ({ withNavbar = true }) => (
 	<div>

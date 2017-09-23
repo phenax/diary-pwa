@@ -1,7 +1,7 @@
 
 import { API_ENDPOINT } from '../config/graphql';
 import { listPosts, getPost, savePost } from '../queries/posts';
-import { login } from '../queries/users';
+import { login, findUser as findUserQuery } from '../queries/users';
 import { Extendable } from '../libs/utils';
 
 
@@ -9,6 +9,18 @@ import { Extendable } from '../libs/utils';
 export class UnauthorizedError extends Extendable(Error) {
 	isUnauthorizedError = true;
 	name = 'UnauthorizedError';
+	errors = [];
+
+	constructor(message, errors) {
+		super(message);
+		if(errors) this.errors = errors;
+	}
+}
+
+// Unauthorized exception
+export class NotFoundError extends Extendable(Error) {
+	isNotFoundError = true;
+	name = 'NotFoundError';
 	errors = [];
 
 	constructor(message, errors) {
@@ -34,8 +46,19 @@ const graphQLFetch = query => {
 		.then(resp => resp.json())
 		.then(resp => {
 			if(resp.errors && resp.errors.length) {
-				throw new UnauthorizedError(resp.errors[0].message, resp.errors);
+				switch(resp.errors[0].message) {
+					case 'Unauthorized':
+						throw new UnauthorizedError(resp.errors[0].message, resp.errors);
+					case 'NotFound':
+						throw new NotFoundError(resp.errors[0].message, resp.errors);
+					default: {
+						const e = new Error(resp.errors[0].message);
+						e.errors = resp.errors;
+						throw e;
+					}
+				}
 			}
+
 			return resp.data;
 		});
 };
@@ -60,3 +83,6 @@ export const loginUser = (username, password) =>
 // Save diary page call
 export const saveDiaryPage = data =>
 	graphQLFetch(savePost(data));
+
+export const findUser = username =>
+	graphQLFetch(findUserQuery({ username }));

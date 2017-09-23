@@ -168,60 +168,80 @@ func init() {
 				Type:         graphql.String,
 				DefaultValue: "",
 			},
+			"username": &graphql.ArgumentConfig{
+				Type:         graphql.String,
+				DefaultValue: "",
+			},
 		},
 		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 			var user UserWithPost
-			var authUser SessionUser
 
 			args := params.Args
 			userSession := libs.GraphQLGetSession(params)
 
-			// User logged in checked
-			if userSession.Values["User"] == nil {
-				return nil, errors.New("Unauthorized")
+			if args["username"] == "" {
+
+				var authUser SessionUser
+
+				// User logged in checked
+				if userSession.Values["User"] == nil {
+					return nil, errors.New("Unauthorized")
+				}
+
+				json.Unmarshal([]byte(userSession.Values["User"].(string)), &authUser)
+
+				Users.Find(&bson.M{"uid": authUser.ID}).One(&user.User)
+
+			} else {
+
+				Users.Find(&bson.M{
+					"$or": []bson.M{
+						{"email": args["username"]},
+						{"username": args["username"]},
+					},
+				}).One(&user.User)
 			}
-
-			json.Unmarshal([]byte(userSession.Values["User"].(string)), &authUser)
-
-			Users.Find(&bson.M{"uid": authUser.ID}).One(&user.User)
 
 			// Session exists but user invalid
 			if user.User.ID == "" {
-				return nil, errors.New("Unauthorized")
+				return nil, errors.New("NotFound")
 			}
 
-			postQuery := Posts.Find(&bson.M{"user_id": user.User.ID})
+			if args["username"] == "" {
 
-			numberOfPages, err := postQuery.Count()
-			if err != nil {
-				return nil, err
-			}
-			user.TotalNumberOfPages = numberOfPages
+				postQuery := Posts.Find(&bson.M{"user_id": user.User.ID})
 
-			start, _ := args["start"].(int)
-			count, _ := args["count"].(int)
-
-			if start >= 0 {
-				postQuery.Skip(start)
-			}
-			if count >= 0 {
-				postQuery.Limit(count)
-			}
-
-			user.IsFirstPage = true
-			if start >= 0 && count >= 0 {
-				user.IsFirstPage = start <= count
-			}
-
-			user.IsLastPage = true
-			if postCount, err := postQuery.Count(); count >= 0 {
+				numberOfPages, err := postQuery.Count()
 				if err != nil {
 					return nil, err
 				}
-				user.IsLastPage = postCount < count
-			}
+				user.TotalNumberOfPages = numberOfPages
 
-			postQuery.All(&user.Posts)
+				start, _ := args["start"].(int)
+				count, _ := args["count"].(int)
+
+				if start >= 0 {
+					postQuery.Skip(start)
+				}
+				if count >= 0 {
+					postQuery.Limit(count)
+				}
+
+				user.IsFirstPage = true
+				if start >= 0 && count >= 0 {
+					user.IsFirstPage = start <= count
+				}
+
+				user.IsLastPage = true
+				if postCount, err := postQuery.Count(); count >= 0 {
+					if err != nil {
+						return nil, err
+					}
+					user.IsLastPage = postCount < count
+				}
+
+				postQuery.All(&user.Posts)
+			}
 
 			return user, nil
 		},
