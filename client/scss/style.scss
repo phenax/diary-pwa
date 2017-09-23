@@ -60,3 +60,36 @@
 	}
 }
 
+.flexy-row {
+	display: flex;
+	flex-direction: row;
+
+	.flexy-col {
+
+		&--6 {
+			width: 50%;
+		}
+	}
+}
+
+input:focus {
+	border-bottom-color: $siimple-accent !important;
+}
+
+@keyframes slideInY {
+	0% {
+		transform: translateY(50px);
+		opacity: 0;
+	}
+	100% {
+		transform: translateY(0);
+		opacity: 1;
+	}
+}
+
+.slide-in {
+	transform: translateX(80px);
+	opacity: 0;
+	will-change: opacity, transform;
+	animation: slideInY .3s ease-in-out forwards;
+}

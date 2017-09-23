@@ -67,7 +67,7 @@ export default class HomePage extends Component {
 								this.state.posts.map(post => (
 									<div>
 										<Link href={`/page/${post.ID}`} style={{ textDecoration: 'none' }}>
-											<Card>
+											<Card isAction={true}>
 												<CardTitle>{post.Title}</CardTitle>
 												<CardContent>{post.Content.slice(0, 100)}{post.Content.length > 100? '...': ''}</CardContent>
 											</Card>

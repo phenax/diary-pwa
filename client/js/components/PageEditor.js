@@ -99,6 +99,7 @@ export default class PageEditor extends Component {
 
 					<br />
 
+
 					<div>
 						<button class='siimple-btn siimple-btn--purple-0' type='submit'>
 							Submit

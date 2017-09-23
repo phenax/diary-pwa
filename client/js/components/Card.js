@@ -13,8 +13,8 @@ const styles = {
 	},
 };
 
-export const Card = ({ children }) => (
-	<div style={styles.cardWrapper} class='card-shadow card-shadow__hover'>
+export const Card = ({ children, isAction = false }) => (
+	<div style={styles.cardWrapper} class={`${isAction? 'card-shadow card-shadow__hover': 'siimple-shadow--1'}`}>
 		<div style={styles.card}>
 			{children}
 		</div>

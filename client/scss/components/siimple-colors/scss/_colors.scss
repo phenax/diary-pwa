@@ -7,14 +7,14 @@
 //
 
 //Navy base color
-$siimple-navy: #57607c;
+$siimple-navy: #151922;
 
 //Navy colors
-$siimple-navy-0: #3f465a;
-$siimple-navy-1: #495169;
-$siimple-navy-2: #57607c;
-$siimple-navy-3: #697496;
-$siimple-navy-4: #8790ab;
+$siimple-navy-0: #000;
+$siimple-navy-1: #111611;
+$siimple-navy-2: #151922;
+$siimple-navy-3: #252932;
+$siimple-navy-4: #454952;
 
 //Green base color
 $siimple-green: #1add9f;
@@ -115,4 +115,12 @@ $siimple-white-1: #ffffff;
 $siimple-white-2: #ffffff;
 $siimple-white-3: #ffffff;
 $siimple-white-4: #ffffff;
+
+
+
+
+
+
+$siimple-primary: $siimple-navy;
+$siimple-accent: $siimple-red;
 

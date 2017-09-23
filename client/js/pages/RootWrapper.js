@@ -22,6 +22,8 @@ const styles = {
 
 
 const asyncComponents = {
+	LoginPage: () => new Promise((resolve) =>
+		require.ensure([], () => resolve(require('./LoginPage').default))),
 	DiaryPage: () => new Promise((resolve) =>
 		require.ensure([], () => resolve(require('./DiaryPage').default))),
 	DiaryEditPage: () => new Promise((resolve) =>
@@ -31,17 +33,30 @@ const asyncComponents = {
 };
 
 
+export const NavLink = ({ children, href }) =>
+	<Link class="siimple-btn siimple-color--grey" activeClassName="siimple-btn--pink" href={href}>{children}</Link>;
+
 export default ({ withNavbar = true }) => (
 	<div>
 		<div style={styles.wrapper}>
 			{withNavbar?
 				<Navbar minHeight={VARS.navbarMinHeight}>
-					<Link class="siimple-btn siimple-color--grey" activeClassName="siimple-btn--pink" href="/">Home</Link>
-					<Link class="siimple-btn siimple-color--grey" activeClassName="siimple-btn--pink" href="/notfound">Not Found</Link>
+					<NavLink href="/">Home</NavLink>
+					<NavLink href="/login">Login</NavLink>
+					<NavLink href="/signup">Signup</NavLink>
+					<NavLink href="/notfound">Not Found</NavLink>
 				</Navbar>:
 				null}
 			<Router>
 				<HomePage path='/' />
+				<AsyncRoute path='/login'
+					getComponent={asyncComponents.LoginPage}
+					loading={LoadingSpinner}
+				/>
+				<AsyncRoute path='/signup'
+					getComponent={asyncComponents.LoginPage}
+					loading={LoadingSpinner}
+				/>
 				<AsyncRoute path='/page/:pageId'
 					getComponent={asyncComponents.DiaryPage}
 					loading={LoadingSpinner}
