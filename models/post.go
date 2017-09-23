@@ -1,6 +1,9 @@
 package models
 
 import (
+	"encoding/json"
+	"errors"
+
 	"github.com/graphql-go/graphql"
 	"github.com/phenax/diary/db"
 	"github.com/phenax/diary/libs"
@@ -106,19 +109,26 @@ func init() {
 	GraphQLCreatePostField = &graphql.Field{
 		Type: GraphQLResponseType,
 		Args: graphql.FieldConfigArgument{
-			"UserID":  &graphql.ArgumentConfig{Type: graphql.String},
 			"Title":   &graphql.ArgumentConfig{Type: graphql.String},
 			"Content": &graphql.ArgumentConfig{Type: graphql.String},
 			"Rating":  &graphql.ArgumentConfig{Type: graphql.Int},
 		},
 		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+			var authUser SessionUser
 			args := params.Args
 
-			libs.Log("POST Posts params", args)
+			userSession := libs.GraphQLGetSession(params)
+
+			// User logged in checked
+			if userSession.Values["User"] == nil {
+				return nil, errors.New("Unauthorized")
+			}
+
+			json.Unmarshal([]byte(userSession.Values["User"].(string)), &authUser)
 
 			post := &Post{
 				ID:      bson.NewObjectId().Hex(),
-				UserID:  libs.Stringify(args["UserID"]),
+				UserID:  authUser.ID,
 				Title:   libs.Stringify(args["Title"]),
 				Content: libs.Stringify(args["Content"]),
 				Rating:  libs.Intify(args["Rating"]),

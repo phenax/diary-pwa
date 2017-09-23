@@ -11,7 +11,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 
 
 const VARS = {
-	navbarMinHeight: '50px',
+	navbarMinHeight: '60px',
 };
 
 const styles = {
@@ -26,6 +26,8 @@ const asyncComponents = {
 		require.ensure([], () => resolve(require('./LoginPage').default))),
 	DiaryPage: () => new Promise((resolve) =>
 		require.ensure([], () => resolve(require('./DiaryPage').default))),
+	DiaryNewPage: () => new Promise((resolve) =>
+		require.ensure([], () => resolve(require('./DiaryNewPage').default))),
 	DiaryEditPage: () => new Promise((resolve) =>
 		require.ensure([], () => resolve(require('./DiaryEditPage').default))),
 	ErrorPage: () => new Promise((resolve) =>
@@ -42,6 +44,7 @@ export default ({ withNavbar = true }) => (
 			{withNavbar?
 				<Navbar minHeight={VARS.navbarMinHeight}>
 					<NavLink href="/">Home</NavLink>
+					<NavLink href="/new">New Page</NavLink>
 					<NavLink href="/login">Login</NavLink>
 					<NavLink href="/signup">Signup</NavLink>
 					<NavLink href="/notfound">Not Found</NavLink>
@@ -59,6 +62,10 @@ export default ({ withNavbar = true }) => (
 				/>
 				<AsyncRoute path='/page/:pageId'
 					getComponent={asyncComponents.DiaryPage}
+					loading={LoadingSpinner}
+				/>
+				<AsyncRoute path='/new'
+					getComponent={asyncComponents.DiaryNewPage}
 					loading={LoadingSpinner}
 				/>
 				<AsyncRoute path='/page/:pageId/edit'

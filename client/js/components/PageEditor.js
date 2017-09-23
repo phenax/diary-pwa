@@ -9,9 +9,9 @@ export default class PageEditor extends Component {
 			padding: '1em 0',
 		},
 		titleField: {
-			fontSize: '2.5em',
+			fontSize: '2em',
 			height: 'auto',
-			padding: '.15em .5em',
+			padding: '.3em .5em',
 			display: 'block',
 			width: '100%',
 		},
@@ -34,6 +34,13 @@ export default class PageEditor extends Component {
 			padding: '.6em',
 			borderRadius: '5px',
 			cursor: 'pointer',
+		},
+
+		submitBtn: {
+			textTransform: 'uppercase',
+			fontSize: '1em',
+			padding: '.3em 1em',
+			height: 'auto',
 		},
 	};
 
@@ -100,9 +107,9 @@ export default class PageEditor extends Component {
 					<br />
 
 
-					<div>
-						<button class='siimple-btn siimple-btn--purple-0' type='submit'>
-							Submit
+					<div style={{ textAlign: 'right' }}>
+						<button class='siimple-btn siimple-btn--navy' type='submit' style={PageEditor.styles.submitBtn}>
+							Post
 						</button>
 					</div>
 				</div>

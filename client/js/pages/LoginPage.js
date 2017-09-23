@@ -3,6 +3,7 @@ import { h, Component } from 'preact';
 
 import { loginUser, UnauthorizedError } from '../libs/fetch';
 
+import Title from '../components/Title';
 
 export default class LoginPage extends Component {
 
@@ -85,6 +86,8 @@ export default class LoginPage extends Component {
 	render() {
 		return (
 			<div class='center-wrapper' style={{ maxWidth: '1000px' }}>
+				<Title>Login/Register</Title>
+
 				<br />
 				<div class='siimple-shadow--1'>
 					<div>
@@ -111,6 +114,8 @@ export default class LoginPage extends Component {
 
 export const LoginForm = ({ email = null, ctx }) => (
 	<div>
+		<Title>Log in to your account</Title>
+
 		<div>
 			<div class='slide-in' style={{ display: (email? 'none': 'block') }}>
 				<h4 class='siimple-h4'>
@@ -167,6 +172,8 @@ export const LoginForm = ({ email = null, ctx }) => (
 
 export const SignupForm = () => (
 	<div class='slide-in'>
+		<Title>Create an account</Title>
+
 		<h4 class='siimple-h4'>
 			Create an account
 		</h4>

@@ -6,6 +6,7 @@ import { fetchUserPosts, UnauthorizedError } from '../libs/fetch';
 
 import { Card, CardTitle, CardContent } from '../components/Card';
 import LoadingSpinner from '../components/LoadingSpinner';
+import Title from '../components/Title';
 
 export default class HomePage extends Component {
 
@@ -58,20 +59,22 @@ export default class HomePage extends Component {
 			if(this.state.isLoggedIn) {
 				$component = (
 					<div>
+						<Title>My Diary</Title>
 						<h2 class='siimple-h2'>
 							<div>My Diary</div>
 						</h2>
-						<div style={{ padding: '1em 0' }}>
+						<div style={{ padding: '1.5em 0' }}>
 							{this.state.posts.length === 0?
 								(<div><em>No posts found</em></div>):
 								this.state.posts.map(post => (
 									<div>
-										<Link href={`/page/${post.ID}`} style={{ textDecoration: 'none' }}>
+										<Link href={`/page/${post.ID}`} style={{ textDecoration: 'none', display: 'block', }}>
 											<Card isAction={true}>
 												<CardTitle>{post.Title}</CardTitle>
 												<CardContent>{post.Content.slice(0, 100)}{post.Content.length > 100? '...': ''}</CardContent>
 											</Card>
 										</Link>
+										<br />
 									</div>
 								))
 							}
@@ -81,6 +84,7 @@ export default class HomePage extends Component {
 			} else {
 				$component = (
 					<div>
+						<Title>You need to login bro</Title>
 						<h2 class='siimple-h2'>
 							Not logged in. Login to continue
 						</h2>
@@ -92,6 +96,7 @@ export default class HomePage extends Component {
 
 		return (
 			<div class='center-wrapper'>
+				<Title>Welcome</Title>
 				<br />
 				{$component}
 			</div>

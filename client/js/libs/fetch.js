@@ -1,6 +1,6 @@
 
 import { API_ENDPOINT } from '../config/graphql';
-import { listPosts, getPost } from '../queries/posts';
+import { listPosts, getPost, savePost } from '../queries/posts';
 import { login } from '../queries/users';
 import { Extendable } from '../libs/utils';
 
@@ -56,3 +56,7 @@ export const fetchPost = pageId =>
 // Login a user
 export const loginUser = (username, password) =>
 	graphQLFetch(login({ username, password }));
+
+// Save diary page call
+export const saveDiaryPage = data =>
+	graphQLFetch(savePost(data));
