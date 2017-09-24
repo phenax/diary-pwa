@@ -18,7 +18,7 @@ html, html body {
 }
 
 
-$pinkColor: $siimple-pink-3;
+$spinnerColor: $siimple-purple-0;
 $innerBallSize: 50px;
 $outerBallSize: 50px;
 
@@ -65,7 +65,7 @@ $outerBallSize: 50px;
 		margin-left: - $innerBallSize / 2;
 		margin-top: - $innerBallSize / 2;
 
-		background-color: $pinkColor;
+		background-color: $spinnerColor;
 		animation: spinnerInner 1.2s linear infinite;
 	}
 
@@ -75,11 +75,33 @@ $outerBallSize: 50px;
 		margin-left: - $outerBallSize / 2;
 		margin-top: - $outerBallSize / 2;
 
-		background-color: $pinkColor;
+		background-color: $spinnerColor;
 		animation: spinnerInner 1.2s .6s linear infinite;
 	}
 }
 
+
+.siimple-btn {
+  display: inline-block;
+  height: 30px;
+  transition: opacity 0.3s;
+  line-height: 30px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 5px;
+  border: none;
+  color: inherit;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
 
 
 .siimple-color--navy {
@@ -134,7 +156,7 @@ $outerBallSize: 50px;
   background-color: $siimple-pink; }
 
 .siimple-background--red, .siimple-bg--red {
-  background-color: $siimple-red; }
+  background-color: $siimple-red-0; }
 
 .siimple-background--orange, .siimple-bg--orange {
   background-color: $siimple-orange; }
@@ -148,27 +170,17 @@ $outerBallSize: 50px;
 .siimple-background--white, .siimple-bg--white {
   background-color: $siimple-white; }
 
-.siimple-btn {
-  display: inline-block;
-  height: 30px;
-  transition: opacity 0.3s;
-  line-height: 30px;
-  text-align: center;
-  text-decoration: none;
-  cursor: pointer;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 14px;
-  font-weight: bold;
-  padding-left: 10px;
-  padding-right: 10px;
-  border-radius: 5px;
-  border: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
+
+
+.siimple-btn--accent {
+	background-color: $siimple-accent;
+	color: $siimple-white;
 }
 
+.siimple-btn--primary {
+	background-color: $siimple-navy;
+	color: $siimple-white;
+}
 
 .center-wrapper {
 	max-width: 900px;

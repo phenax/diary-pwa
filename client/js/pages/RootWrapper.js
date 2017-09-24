@@ -8,6 +8,7 @@ import AsyncRoute from 'preact-async-route';
 import HomePage from './HomePage';
 import { Navbar } from '../components/Navbar';
 import LoadingSpinner from '../components/LoadingSpinner';
+import Flash from '../components/Flash';
 
 
 const VARS = {
@@ -37,8 +38,8 @@ const asyncComponents = {
 
 export const NavLink = ({ children, href }) =>
 	<Link
-		class="siimple-btn siimple-color--grey"
-		activeClassName="siimple-btn--pink"
+		class="siimple-btn"
+		activeClassName="siimple-color--purple"
 		href={href}>
 		{children}
 	</Link>;
@@ -46,9 +47,9 @@ export const NavLink = ({ children, href }) =>
 export default ({ withNavbar = true }) => (
 	<div>
 		<div style={styles.wrapper}>
+			<Flash default />
 			{withNavbar?
 				<Navbar minHeight={VARS.navbarMinHeight}>
-					<NavLink href="/">Home</NavLink>
 					<NavLink href="/new">New Page</NavLink>
 					<NavLink href="/login">Login</NavLink>
 					<NavLink href="/signup">Signup</NavLink>

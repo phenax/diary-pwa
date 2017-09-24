@@ -2,7 +2,6 @@ package models
 
 import (
 	"encoding/json"
-	"errors"
 
 	"github.com/graphql-go/graphql"
 	"github.com/phenax/diary/db"
@@ -121,7 +120,7 @@ func init() {
 
 			// User logged in checked
 			if userSession.Values["User"] == nil {
-				return nil, errors.New("Unauthorized")
+				return NewResponse(401, "Unauthorized"), nil
 			}
 
 			json.Unmarshal([]byte(userSession.Values["User"].(string)), &authUser)

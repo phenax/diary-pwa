@@ -2,10 +2,11 @@
 import { h, Component } from 'preact';
 import { route } from 'preact-router';
 
-import { saveDiaryPage } from '../libs/fetch';
+import { saveDiaryPage, UnauthorizedError } from '../libs/fetch';
 
 import PageEditor from '../components/PageEditor';
 import Title from '../components/Title';
+import Flash from '../components/Flash';
 
 export default class DiaryNewPage extends Component {
 
@@ -26,14 +27,27 @@ export default class DiaryNewPage extends Component {
 
 		saveDiaryPage(data)
 			.then(resp => resp.NewPost)
-			.then(resp => {
-				if(resp.Status == 200) {
-					// TODO: Add some kind of flash to notify user that its saved
-					route('/', false);
-				} else {
-					// TODO: HAndle this more elegantly
-					alert(resp.Message);
+			.then(data => {
+				switch(data.Status) {
+					case 200: // Take the user to dashboard // TODO: Add some kind of flash to notify user that its saved
+						return route('/', false);
+					case 400:
+						throw new Error(data.Message);
+					case 401:
+						throw new UnauthorizedError(data.Message, []);
+					default:
+						throw new Error(data.Message);
 				}
+			})
+			.catch(e => {
+
+				let errorMessage = 'Something went wrong';
+
+				if(e instanceof UnauthorizedError) {
+					errorMessage = 'You are not logged in. Please log in to continue.';
+				}
+
+				Flash.setFlash(errorMessage, 'red', 'white');
 			});
 
 		return false;

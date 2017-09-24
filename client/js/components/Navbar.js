@@ -1,5 +1,6 @@
 
 import { h, Component } from 'preact';
+import { Link } from 'preact-router/match';
 import assign from 'object-assign';
 
 
@@ -42,10 +43,12 @@ export class Navbar extends Component {
 			<div style={Navbar.styles.navbarWrapper}>
 				<div class='vertical-center siimple-bg--navy siimple-shadow--2' style={navbarStyles}>
 					<div style={Navbar.styles.navbar_logo}>
-						<span class='siimple-color--pink' style={{ fontWeight: 'bold' }}>A</span><span>Diary</span>
+						<Link href='/' style={{ color: 'inherit', textDecoration: 'none' }}>
+							<span class='siimple-color--purple' style={{ fontWeight: 'bold' }}>A</span><span>Diary</span>
+						</Link>
 					</div>
 
-					<div style={Navbar.styles.navbar_links}>
+					<div style={Navbar.styles.navbar_links} class='siimple-color--grey'>
 						{this.props.children}
 					</div>
 				</div>

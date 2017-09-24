@@ -177,7 +177,7 @@ export const LoginForm = ({ user = null, ctx }) => (
 					/>
 				</div>
 				<div style={{ padding: '1em 0' }}>
-					<button class='siimple-btn siimple-btn--navy' type='submit' style={{ display: 'block', width: '100%' }}>
+					<button class='siimple-btn siimple-btn--primary' type='submit' style={{ display: 'block', width: '100%' }}>
 						Continue
 					</button>
 				</div>
@@ -213,7 +213,7 @@ export const LoginForm = ({ user = null, ctx }) => (
 					/>
 				</div>
 				<div style={{ padding: '1em 0' }}>
-					<button class='siimple-btn siimple-btn--navy' type='submit' style={{ display: 'block', width: '100%' }}>
+					<button class='siimple-btn siimple-btn--primary' type='submit' style={{ display: 'block', width: '100%' }}>
 						Login
 					</button>
 				</div>
@@ -276,7 +276,7 @@ export const SignupForm = () => (
 
 
 		<div style={{ padding: '1em 0' }}>
-			<button class='siimple-btn siimple-btn--navy' type='submit' style={{ display: 'block', width: '100%' }}>
+			<button class='siimple-btn siimple-btn--primary' type='submit' style={{ display: 'block', width: '100%' }}>
 				Login
 			</button>
 		</div>
