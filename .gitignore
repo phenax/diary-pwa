@@ -5,7 +5,7 @@ public/css
 
 /vendor/*/
 
-diary
+diary-pwa
 
 config/db.prod.go
 

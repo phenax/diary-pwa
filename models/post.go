@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 
 	"github.com/graphql-go/graphql"
-	"github.com/phenax/diary/db"
-	"github.com/phenax/diary/libs"
+	"github.com/phenax/diary-pwa/db"
+	"github.com/phenax/diary-pwa/libs"
 	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
 )

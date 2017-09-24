@@ -1,10 +1,10 @@
 {
-  "name": "diary",
+  "name": "diary-pwa",
   "version": "0.0.0",
   "description": "Diary web app",
   "main": "_",
   "scripts": {
-    "start": "npm run build && ./diary",
+    "start": "npm run build && ./diary-pwa",
     "build": "go build",
     "build:js": "webpack -p",
     "watch": "fresh",
@@ -13,10 +13,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "__"
+    "url": "https://github.com/phenax/diary-pwa"
   },
   "keywords": [
-    "__"
+    "diary",
+    "diary-pwa"
   ],
   "author": "Akshay Nair <phenax5@gmail.com>",
   "license": "Apache-2.0",

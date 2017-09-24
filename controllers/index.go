@@ -7,8 +7,8 @@ import (
 	// "reflect"
 
 	// "labix.org/v2/mgo/bson"
-	"github.com/phenax/diary/libs"
-	"github.com/phenax/diary/models"
+	"github.com/phenax/diary-pwa/libs"
+	"github.com/phenax/diary-pwa/models"
 	// "github.com/gorilla/mux"
 )
 

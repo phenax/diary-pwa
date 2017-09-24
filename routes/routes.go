@@ -4,8 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	ctrlr "github.com/phenax/diary/controllers"
-	libs "github.com/phenax/diary/libs"
+	ctrlr "github.com/phenax/diary-pwa/controllers"
+	libs "github.com/phenax/diary-pwa/libs"
 )
 
 // Initialize the routes

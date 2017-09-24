@@ -11,7 +11,7 @@ import (
 	"github.com/gorilla/mux"
 	graphQLHandler "github.com/graphql-go/handler"
 
-	"github.com/phenax/diary/models"
+	"github.com/phenax/diary-pwa/models"
 )
 
 //

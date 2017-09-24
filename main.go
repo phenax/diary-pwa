@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"os"
 
-	_ "github.com/phenax/diary/routes"
+	_ "github.com/phenax/diary-pwa/routes"
 )
 
 const (

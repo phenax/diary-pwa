@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
-	libs "github.com/phenax/diary/libs"
+	libs "github.com/phenax/diary-pwa/libs"
 )
 
 // Compiled templates go here
