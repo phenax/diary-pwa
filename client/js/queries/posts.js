@@ -42,6 +42,7 @@ export const getPost = (pageId = -1) => ({
 	query: `
 		query Posts($pageId: String) {
 			Post(pageId: $pageId) {
+				ID
 				Title
 				Content
 				Rating

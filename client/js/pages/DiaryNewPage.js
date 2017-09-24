@@ -3,6 +3,7 @@ import { h, Component } from 'preact';
 import { route } from 'preact-router';
 
 import { saveDiaryPage, UnauthorizedError } from '../libs/fetch';
+import { savePage } from '../libs/db';
 
 import PageEditor from '../components/PageEditor';
 import Title from '../components/Title';
@@ -30,6 +31,7 @@ export default class DiaryNewPage extends Component {
 			.then(data => {
 				switch(data.Status) {
 					case 200: // Take the user to dashboard // TODO: Add some kind of flash to notify user that its saved
+						// TODO: Send ID and save(savePage(post))
 						return route('/', false);
 					case 400:
 						throw new Error(data.Message);

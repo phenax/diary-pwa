@@ -1,11 +1,14 @@
 
 import { h, Component } from 'preact';
-import { fetchPost } from '../libs/fetch';
 import { Link } from 'preact-router/match';
+
+import { savePage } from '../libs/db';
+import { fetchPost, UnauthorizedError, NotFoundError } from '../libs/fetch';
 
 import LoadingSpinner from '../components/LoadingSpinner';
 import DiaryPost from '../components/DiaryPost';
 import Title from '../components/Title';
+import Flash from '../components/Flash';
 
 export default class DiaryPage extends Component {
 
@@ -21,11 +24,18 @@ export default class DiaryPage extends Component {
 
 	_fetchPost(postId) {
 		fetchPost(postId)
-			.then(post =>
-				post?
-					this.setState({ post, isNotFound: false }):
-					this.setState({ isNotFound: true })
-			);
+			.then(post => {
+				this.setState({ post, isNotFound: false });
+				savePage(post);
+			})
+			.catch(e => {
+				console.log(e);
+				if(e instanceof NotFoundError) {
+					this.setState({ isNotFound: true });
+				} else if(e instanceof UnauthorizedError) {
+					Flash.setFlash('You are not logged in. Log in to continue.', 'red');
+				}
+			});
 	}
 
 
@@ -38,7 +48,9 @@ export default class DiaryPage extends Component {
 
 						if(this.state.isNotFound) {   // Page not found error
 							return (
-								<div>Not found soory bruh</div>
+								<div>
+									<h2 class='siimple-h2'>Page not found</h2>
+								</div>
 							);
 						} else if(this.state.post) {  // The post has been loaded
 							return (

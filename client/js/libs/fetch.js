@@ -73,7 +73,12 @@ export const fetchUserPosts = vars =>
 // Get single post(passing the id)
 export const fetchPost = pageId =>
 	graphQLFetch(getPost(pageId))
-		.then(resp => resp.Post);
+		.then(resp => resp.Post)
+		.then(post => {
+			if(!post)
+				throw new NotFoundError('Post not found');
+			return post;
+		});
 
 
 // Login a user

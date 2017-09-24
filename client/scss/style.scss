@@ -93,3 +93,26 @@ input:focus {
 	will-change: opacity, transform;
 	animation: slideInY .7s ease-in-out forwards;
 }
+
+.markdown-content {
+
+	$extendProps: (
+		('h1', 'h1'),
+		('h2', 'h2'),
+		('h3', 'h3'),
+		('h4', 'h4'),
+		('h5', 'h5'),
+		('h6', 'h6'),
+		('p', 'p'),
+		('strong', 'label'),
+		('b', 'label'),
+		('i', 'em'),
+		('em', 'em'),
+		('a', 'a'),
+		('pre', 'pre'),
+	);
+
+	@each $elem in $extendProps {
+		#{nth($elem, 1)} { @extend .siimple-#{nth($elem, 2)}; }
+	}
+}

@@ -44,11 +44,7 @@ export default class PageEditor extends Component {
 		},
 	};
 
-	state = {
-
-	};
-
-	ratings = [
+	RATINGS = [
 		{ value: 1, icon: '☹' },
 		{ value: 2, icon: '😐' },
 		{ value: 3, icon: '😊' },
@@ -57,6 +53,33 @@ export default class PageEditor extends Component {
 
 	constructor(props) {
 		super(props);
+
+		this.isEditMode = !!this.props.page;
+	}
+
+	componentDidMount() {
+		
+		if(this.isEditMode) {
+
+			// Set the values to the input fields
+			Object.keys(this.props.page).map(propName => {
+
+				const $inputs =
+					Array.from(this.base.querySelectorAll(`[name="${propName}"]`));
+
+				if($inputs.length) {
+					if($inputs[0].type === 'radio' || $inputs[0].type === 'checkbox') {
+						$inputs
+							.map($el => { $el.checked = false; return $el; })
+							.filter($el => $el.value == this.props.page[propName])
+							.forEach($el => $el.checked = 'checked');
+					} else {
+						$inputs
+							.forEach($el => $el.value = this.props.page[propName]);
+					}
+				}
+			});
+		}
 	}
 
 	render() {
@@ -87,7 +110,7 @@ export default class PageEditor extends Component {
 
 					<div class='siimple-grid'>
 						<div class='siimple-grid-row'>
-							{this.ratings.map(rating => (
+							{this.RATINGS.map(rating => (
 								<div class="siimple-grid-col siimple-grid-col--3">
 									<label class='megacheckbox' style={PageEditor.styles.ratingLabel}>
 										<input
