@@ -3,6 +3,8 @@ node_modules
 public/js
 public/css
 
+/vendor/*/
+
 diary
 
 config/db.prod.go

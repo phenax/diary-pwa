@@ -1,22 +1,23 @@
 package db
 
-// import (
-// "labix.org/v2/mgo"
-// "time"
-// );
+import (
+	"time"
 
-// // Uncomment this function for adding production config
-// func GetProdConfig() (*mgo.DialInfo) {
+	"labix.org/v2/mgo"
+)
 
-// 	return &mgo.DialInfo{
+// Rename the function and remove _
+func GetProdConfig_() *mgo.DialInfo {
 
-// 		Addrs: []string{ "localhost" },
+	return &mgo.DialInfo{
 
-// 		Timeout:  60 * time.Second,
+		Addrs: []string{"localhost"},
 
-// 		Database: "diary",
+		Timeout: 60 * time.Second,
 
-// 		Username: "",
-// 		Password: "",
-// 	};
-// }
+		Database: "diary",
+
+		Username: "",
+		Password: "",
+	}
+}

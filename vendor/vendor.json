@@ -1,0 +1,128 @@
+{
+	"comment": "",
+	"heroku": {
+		"goVersion": "go1.8",
+		"install": [
+			"."
+		],
+		"sync": false
+	},
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "g/V4qrXjUGG9B+e3hB+4NAYJ5Gs=",
+			"path": "github.com/gorilla/context",
+			"revision": "08b5f424b9271eedf6f9f0ce86cb9396ed337a42",
+			"revisionTime": "2016-08-17T18:46:32Z"
+		},
+		{
+			"checksumSHA1": "zmCk+lgIeiOf0Ng9aFP9aFy8ksE=",
+			"path": "github.com/gorilla/mux",
+			"revision": "599cba5e7b6137d46ddf58fb1765f5d928e69604",
+			"revisionTime": "2017-02-28T22:43:54Z"
+		},
+		{
+			"checksumSHA1": "ucTBCc7dDRKLGPsYfAzu/Gq63qA=",
+			"path": "github.com/gorilla/securecookie",
+			"revision": "e59506cc896acb7f7bf732d4fdf5e25f7ccd8983",
+			"revisionTime": "2017-02-24T19:38:04Z"
+		},
+		{
+			"checksumSHA1": "dxwmtflRNX8Q+gtB5EchmMwFnpQ=",
+			"path": "github.com/gorilla/sessions",
+			"revision": "b61c93cb7f67533c8bfbb5ea450efc07e5833c5e",
+			"revisionTime": "2017-08-02T14:17:18Z"
+		},
+		{
+			"checksumSHA1": "mgmbzURcA6Bit+VRdxOJMkM+gnw=",
+			"path": "github.com/graphql-go/graphql",
+			"revision": "4b17eb6eeba3fa46746944ea8c02f4b3758cc68f",
+			"revisionTime": "2017-09-14T02:26:12Z"
+		},
+		{
+			"checksumSHA1": "/g29kXS7NodmiYAPKeIyEXYYI+g=",
+			"path": "github.com/graphql-go/graphql/gqlerrors",
+			"revision": "4b17eb6eeba3fa46746944ea8c02f4b3758cc68f",
+			"revisionTime": "2017-09-14T02:26:12Z"
+		},
+		{
+			"checksumSHA1": "t2SAPiaZ29ocFRyAPwV17OTccLE=",
+			"path": "github.com/graphql-go/graphql/language/ast",
+			"revision": "4b17eb6eeba3fa46746944ea8c02f4b3758cc68f",
+			"revisionTime": "2017-09-14T02:26:12Z"
+		},
+		{
+			"checksumSHA1": "FNFpZJ07U5Ud3MCc25ast14qVbo=",
+			"path": "github.com/graphql-go/graphql/language/kinds",
+			"revision": "4b17eb6eeba3fa46746944ea8c02f4b3758cc68f",
+			"revisionTime": "2017-09-14T02:26:12Z"
+		},
+		{
+			"checksumSHA1": "8prb7ZKM8a07/nduiBn9bjby6GI=",
+			"path": "github.com/graphql-go/graphql/language/lexer",
+			"revision": "4b17eb6eeba3fa46746944ea8c02f4b3758cc68f",
+			"revisionTime": "2017-09-14T02:26:12Z"
+		},
+		{
+			"checksumSHA1": "yskrC6tG5BTJdIk4GKHzGTenQOc=",
+			"path": "github.com/graphql-go/graphql/language/location",
+			"revision": "4b17eb6eeba3fa46746944ea8c02f4b3758cc68f",
+			"revisionTime": "2017-09-14T02:26:12Z"
+		},
+		{
+			"checksumSHA1": "eOtYOcF6kb2TeM8jRwbxbeJdT6E=",
+			"path": "github.com/graphql-go/graphql/language/parser",
+			"revision": "4b17eb6eeba3fa46746944ea8c02f4b3758cc68f",
+			"revisionTime": "2017-09-14T02:26:12Z"
+		},
+		{
+			"checksumSHA1": "vvZgiJe8nZ6r++mAFcgXw1O1+nE=",
+			"path": "github.com/graphql-go/graphql/language/printer",
+			"revision": "4b17eb6eeba3fa46746944ea8c02f4b3758cc68f",
+			"revisionTime": "2017-09-14T02:26:12Z"
+		},
+		{
+			"checksumSHA1": "dRrl/Ky/0NTYA3bZznpxp4tG5Jc=",
+			"path": "github.com/graphql-go/graphql/language/source",
+			"revision": "4b17eb6eeba3fa46746944ea8c02f4b3758cc68f",
+			"revisionTime": "2017-09-14T02:26:12Z"
+		},
+		{
+			"checksumSHA1": "f62XVj7So29WO/HJC6znxHbbeTs=",
+			"path": "github.com/graphql-go/graphql/language/typeInfo",
+			"revision": "4b17eb6eeba3fa46746944ea8c02f4b3758cc68f",
+			"revisionTime": "2017-09-14T02:26:12Z"
+		},
+		{
+			"checksumSHA1": "qeUIi6ohnCSBjL7lbvqPcc+L0Ig=",
+			"path": "github.com/graphql-go/graphql/language/visitor",
+			"revision": "4b17eb6eeba3fa46746944ea8c02f4b3758cc68f",
+			"revisionTime": "2017-09-14T02:26:12Z"
+		},
+		{
+			"checksumSHA1": "R79JlGbBBuQElDWJXRUM2poTQRQ=",
+			"path": "github.com/graphql-go/handler",
+			"revision": "fb144b8b1e2e8ad591a72a481c3042212a5ddc2e",
+			"revisionTime": "2017-09-12T01:33:33Z"
+		},
+		{
+			"checksumSHA1": "tlQInNkqcoSbRydjohND/xm8Ycc=",
+			"path": "labix.org/v2/mgo",
+			"revision": "be6a0f3e60172c5a3e35ff9e7cd407b3bf357fe5",
+			"revisionTime": "2017-09-24T10:30:10Z"
+		},
+		{
+			"checksumSHA1": "aM4ZlRetn5gV4qipnYoAYWKbh+4=",
+			"path": "labix.org/v2/mgo/bson",
+			"revision": "be6a0f3e60172c5a3e35ff9e7cd407b3bf357fe5",
+			"revisionTime": "2017-09-24T10:30:10Z"
+		},
+		{
+			"checksumSHA1": "V91qtyqtqyP1B9uKNJSn/8iArTc=",
+			"path": "labix.org/v2/mgo/sasl",
+			"revision": "be6a0f3e60172c5a3e35ff9e7cd407b3bf357fe5",
+			"revisionTime": "2017-09-24T10:30:10Z"
+		}
+	],
+	"rootPath": "github.com/phenax/diary"
+}

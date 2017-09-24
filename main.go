@@ -3,21 +3,32 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	_ "github.com/phenax/diary/routes"
 )
 
 const (
-	// HOST The Host for the server
-	HOST = ""
-	// PORT The server port to listen to
-	PORT = "8080"
+	// DefaultHost The Host for the server
+	DefaultHost = ""
+	// DefaultPort The server port to listen to
+	DefaultPort = "8080"
 )
 
 func main() {
 
-	fmt.Println("Server has started on " + HOST + ":" + PORT)
+	port := os.Getenv("PORT")
+	host := os.Getenv("HOST")
+
+	if port == "" {
+		port = DefaultPort
+	}
+	if host == "" {
+		host = DefaultHost
+	}
+
+	fmt.Println("Server has started on " + host + ":" + port)
 
 	// Start the server
-	http.ListenAndServe(HOST+":"+PORT, nil)
+	http.ListenAndServe(host+":"+port, nil)
 }

@@ -1,6 +1,7 @@
 package db
 
 import (
+	"os"
 	"time"
 
 	"labix.org/v2/mgo"
@@ -50,7 +51,7 @@ func GetConnection(prods ...bool) (*mgo.Session, error) {
 
 	// Production connection
 	if prod {
-		config = nil // GetProdConfig();
+		config = GetProdConfig()
 	} else {
 		config = GetConfig()
 	}
@@ -72,20 +73,13 @@ func GetConnection(prods ...bool) (*mgo.Session, error) {
 //
 // GetDB - Get the database instance
 //
-// params
-// -- prods {bool} Optional parameter
-//
 // returns
 // -- {*mgo.Database} Database instance
 // -- {error}
 //
-func GetDB(prods ...bool) (*mgo.Database, error) {
+func GetDB() (*mgo.Database, error) {
 
-	prod := false
-
-	if len(prods) > 0 {
-		prod = prods[0]
-	}
+	prod := os.Getenv("ENV") == "production"
 
 	// Get db connection
 	conn, err := GetConnection(prod)
