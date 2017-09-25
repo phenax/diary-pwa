@@ -25,7 +25,7 @@ type Post struct {
 // PostWithUser type (post with the user)
 type PostWithUser struct {
 	Post,
-	Users []User `bson:"Users"`
+	User User `bson:"Users"`
 }
 
 //
@@ -82,25 +82,31 @@ func init() {
 			},
 		},
 		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+			var authUser SessionUser
 			var post Post
 			args := params.Args
 
+			userSession := libs.GraphQLGetSession(params)
+			// User logged in checked
+			if userSession.Values["User"] == nil {
+				return nil, error("Unauthorized")
+			}
+
+			json.Unmarshal([]byte(userSession.Values["User"].(string)), &authUser)
+
 			query := Posts.Find(&bson.M{
 				"pid": args["pageId"],
-				// "user_id":                // TODO: Add check for user post after auth
+				"user_id": authUser.ID,
 			})
 
 			if n, err := query.Count(); n == 0 {
-
 				if err != nil {
 					return nil, err
 				}
-
 				return nil, nil
 			}
 
 			query.One(&post)
-
 			return post, nil
 		},
 	}
