@@ -114,6 +114,7 @@ func init() {
 	GraphQLCreatePostField = &graphql.Field{
 		Type: GraphQLResponseType,
 		Args: graphql.FieldConfigArgument{
+			"ID":   &graphql.ArgumentConfig{Type: graphql.String},
 			"Title":   &graphql.ArgumentConfig{Type: graphql.String},
 			"Content": &graphql.ArgumentConfig{Type: graphql.String},
 			"Rating":  &graphql.ArgumentConfig{Type: graphql.Int},
@@ -124,6 +125,9 @@ func init() {
 
 			userSession := libs.GraphQLGetSession(params)
 
+			postId := args["ID"].(string)
+			isUpdateQuery := updatePostId != ""
+
 			// User logged in checked
 			if userSession.Values["User"] == nil {
 				return NewResponse(401, "Unauthorized"), nil
@@ -131,8 +135,12 @@ func init() {
 
 			json.Unmarshal([]byte(userSession.Values["User"].(string)), &authUser)
 
+			if !isUpdateQuery {
+				postId = bson.NewObjectId().Hex()
+			}
+
 			post := &Post{
-				ID:      bson.NewObjectId().Hex(),
+				ID:      postId,
 				UserID:  authUser.ID,
 				Title:   libs.Stringify(args["Title"]),
 				Content: libs.Stringify(args["Content"]),
@@ -145,7 +153,13 @@ func init() {
 				return NewResponse(400, validation["Message"]), nil
 			}
 
-			err := Posts.Insert(post)
+			var err error
+
+			if isUpdateQuery {
+				err := Posts.Update(&bson.M{ "pid": postId }, post)
+			} else {
+				err := Posts.Insert(post)
+			}
 
 			if err != nil {
 				return NewResponse(500, "Something went wrong"), nil
