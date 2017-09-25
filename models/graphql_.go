@@ -31,8 +31,7 @@ func GetGraphQLSchema() *graphql.Schema {
 
 			// Post  queries
 			"Post":    GraphQLPostField,
-			"NewPost": GraphQLCreatePostField,
-			// "UpdatePost": null,
+			"SavePost": GraphQLSavePostField,
 		}
 
 		rootQuery := graphql.ObjectConfig{Name: "RootQuery", Fields: fields}

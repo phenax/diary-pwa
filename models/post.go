@@ -67,9 +67,9 @@ var GraphQLPost = graphql.NewObject(graphql.ObjectConfig{
 var GraphQLPostField *graphql.Field
 
 //
-// GraphQLCreatePostField - GraphQL Field information for post
+// GraphQLSavePostField - GraphQL Field information for post
 //
-var GraphQLCreatePostField *graphql.Field
+var GraphQLSavePostField *graphql.Field
 
 func init() {
 
@@ -111,7 +111,7 @@ func init() {
 		},
 	}
 
-	GraphQLCreatePostField = &graphql.Field{
+	GraphQLSavePostField = &graphql.Field{
 		Type: GraphQLResponseType,
 		Args: graphql.FieldConfigArgument{
 			"ID":   &graphql.ArgumentConfig{Type: graphql.String},
