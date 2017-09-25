@@ -5,6 +5,8 @@ import { Router } from 'preact-router';
 import { Link } from 'preact-router/match';
 import AsyncRoute from 'preact-async-route';
 
+import { findUser } from '../libs/fetch';
+
 import HomePage from './HomePage';
 import { Navbar } from '../components/Navbar';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -44,45 +46,67 @@ export const NavLink = ({ children, href }) =>
 		{children}
 	</Link>;
 
-export default ({ withNavbar = true }) => (
-	<div>
-		<div style={styles.wrapper}>
-			<Flash default />
-			{withNavbar?
-				<Navbar minHeight={VARS.navbarMinHeight}>
-					<NavLink href="/new">New Page</NavLink>
-					<NavLink href="/login">Login</NavLink>
-					<NavLink href="/signup">Signup</NavLink>
-					<NavLink href="/notfound">Not Found</NavLink>
-				</Navbar>:
-				null}
-			<Router>
-				<HomePage path='/' />
-				<AsyncRoute path='/login'
-					getComponent={asyncComponents.LoginPage}
-					loading={LoadingSpinner}
-				/>
-				<AsyncRoute path='/signup'
-					getComponent={asyncComponents.LoginPage}
-					loading={LoadingSpinner}
-				/>
-				<AsyncRoute path='/page/:pageId'
-					getComponent={asyncComponents.DiaryPage}
-					loading={LoadingSpinner}
-				/>
-				<AsyncRoute path='/new'
-					getComponent={asyncComponents.DiaryNewPage}
-					loading={LoadingSpinner}
-				/>
-				<AsyncRoute path='/page/:pageId/edit'
-					getComponent={asyncComponents.DiaryEditPage}
-					loading={LoadingSpinner}
-				/>
-				<AsyncRoute default
-					getComponent={asyncComponents.ErrorPage}
-					loading={LoadingSpinner}
-				/>
-			</Router>
-		</div>
-	</div>
-);
+export default RootWrapper extends Component {
+
+	state = {
+		user: null,
+	};
+
+	constructor(props) {
+		super(props);
+
+		this.withNavbar = (typeof this.props.withNavbar !== 'undefined')? this.props.withNavbar: true;
+	}
+
+	componentDidMount() {
+		findUser({})
+			.then(resp => console.log(resp))
+			.then(user => this.setState({ user }));
+	}
+
+	render() {
+		console.log(this.state.user);
+		return (
+			<div>
+				<div style={styles.wrapper}>
+					<Flash default />
+					{this.withNavbar?
+						<Navbar minHeight={VARS.navbarMinHeight}>
+							<NavLink href="/new">New Page</NavLink>
+							<NavLink href="/login">Login</NavLink>
+							<NavLink href="/signup">Signup</NavLink>
+							<NavLink href="/notfound">Not Found</NavLink>
+						</Navbar>:
+						null}
+					<Router>
+						<HomePage path='/' />
+						<AsyncRoute path='/login'
+							getComponent={asyncComponents.LoginPage}
+							loading={LoadingSpinner}
+						/>
+						<AsyncRoute path='/signup'
+							getComponent={asyncComponents.LoginPage}
+							loading={LoadingSpinner}
+						/>
+						<AsyncRoute path='/page/:pageId'
+							getComponent={asyncComponents.DiaryPage}
+							loading={LoadingSpinner}
+						/>
+						<AsyncRoute path='/new'
+							getComponent={asyncComponents.DiaryNewPage}
+							loading={LoadingSpinner}
+						/>
+						<AsyncRoute path='/page/:pageId/edit'
+							getComponent={asyncComponents.DiaryEditPage}
+							loading={LoadingSpinner}
+						/>
+						<AsyncRoute default
+							getComponent={asyncComponents.ErrorPage}
+							loading={LoadingSpinner}
+						/>
+					</Router>
+				</div>
+			</div>
+		);
+	}
+}
