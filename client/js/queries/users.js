@@ -24,12 +24,15 @@ export const login = variables => ({
 export const findUser = ({ username }) => ({
 	variables: { username },
 	query: `
-		query UserFind($username:String) {
-			UserPosts(username:$username) {
+		query UserFind${username? '($username:String)': ''} {
+			UserPosts${username? '(username:$username)': ''} {
 				User {
 					Name
 					Username
 					Email
+					${!username? `
+						ID
+					`: ''}
 				}
 			}
 		}
