@@ -3,7 +3,7 @@
 export const login = variables => ({
 	variables,
 	query: `
-		query LoginUser($username: String, $password: String) {
+		mutation LoginUser($username: String, $password: String) {
 			Login(Username: $username, Password: $password) {
 				Status,
 				Message,

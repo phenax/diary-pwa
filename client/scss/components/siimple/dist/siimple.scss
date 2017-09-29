@@ -52,7 +52,7 @@
   display: block;
   font-family: 'Montserrat', sans-serif;
   font-weight: bold;
-  color: $siimple-navy;
+  color: #fff;
   margin-top: 20px;
   margin-left: 0px;
   margin-right: 0px;
@@ -64,7 +64,7 @@
   display: block;
   font-family: 'Montserrat', sans-serif;
   font-weight: bold;
-  color: $siimple-navy;
+  color: #fff;
   margin-top: 20px;
   margin-left: 0px;
   margin-right: 0px;
@@ -76,7 +76,7 @@
   display: block;
   font-family: 'Montserrat', sans-serif;
   font-weight: bold;
-  color: $siimple-navy;
+  color: #fff;
   margin-top: 20px;
   margin-left: 0px;
   margin-right: 0px;
@@ -88,7 +88,7 @@
   display: block;
   font-family: 'Montserrat', sans-serif;
   font-weight: bold;
-  color: $siimple-navy;
+  color: #fff;
   margin-top: 20px;
   margin-left: 0px;
   margin-right: 0px;
@@ -100,7 +100,7 @@
   display: block;
   font-family: 'Montserrat', sans-serif;
   font-weight: bold;
-  color: $siimple-navy;
+  color: #fff;
   margin-top: 20px;
   margin-left: 0px;
   margin-right: 0px;
@@ -112,7 +112,7 @@
   display: block;
   font-family: 'Montserrat', sans-serif;
   font-weight: bold;
-  color: $siimple-navy;
+  color: #fff;
   margin-top: 20px;
   margin-left: 0px;
   margin-right: 0px;
@@ -123,7 +123,7 @@
 .siimple-small {
   font-family: 'Montserrat', sans-serif;
   font-size: 14px;
-  color: $siimple-navy; }
+  color: #ddd; }
 
 .siimple-p, .siimple-paragraph {
   display: block;
@@ -132,9 +132,9 @@
   margin-bottom: 10px;
   margin-top: 0px; }
 
-.siimple-a, .siimple-link {
+a, .siimple-a, .siimple-link {
   font-family: 'Montserrat', sans-serif;
-  color: $siimple-navy;
+  color: $siimple-purple-0;
   font-weight: bold;
   text-decoration: underline;
   transition: all 0.3s; }

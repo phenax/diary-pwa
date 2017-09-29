@@ -2,10 +2,11 @@
 @import 'components/siimple-colors/scss/colors';
 
 html, html body {
-	color: #333;
+	color: #fff;
 	font-size: 16px;
 	line-height: 1.5rem;
 	font-family: 'Montserrat', 'Helvetica', 'sans-serif';
+	background-color: $siimple-navy-3;
 
 	&, body * {
 		box-sizing: border-box;

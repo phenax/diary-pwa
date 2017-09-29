@@ -2,6 +2,7 @@ package models
 
 import (
 	"encoding/json"
+	"errors"
 
 	"github.com/graphql-go/graphql"
 	"github.com/phenax/diary-pwa/db"
@@ -89,13 +90,13 @@ func init() {
 			userSession := libs.GraphQLGetSession(params)
 			// User logged in checked
 			if userSession.Values["User"] == nil {
-				return nil, error("Unauthorized")
+				return nil, errors.New("Unauthorized")
 			}
 
 			json.Unmarshal([]byte(userSession.Values["User"].(string)), &authUser)
 
 			query := Posts.Find(&bson.M{
-				"pid": args["pageId"],
+				"pid":     args["pageId"],
 				"user_id": authUser.ID,
 			})
 
@@ -114,7 +115,7 @@ func init() {
 	GraphQLSavePostField = &graphql.Field{
 		Type: GraphQLResponseType,
 		Args: graphql.FieldConfigArgument{
-			"ID":   &graphql.ArgumentConfig{Type: graphql.String},
+			"ID":      &graphql.ArgumentConfig{Type: graphql.String},
 			"Title":   &graphql.ArgumentConfig{Type: graphql.String},
 			"Content": &graphql.ArgumentConfig{Type: graphql.String},
 			"Rating":  &graphql.ArgumentConfig{Type: graphql.Int},
@@ -125,8 +126,8 @@ func init() {
 
 			userSession := libs.GraphQLGetSession(params)
 
-			postId := args["ID"].(string)
-			isUpdateQuery := updatePostId != ""
+			updatePostID := args["ID"].(string)
+			isUpdateQuery := updatePostID != ""
 
 			// User logged in checked
 			if userSession.Values["User"] == nil {
@@ -136,11 +137,11 @@ func init() {
 			json.Unmarshal([]byte(userSession.Values["User"].(string)), &authUser)
 
 			if !isUpdateQuery {
-				postId = bson.NewObjectId().Hex()
+				updatePostID = bson.NewObjectId().Hex()
 			}
 
 			post := &Post{
-				ID:      postId,
+				ID:      updatePostID,
 				UserID:  authUser.ID,
 				Title:   libs.Stringify(args["Title"]),
 				Content: libs.Stringify(args["Content"]),
@@ -156,9 +157,9 @@ func init() {
 			var err error
 
 			if isUpdateQuery {
-				err := Posts.Update(&bson.M{ "pid": postId }, post)
+				err = Posts.Update(&bson.M{"pid": updatePostID}, post)
 			} else {
-				err := Posts.Insert(post)
+				err = Posts.Insert(post)
 			}
 
 			if err != nil {

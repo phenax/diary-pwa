@@ -5,7 +5,7 @@ import assign from 'object-assign';
 export const savePost = (variables = {}) => ({
 	variables,
 	query: `
-		query SavePost($ID: String, $Title: String, $Content: String, $Rating: Int) {
+		mutation SavePost($ID: String, $Title: String, $Content: String, $Rating: Int) {
 			SavePost(ID: $ID, Title: $Title, Content: $Content, Rating: $Rating) {
 				Status
 				Message
@@ -40,7 +40,7 @@ export const listPosts = (variables = {}) => ({
 export const getPost = (pageId = -1) => ({
 	variables: { pageId },
 	query: `
-		query Posts($pageId: String) {
+		query Post($pageId: String) {
 			Post(pageId: $pageId) {
 				ID
 				Title
