@@ -1,8 +1,9 @@
 
-import {h, Component} from 'preact';
+import { h, Component } from 'preact';
+import { route } from 'preact-router';
 
-import { getPage, savePage } from '../libs/db';
-import { fetchPost, UnauthorizedError, NotFoundError } from '../libs/fetch';
+import { getPage } from '../libs/db';
+import { fetchPost, saveDiaryPage, UnauthorizedError, NotFoundError } from '../libs/fetch';
 
 import PageEditor from '../components/PageEditor';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -21,23 +22,20 @@ export default class DiaryEditPage extends Component {
 		
 		this.pageId = this.props.matches.pageId;
 
-		// TODO: If the post isnt saved, fetch from api
+		// If the post isnt saved, fetch from api
 		getPage(this.pageId)
 			.then(post => {
 				if(!post) throw new Error();
-				this.setState({ post });
+				return post;
 			})
 			.catch(() =>
 				fetchPost(this.pageId)
-					.then(post => {
-						savePage(post);
-						return post;
-					})
 					.catch(e => {
 						let message = 'Something went wrong';
 
 						if(e instanceof NotFoundError) {
 							message = 'Post not found.';
+							route('/', false);
 						} else if(e instanceof UnauthorizedError) {
 							message = 'You are not logged in. Log in to continue.';							
 						}
@@ -60,8 +58,7 @@ export default class DiaryEditPage extends Component {
 
 		data.ID = this.pageId;
 
-		console.log(data);
-		// Save to server and save in indexeddb
+		saveDiaryPage(data);
 
 		return false;
 	}

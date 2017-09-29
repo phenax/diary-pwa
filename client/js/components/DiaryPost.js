@@ -6,7 +6,9 @@ const styles = {
 	content: {
 
 	},
-	heading: {},
+	heading: {
+		padding: '1em 0',
+	},
 	heading_title: {},
 	heading_subtitle: {
 		opacity: '.7',

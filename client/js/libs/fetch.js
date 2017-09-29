@@ -1,8 +1,15 @@
 
+import { route } from 'preact-router';
+
 import { API_ENDPOINT } from '../config/graphql';
+
 import { listPosts, getPost, savePost } from '../queries/posts';
 import { login, findUser as findUserQuery } from '../queries/users';
+
 import { Extendable } from '../libs/utils';
+import { savePage } from '../libs/db';
+
+import Flash from '../components/Flash';
 
 
 // Unauthorized exception
@@ -78,6 +85,10 @@ export const fetchPost = pageId =>
 			if(!post)
 				throw new NotFoundError('Post not found');
 			return post;
+		})
+		.then(post => {
+			savePage(post);
+			return post;
 		});
 
 
@@ -85,9 +96,38 @@ export const fetchPost = pageId =>
 export const loginUser = (username, password) =>
 	graphQLFetch(login({ username, password }));
 
-// Save diary page call
-export const saveDiaryPage = data =>
-	graphQLFetch(savePost(data));
-
 export const findUser = username =>
 	graphQLFetch(findUserQuery({ username }));
+
+
+// Save diary page call
+export const saveDiaryPage = data =>
+	graphQLFetch(savePost(data))
+		.then(resp => resp.SavePost)
+			.then(data => {
+				let post;
+				switch(data.Status) {
+					case 200:  // Take the user to dashboard
+						// TODO: Add some kind of flash to notify user that its saved
+						post = JSON.parse(data.Message);
+						savePage(post);
+						return route('/', false);
+					case 400:
+						throw new Error(data.Message);
+					case 401:
+						throw new UnauthorizedError(data.Message, []);
+					default: throw new Error(data.Message);
+				}
+			})
+			.catch(e => {
+
+				console.log(e);
+
+				let errorMessage = 'Something went wrong';
+
+				if(e instanceof UnauthorizedError) {
+					errorMessage = 'You are not logged in. Please log in to continue.';
+				}
+
+				Flash.setFlash(errorMessage, 'red', 'white');
+			});

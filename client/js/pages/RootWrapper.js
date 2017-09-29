@@ -5,7 +5,7 @@ import { Router } from 'preact-router';
 import { Link } from 'preact-router/match';
 import AsyncRoute from 'preact-async-route';
 
-import { findUser } from '../libs/fetch';
+import { findUser, NotFoundError, UnauthorizedError } from '../libs/fetch';
 
 import HomePage from './HomePage';
 import { Navbar } from '../components/Navbar';
@@ -61,12 +61,15 @@ export default class RootWrapper extends Component {
 	componentDidMount() {
 		findUser({})
 			.then(resp => console.log(resp))
-			.then(user => this.setState({ user }))
-			.catch(console.log);
+			// .then(user => this.setState({ user }))
+			.catch(e => {
+				if(e instanceof NotFoundError || e instanceof UnauthorizedError) {
+					// TODO: Handle Not logged in
+				}
+			});
 	}
 
 	render() {
-		console.log(this.state.user);
 		return (
 			<div>
 				<div style={styles.wrapper}>

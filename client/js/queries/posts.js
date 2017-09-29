@@ -5,7 +5,7 @@ import assign from 'object-assign';
 export const savePost = (variables = {}) => ({
 	variables,
 	query: `
-		mutation SavePost($ID: String, $Title: String, $Content: String, $Rating: Int) {
+		query SavePost($ID: String, $Title: String, $Content: String, $Rating: Int) {
 			SavePost(ID: $ID, Title: $Title, Content: $Content, Rating: $Rating) {
 				Status
 				Message

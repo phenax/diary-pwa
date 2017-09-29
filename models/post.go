@@ -166,7 +166,8 @@ func init() {
 				return NewResponse(500, "Something went wrong"), nil
 			}
 
-			return NewResponse(200, "Post saved successfully"), nil
+			postJSON, _ := json.Marshal(post)
+			return NewResponse(200, string(postJSON)), nil
 		},
 	}
 }

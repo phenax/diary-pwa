@@ -68,8 +68,8 @@ export default class HomePage extends Component {
 								(<div><em>No posts found</em></div>):
 								this.state.posts.map(post => (
 									<div>
-										<Link href={`/page/${post.ID}`} style={{ textDecoration: 'none', display: 'block', }}>
-											<Card isAction={true}>
+										<Link href={`/page/${post.ID}`} style={{ color: 'inherit', textDecoration: 'none', display: 'block', }}>
+											<Card isAction={true} cardClass='siimple-bg--navy'>
 												<CardTitle>{post.Title}</CardTitle>
 												<CardContent>{post.Content.slice(0, 100)}{post.Content.length > 100? '...': ''}</CardContent>
 											</Card>

@@ -2,7 +2,6 @@
 import { h, Component } from 'preact';
 import { Link } from 'preact-router/match';
 
-import { savePage } from '../libs/db';
 import { fetchPost, UnauthorizedError, NotFoundError } from '../libs/fetch';
 
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -24,10 +23,7 @@ export default class DiaryPage extends Component {
 
 	_fetchPost(postId) {
 		fetchPost(postId)
-			.then(post => {
-				this.setState({ post, isNotFound: false });
-				savePage(post);
-			})
+			.then(post => this.setState({ post, isNotFound: false }))
 			.catch(e => {
 				console.log(e);
 				if(e instanceof NotFoundError) {

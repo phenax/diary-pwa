@@ -1,5 +1,6 @@
 
 import {h} from 'preact';
+import assign from 'object-assign';
 
 const styles = {
 	cardWrapper: {
@@ -13,8 +14,10 @@ const styles = {
 	},
 };
 
-export const Card = ({ children, isAction = false }) => (
-	<div style={styles.cardWrapper} class={`${isAction? 'card-shadow card-shadow__hover': 'siimple-shadow--1'}`}>
+export const Card = ({ children, isAction = false, cardStyle = {}, cardClass = '' }) => (
+	<div
+		style={assign({}, styles.cardWrapper, cardStyle)}
+		class={`${isAction? 'card-shadow card-shadow__hover': 'siimple-shadow--1'} ${cardClass}`}>
 		<div style={styles.card}>
 			{children}
 		</div>
