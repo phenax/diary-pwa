@@ -59,7 +59,12 @@
   margin-right: 0px;
   padding: 0px;
   font-size: 45px;
-  margin-bottom: 20px; }
+  margin-bottom: 20px;
+
+  &.siimple-color--navy {
+    color: $siimple-navy;
+  }
+}
 
 .siimple-h2, .siimple-heading2 {
   line-height: 1em;
@@ -72,7 +77,12 @@
   margin-right: 0px;
   padding: 0px;
   font-size: 35px;
-  margin-bottom: 20px; }
+  margin-bottom: 20px;
+
+  &.siimple-color--navy {
+    color: $siimple-navy;
+  }
+}
 
 .siimple-h3, .siimple-heading3 {
   line-height: 1em;
@@ -85,7 +95,12 @@
   margin-right: 0px;
   padding: 0px;
   font-size: 25px;
-  margin-bottom: 18px; }
+  margin-bottom: 18px;
+
+  &.siimple-color--navy {
+    color: $siimple-navy;
+  }
+}
 
 .siimple-h4, .siimple-heading4 {
   line-height: 1em;
@@ -98,7 +113,12 @@
   margin-right: 0px;
   padding: 0px;
   font-size: 22px;
-  margin-bottom: 16px; }
+  margin-bottom: 16px;
+
+  &.siimple-color--navy {
+    color: $siimple-navy;
+  }
+}
 
 .siimple-h5, .siimple-heading5 {
   line-height: 1em;
@@ -111,7 +131,12 @@
   margin-right: 0px;
   padding: 0px;
   font-size: 20px;
-  margin-bottom: 14px; }
+  margin-bottom: 14px;
+
+  &.siimple-color--navy {
+    color: $siimple-navy;
+  }
+}
 
 .siimple-h6, .siimple-heading6 {
   line-height: 1em;
@@ -124,7 +149,12 @@
   margin-right: 0px;
   padding: 0px;
   font-size: 18px;
-  margin-bottom: 12px; }
+  margin-bottom: 12px;
+
+  &.siimple-color--navy {
+    color: $siimple-navy;
+  }
+}
 
 .siimple-small {
   font-family: 'Montserrat', sans-serif;

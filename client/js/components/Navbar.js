@@ -44,7 +44,7 @@ export class Navbar extends Component {
 				<div class='vertical-center siimple-bg--navy siimple-shadow--2' style={navbarStyles}>
 					<div style={Navbar.styles.navbar_logo}>
 						<Link href='/' style={{ color: 'inherit', textDecoration: 'none' }}>
-							<span class='siimple-color--purple' style={{ fontWeight: 'bold' }}>A</span><span>Diary</span>
+							<span style={{ fontWeight: 'lighter' }}>Diary</span><span class='siimple-color--purple' style={{ fontWeight: 'bold' }}>PWA</span>
 						</Link>
 					</div>
 

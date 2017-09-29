@@ -134,19 +134,17 @@ export default class LoginPage extends Component {
 				<Title>Login/Register</Title>
 
 				<br />
-				<div class='siimple-shadow--1'>
-					<div>
-						<div class='flexy-row'>
-							<div class='flexy-col flexy-col--6 vertical-center' style={{ padding: '0', margin: '0' }}>
-								<LoginSidebar isLoginPage={this.isLoginPage} />
-							</div>
-							<div class='flexy-col flexy-col--6 vertical-center'>
-								<div style={{ padding: '1.5em', width: '100%' }}>
-									<form onSubmit={this.onFormSubmit} style={{ display: 'block', width: '100%' }}>
-										{this.isLoginPage? <LoginForm user={this.state.user} ctx={this} />: <SignupForm />}
-										{this.state.error? <div class='siimple-color--red-1'>{this.state.error}</div>: null}
-									</form>
-								</div>
+				<div class='siimple-bg--white siimple-shadow--1'>
+					<div class='flexy-row'>
+						<div class='flexy-col flexy-col--6 vertical-center' style={{ padding: '0', margin: '0' }}>
+							<LoginSidebar isLoginPage={this.isLoginPage} />
+						</div>
+						<div class='flexy-col flexy-col--6 vertical-center siimple-color--navy'>
+							<div style={{ padding: '1.5em', width: '100%' }}>
+								<form onSubmit={this.onFormSubmit} style={{ display: 'block', width: '100%' }}>
+									{this.isLoginPage? <LoginForm user={this.state.user} ctx={this} />: <SignupForm />}
+									{this.state.error? <div class='siimple-color--red-1'>{this.state.error}</div>: null}
+								</form>
 							</div>
 						</div>
 					</div>
@@ -163,7 +161,7 @@ export const LoginForm = ({ user = null, ctx }) => (
 
 		<div>
 			<div class='slide-in' style={{ display: (user? 'none': 'block') }}>
-				<h4 class='siimple-h4'>
+				<h4 class='siimple-h4 siimple-color--navy'>
 					Login
 				</h4>
 				<div>
@@ -183,12 +181,12 @@ export const LoginForm = ({ user = null, ctx }) => (
 				</div>
 			</div>
 			<div class='slide-in' style={{ display: (user? 'block': 'none') }}>
-				<h4 class='siimple-h4' style={{ textAlign: 'center' }}>
+				<h4 class='siimple-h4 siimple-color--navy' style={{ textAlign: 'center' }}>
 					<div>{user? (
 						<div>
 							<div>Hi, {user.Name}!</div>
 							<div>
-								<small class='siimple-small' style={{ opacity: '.6' }}>@{user.Username}</small>
+								<small class='siimple-small' style={{ color: 'inherit',opacity: '.6' }}>@{user.Username}</small>
 							</div>
 						</div>
 					): null}</div>
@@ -226,7 +224,7 @@ export const SignupForm = () => (
 	<div class='slide-in'>
 		<Title>Create an account</Title>
 
-		<h4 class='siimple-h4'>
+		<h4 class='siimple-h4 siimple-color--navy'>
 			Create an account
 		</h4>
 
@@ -284,7 +282,7 @@ export const SignupForm = () => (
 );
 
 export const LoginSidebar = ({ isLoginPage = true }) => (
-	<div style={LoginPage.styles.sidebarWrapper} class='siimple-bg--grey'>
+	<div style={LoginPage.styles.sidebarWrapper} class='siimple-bg--navy'>
 		<br />
 
 		<h3 class='siimple-h3' style={{ textTransform: 'uppercase' }}>
