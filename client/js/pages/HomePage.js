@@ -71,7 +71,7 @@ export default class HomePage extends Component {
 										<Link href={`/page/${post.ID}`} style={{ color: 'inherit', textDecoration: 'none', display: 'block', }}>
 											<Card isAction={true} cardClass='siimple-bg--navy'>
 												<CardTitle>{post.Title}</CardTitle>
-												<CardContent>{post.Content.slice(0, 100)}{post.Content.length > 100? '...': ''}</CardContent>
+												<CardContent>{post.Content.slice(0, 150)}{post.Content.length > 150? '...': ''}</CardContent>
 											</Card>
 										</Link>
 										<br />

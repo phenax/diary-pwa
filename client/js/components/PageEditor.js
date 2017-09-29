@@ -94,6 +94,12 @@ export default class PageEditor extends Component {
 					}
 				}
 			});
+		} else {
+			Array.from(this.base.querySelectorAll('input,textarea'))
+				.forEach($input => {
+					$input.value = '';
+					$input.checked = true;
+				});
 		}
 	}
 

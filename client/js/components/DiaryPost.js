@@ -1,7 +1,7 @@
 
 import {h} from 'preact';
 import { markdown } from 'markdown';
-import moment from 'moment';
+import fecha from 'fecha';
 
 const styles = {
 	content: {
@@ -24,9 +24,9 @@ const escapeHtml = html => {
 };
 
 const time = (timestamp) => {
-	const TIME_FORMAT = 'MMMM D, YYYY. hh:mm A';
-	const date = moment(parseInt(timestamp)*1000);
-	return date.format(TIME_FORMAT);
+	const TIME_FORMAT = 'MMMM Do, YYYY  hh:mm A';
+	const date = new Date(parseInt(timestamp)*1000);
+	return fecha.format(date, TIME_FORMAT);
 };
 
 export default ({ post }) => (
