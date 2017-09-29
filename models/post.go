@@ -122,12 +122,13 @@ func init() {
 		},
 		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 			var authUser SessionUser
+			var updatePostIDStr string
 			args := params.Args
 
 			userSession := libs.GraphQLGetSession(params)
 
-			updatePostID := args["ID"].(string)
-			isUpdateQuery := updatePostID != ""
+			updatePostID := args["ID"]
+			isUpdateQuery := updatePostID != nil
 
 			// User logged in checked
 			if userSession.Values["User"] == nil {
@@ -137,11 +138,13 @@ func init() {
 			json.Unmarshal([]byte(userSession.Values["User"].(string)), &authUser)
 
 			if !isUpdateQuery {
-				updatePostID = bson.NewObjectId().Hex()
+				updatePostIDStr = bson.NewObjectId().Hex()
+			} else {
+				updatePostIDStr = updatePostID.(string)
 			}
 
 			post := &Post{
-				ID:      updatePostID,
+				ID:      updatePostIDStr,
 				UserID:  authUser.ID,
 				Title:   libs.Stringify(args["Title"]),
 				Content: libs.Stringify(args["Content"]),
@@ -150,6 +153,8 @@ func init() {
 
 			validation := post.Validate()
 
+			libs.Log("Post", post)
+
 			if validation["IsValid"] != "1" {
 				return NewResponse(400, validation["Message"]), nil
 			}
@@ -157,7 +162,7 @@ func init() {
 			var err error
 
 			if isUpdateQuery {
-				err = Posts.Update(&bson.M{"pid": updatePostID}, post)
+				err = Posts.Update(&bson.M{"pid": updatePostIDStr}, post)
 			} else {
 				err = Posts.Insert(post)
 			}
@@ -166,7 +171,10 @@ func init() {
 				return NewResponse(500, "Something went wrong"), nil
 			}
 
+			libs.Log("Before marshal", post)
+
 			postJSON, _ := json.Marshal(post)
+			libs.Log("After marshal", postJSON)
 			return NewResponse(200, string(postJSON)), nil
 		},
 	}
