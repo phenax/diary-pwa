@@ -209,7 +209,10 @@ func init() {
 
 			if args["username"] == "" {
 
-				postQuery := Posts.Find(&bson.M{"user_id": user.User.ID})
+				postQuery :=
+					Posts.
+						Find(&bson.M{"user_id": user.User.ID}).
+						Sort("-timestamp")
 
 				numberOfPages, err := postQuery.Count()
 				if err != nil {

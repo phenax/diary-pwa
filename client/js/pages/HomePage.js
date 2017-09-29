@@ -65,7 +65,7 @@ export default class HomePage extends Component {
 						</h2>
 						<div style={{ padding: '1.5em 0' }}>
 							{this.state.posts.length === 0?
-								(<div><em>No posts found</em></div>):
+								(<div><em>Looks like you don't have any posts. <Link href='/new'>Create one now!</Link></em></div>):
 								this.state.posts.map(post => (
 									<div>
 										<Link href={`/page/${post.ID}`} style={{ color: 'inherit', textDecoration: 'none', display: 'block', }}>

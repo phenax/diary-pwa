@@ -30,7 +30,7 @@ func GetGraphQLSchema() *graphql.Schema {
 			"Login":     GraphQLLoginUserField,
 
 			// Post  queries
-			"Post":    GraphQLPostField,
+			"Post":     GraphQLPostField,
 			"SavePost": GraphQLSavePostField,
 		}
 

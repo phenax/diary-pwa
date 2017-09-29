@@ -3,6 +3,8 @@ package models
 import (
 	"encoding/json"
 	"errors"
+	"strconv"
+	"time"
 
 	"github.com/graphql-go/graphql"
 	"github.com/phenax/diary-pwa/db"
@@ -15,12 +17,13 @@ import (
 // Post type
 //
 type Post struct {
-	OID     bson.ObjectId `bson:"_id,omitempty"`
-	ID      string        `bson:"pid,omitempty"`
-	UserID  string        `bson:"user_id,omitempty"`
-	Title   string        `bson:"title"`
-	Content string        `bson:"content"`
-	Rating  int           `bson:"rating"`
+	OID       bson.ObjectId `bson:"_id,omitempty"`
+	ID        string        `bson:"pid,omitempty"`
+	UserID    string        `bson:"user_id,omitempty"`
+	Title     string        `bson:"title"`
+	Content   string        `bson:"content"`
+	Rating    int           `bson:"rating"`
+	Timestamp string        `bson:"timestamp"`
 }
 
 // PostWithUser type (post with the user)
@@ -53,11 +56,12 @@ var GraphQLPost = graphql.NewObject(graphql.ObjectConfig{
 	Name:        "Post",
 	Description: "An entry in the diary",
 	Fields: graphql.Fields{
-		"ID":      &graphql.Field{Type: graphql.String},
-		"Title":   &graphql.Field{Type: graphql.String},
-		"Content": &graphql.Field{Type: graphql.String},
-		"Rating":  &graphql.Field{Type: graphql.Int},
-		"UserID":  &graphql.Field{Type: graphql.String},
+		"ID":        &graphql.Field{Type: graphql.String},
+		"Title":     &graphql.Field{Type: graphql.String},
+		"Content":   &graphql.Field{Type: graphql.String},
+		"Rating":    &graphql.Field{Type: graphql.Int},
+		"UserID":    &graphql.Field{Type: graphql.String},
+		"Timestamp": &graphql.Field{Type: graphql.String},
 		// "Users": &graphql.Field{ Type: graphql.NewList(GraphQLUser) },
 	},
 })
@@ -144,11 +148,12 @@ func init() {
 			}
 
 			post := &Post{
-				ID:      updatePostIDStr,
-				UserID:  authUser.ID,
-				Title:   libs.Stringify(args["Title"]),
-				Content: libs.Stringify(args["Content"]),
-				Rating:  libs.Intify(args["Rating"]),
+				ID:        updatePostIDStr,
+				UserID:    authUser.ID,
+				Title:     libs.Stringify(args["Title"]),
+				Content:   libs.Stringify(args["Content"]),
+				Rating:    libs.Intify(args["Rating"]),
+				Timestamp: strconv.Itoa(int(time.Now().Unix())),
 			}
 
 			validation := post.Validate()

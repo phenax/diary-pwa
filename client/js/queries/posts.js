@@ -46,6 +46,7 @@ export const getPost = (pageId = -1) => ({
 				Title
 				Content
 				Rating
+				Timestamp
 			}
 		}
 	`,
