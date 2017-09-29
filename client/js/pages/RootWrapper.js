@@ -1,5 +1,5 @@
 
-import { h } from 'preact';
+import { h, Component } from 'preact';
 import { Promise } from 'es6-promise';
 import { Router } from 'preact-router';
 import { Link } from 'preact-router/match';
@@ -46,7 +46,7 @@ export const NavLink = ({ children, href }) =>
 		{children}
 	</Link>;
 
-export default RootWrapper extends Component {
+export default class RootWrapper extends Component {
 
 	state = {
 		user: null,
@@ -61,7 +61,8 @@ export default RootWrapper extends Component {
 	componentDidMount() {
 		findUser({})
 			.then(resp => console.log(resp))
-			.then(user => this.setState({ user }));
+			.then(user => this.setState({ user }))
+			.catch(console.log);
 	}
 
 	render() {

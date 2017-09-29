@@ -1,6 +1,8 @@
 
 import {h, Component} from 'preact';
 
+import SpeechRecognitionLib from '../libs/speech-recognition';
+
 
 export default class PageEditor extends Component {
 
@@ -51,10 +53,18 @@ export default class PageEditor extends Component {
 		{ value: 4, icon: '😄' },
 	];
 
+
+
+	state = {
+		isSpeechRecognitionOn: false,
+	};
+
 	constructor(props) {
 		super(props);
 
 		this.isEditMode = !!this.props.page;
+
+		this.toggleSpeechRecognition = this.toggleSpeechRecognition.bind(this);
 	}
 
 	componentDidMount() {
@@ -80,6 +90,57 @@ export default class PageEditor extends Component {
 				}
 			});
 		}
+
+		this.initSpeechRecognition();
+	}
+
+	initSpeechRecognition() {
+
+		this.recognition = new SpeechRecognitionLib();
+
+		if(this.recognition.isSupported) {
+
+			const $contentTextarea = this.base.querySelector('.js-post-content');
+
+			let prevGuess = null;
+
+			this.recognition.onSpeech(e => {
+
+				let content = $contentTextarea.value;
+
+				const result =
+					Array.from(e.results)
+						.map(result => result[0])
+						.map(result => result.transcript)
+						.join('');
+
+				if(prevGuess) {
+					content = content.slice(0, content.length - prevGuess.length - 1);
+				}
+
+				if(e.results[0].isFinal) {
+					prevGuess = null;
+				} else {
+					prevGuess = result;
+				}
+
+				$contentTextarea.value = `${(content.length)? `${content} `: ''}${result}`;
+			});
+		}
+	}
+
+	toggleSpeechRecognition() {
+
+		if(this.recognition.isSupported) {
+
+			if(this.state.isSpeechRecognitionOn) {
+				this.recognition.stop();
+			} else {
+				this.recognition.start();
+			}
+
+			this.setState({ isSpeechRecognitionOn: !this.state.isSpeechRecognitionOn });
+		}
 	}
 
 	render() {
@@ -98,12 +159,23 @@ export default class PageEditor extends Component {
 					<br />
 
 					<div>
-						<textarea
-							type='text' name='Content'
-							class='siimple-textarea'
-							placeholder='I took a shit today...'
-							style={PageEditor.styles.contentField}
-						/>
+						<div style={{ textAlign: 'right' }}>
+							<button
+								type='button'
+								onClick={this.toggleSpeechRecognition}>
+								<i class=''>
+									{this.state.isSpeechRecognitionOn? 'Stop': 'Start'}
+								</i>
+							</button>
+						</div>
+						<div>
+							<textarea
+								type='text' name='Content'
+								class='siimple-textarea js-post-content'
+								placeholder='I took a shit today...'
+								style={PageEditor.styles.contentField}
+							/>
+						</div>
 					</div>
 
 					<br />
