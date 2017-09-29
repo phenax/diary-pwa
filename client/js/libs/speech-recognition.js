@@ -12,8 +12,6 @@ export default class Katrina {
 	constructor() {
 
 		this.startRecognition = this.startRecognition.bind(this);
-		this.onSpeech = this.onSpeech.bind(this);
-		this.onPause = this.onPause.bind(this);
 
 		if(_SpeechRecognitionClass) {
 
@@ -26,10 +24,16 @@ export default class Katrina {
 		}
 	}
 
+	startRecognition: Function;
+	startRecognition() {
+		this.recognition.start();
+		return this;
+	}
+
 
 	start() {
-		this.startRecognition();
-		this.onPause(this.startRecognition);
+		this.startRecognition()
+			.onPause(this.startRecognition);
 	}
 
 	stop() {
@@ -38,20 +42,11 @@ export default class Katrina {
 	}
 
 
-	startRecognition: Function;
-	startRecognition() {
-		this.recognition.start();
-		return this;
-	}
-
-
-	onSpeech: Function;
 	onSpeech(cb: Function) {
 		this.recognition.addEventListener('result', cb);
 		return this;
 	}
 
-	onPause: Function;
 	onPause(cb: Function) {
 		this.recognition.addEventListener('end', cb);
 		return this;

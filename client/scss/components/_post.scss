@@ -1,0 +1,71 @@
+
+
+.megacheckbox {
+
+	$this: &;
+
+	&--text {
+		color: #fff;
+	}
+
+	&--radio {
+		display: none;
+
+		&:checked ~ #{$this}--text {
+			background-color: $siimple-purple-0;
+		}
+	}
+}
+
+.markdown-content {
+
+	$extendProps: (
+		('h1', 'h1'),
+		('h2', 'h2'),
+		('h3', 'h3'),
+		('h4', 'h4'),
+		('h5', 'h5'),
+		('h6', 'h6'),
+		('p', 'p'),
+		('strong', 'label'),
+		('b', 'label'),
+		('i', 'em'),
+		('em', 'em'),
+		('a', 'a'),
+		('pre', 'pre'),
+	);
+
+	@each $elem in $extendProps {
+		#{nth($elem, 1)} { @extend .siimple-#{nth($elem, 2)}; }
+	}
+}
+
+.fa.fa-x-laughing {
+
+	&::before {
+		content: '😄';
+	}
+}
+
+
+.textarea-action {
+
+	&-wrapper {
+		position: relative;
+	}
+
+	&--btn-list {
+		position: absolute;
+		top: 1em;
+		right: 1em;
+
+		opacity: 0;
+		will-change: opacity;
+		transition: opacity .3s ease-in-out;
+	}
+
+	&:focus ~ &--btn-list, &:hover ~ &--btn-list {
+		opacity: 1;
+	}
+}
+

@@ -18,8 +18,8 @@ export default class PageEditor extends Component {
 			width: '100%',
 		},
 		contentField: {
-			height: '400px',
-			minHeight: '200px',
+			height: '300px',
+			minHeight: '160px',
 			padding: '1em',
 			display: 'block',
 			width: '100%',
@@ -28,11 +28,12 @@ export default class PageEditor extends Component {
 
 		ratingLabel: {
 			display: 'block',
+			width: '100%',
 		},
 
 		ratingText: {
 			textAlign: 'center',
-			fontSize: '2.6em',
+			fontSize: '2.5em',
 			padding: '.6em',
 			borderRadius: '5px',
 			cursor: 'pointer',
@@ -41,16 +42,18 @@ export default class PageEditor extends Component {
 		submitBtn: {
 			textTransform: 'uppercase',
 			fontSize: '1em',
-			padding: '.3em 1em',
+			padding: '.5em 1em',
 			height: 'auto',
+			margin: '1em 0',
+			width: '100%',
 		},
 	};
 
 	RATINGS = [
-		{ value: 1, icon: '☹' },
-		{ value: 2, icon: '😐' },
-		{ value: 3, icon: '😊' },
-		{ value: 4, icon: '😄' },
+		{ value: 1, class: 'fa fa-frown-o' },
+		{ value: 2, class: 'fa fa-meh-o' },
+		{ value: 3, class: 'fa fa-smile-o' },
+		{ value: 4, class: 'fa fa-x-laughing' },
 	];
 
 
@@ -65,6 +68,8 @@ export default class PageEditor extends Component {
 		this.isEditMode = !!this.props.page;
 
 		this.toggleSpeechRecognition = this.toggleSpeechRecognition.bind(this);
+
+		this.initSpeechRecognition();
 	}
 
 	componentDidMount() {
@@ -90,8 +95,6 @@ export default class PageEditor extends Component {
 				}
 			});
 		}
-
-		this.initSpeechRecognition();
 	}
 
 	initSpeechRecognition() {
@@ -100,11 +103,14 @@ export default class PageEditor extends Component {
 
 		if(this.recognition.isSupported) {
 
-			const $contentTextarea = this.base.querySelector('.js-post-content');
-
+			let $contentTextarea;
 			let prevGuess = null;
 
 			this.recognition.onSpeech(e => {
+
+				if(!$contentTextarea) {
+					$contentTextarea = this.base.querySelector('.js-post-content');
+				}
 
 				let content = $contentTextarea.value;
 
@@ -156,42 +162,44 @@ export default class PageEditor extends Component {
 						/>
 					</div>
 
-					<br />
-
-					<div>
-						<div style={{ textAlign: 'right' }}>
-							<button
-								type='button'
-								onClick={this.toggleSpeechRecognition}>
-								<i class=''>
-									{this.state.isSpeechRecognitionOn? 'Stop': 'Start'}
-								</i>
-							</button>
-						</div>
-						<div>
-							<textarea
-								type='text' name='Content'
-								class='siimple-textarea js-post-content'
-								placeholder='I took a shit today...'
-								style={PageEditor.styles.contentField}
-							/>
-						</div>
+					<div style={{ paddingTop: '.7em' }} class='textarea-action-wrapper'>
+						<textarea
+							type='text' name='Content'
+							class='siimple-textarea textarea-action js-post-content'
+							id='contentTextarea'
+							placeholder='I took a shit today...'
+							style={PageEditor.styles.contentField}
+						/>
+						{
+							(this.recognition || {}).isSupported?
+								(<div class='textarea-action--btn-list'>
+									<label
+										for='contentTextarea'
+										type='button'
+										class='siimple-btn siimple-btn--navy'
+										style={{ padding: '0 1.3em', height: 'auto', border: 'none' }}
+										onClick={this.toggleSpeechRecognition}>
+										<i class={`fa fa-${this.state.isSpeechRecognitionOn? 'microphone-slash': 'microphone'}`}></i>
+									</label>
+								</div>): null
+						}
 					</div>
 
 					<br />
 
-					<div class='siimple-grid'>
-						<div class='siimple-grid-row'>
+					<div>
+						<div class='flexy-row'>
 							{this.RATINGS.map(rating => (
-								<div class="siimple-grid-col siimple-grid-col--3">
+								<div class="flexy-col" style={{ width: '100%' }}>
 									<label class='megacheckbox' style={PageEditor.styles.ratingLabel}>
 										<input
 											type='radio' name='Rating'
 											class='megacheckbox--radio'
 											value={rating.value} checked
+											style={{ display: 'none' }}
 										/>
 										<div class='megacheckbox--text' style={PageEditor.styles.ratingText}>
-											{rating.icon}
+											<i class={rating.class} />
 										</div>
 									</label>
 								</div>
@@ -204,7 +212,7 @@ export default class PageEditor extends Component {
 
 					<div style={{ textAlign: 'right' }}>
 						<button class='siimple-btn siimple-btn--navy' type='submit' style={PageEditor.styles.submitBtn}>
-							Post
+							Save post
 						</button>
 					</div>
 				</div>
