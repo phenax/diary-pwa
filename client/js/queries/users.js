@@ -52,3 +52,16 @@ export const findUser = ({ username }) => ({
 	`,
 });
 
+
+export const logout = () => ({
+	variables: {},
+	query: `
+		mutation Logout {
+			Logout {
+				Status
+				Message
+			}
+		}
+	`,
+});
+

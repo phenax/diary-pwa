@@ -9,7 +9,15 @@ import (
 //
 // GraphQLResponseType - Schema
 //
-var GraphQLResponseType *graphql.Object
+var GraphQLResponseType = graphql.NewObject(graphql.ObjectConfig{
+	Name:        "Response",
+	Description: "Standard graphql api response",
+	Fields: graphql.Fields{
+		"Status":  &graphql.Field{Type: graphql.Int},
+		"Message": &graphql.Field{Type: graphql.String},
+		"Data":    &graphql.Field{Type: graphql.String},
+	},
+})
 
 //
 // GraphQLSchema - Schema
@@ -23,25 +31,22 @@ func GetGraphQLSchema() *graphql.Schema {
 
 	if graphQLSchema == nil {
 
-		queryFields := graphql.Fields{
-			// User queries
-			"Login":     GraphQLLoginUserField,
-			"UserPosts": GraphQLUsersField,
-
-			// Post  queries
-			"Post": GraphQLPostField,
+		rootQuery := graphql.ObjectConfig{
+			Name: "RootQuery",
+			Fields: graphql.Fields{
+				"Login":     GraphQLLoginUserField,
+				"UserPosts": GraphQLUsersField,
+				"Post":      GraphQLPostField,
+			},
 		}
-
-		mutationFields := graphql.Fields{
-			// User mutations
-			"CreateUser": GraphQLCreateUserField,
-
-			// Post mutations
-			"SavePost": GraphQLSavePostField,
+		rootMutation := graphql.ObjectConfig{
+			Name: "RootMutation",
+			Fields: graphql.Fields{
+				"CreateUser": GraphQLCreateUserField,
+				"Logout":     GraphQLLogoutUserField,
+				"SavePost":   GraphQLSavePostField,
+			},
 		}
-
-		rootQuery := graphql.ObjectConfig{Name: "RootQuery", Fields: queryFields}
-		rootMutation := graphql.ObjectConfig{Name: "RootMutation", Fields: mutationFields}
 
 		schema, err := graphql.NewSchema(
 			graphql.SchemaConfig{
@@ -83,16 +88,4 @@ func NewResponse(status int, message string, dataList ...map[string]string) *GQL
 		Message: message,
 		Data:    data,
 	}
-}
-
-func init() {
-	GraphQLResponseType = graphql.NewObject(graphql.ObjectConfig{
-		Name:        "Response",
-		Description: "Standard graphql api response",
-		Fields: graphql.Fields{
-			"Status":  &graphql.Field{Type: graphql.Int},
-			"Message": &graphql.Field{Type: graphql.String},
-			"Data":    &graphql.Field{Type: graphql.String},
-		},
-	})
 }

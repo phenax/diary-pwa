@@ -5,7 +5,7 @@ import { Router } from 'preact-router';
 import { Link } from 'preact-router/match';
 import AsyncRoute from 'preact-async-route';
 
-import { findUser, NotFoundError, UnauthorizedError } from '../libs/fetch';
+import { findUser, logoutUser, NotFoundError, UnauthorizedError } from '../libs/fetch';
 
 import HomePage from './HomePage';
 import { Navbar } from '../components/Navbar';
@@ -38,13 +38,18 @@ const asyncComponents = {
 };
 
 
-export const NavLink = ({ children, href }) =>
-	<Link
-		class="siimple-btn"
-		activeClassName="siimple-color--purple"
-		href={href}>
-		{children}
-	</Link>;
+export const NavLink = ({ children, href, action }) =>
+	action?
+		<a class='siimple-btn'
+			onClick={action}>
+			{children}
+		</a>:
+		<Link
+			class="siimple-btn"
+			activeClassName="siimple-color--purple"
+			href={href}>
+			{children}
+		</Link>;
 
 export default class RootWrapper extends Component {
 
@@ -80,6 +85,7 @@ export default class RootWrapper extends Component {
 							<NavLink href="/login">Login</NavLink>
 							<NavLink href="/signup">Signup</NavLink>
 							<NavLink href="/notfound">Not Found</NavLink>
+							<NavLink action={logoutUser}>Logout</NavLink>
 						</Navbar>:
 						null}
 					<Router>

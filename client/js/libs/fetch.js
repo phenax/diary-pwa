@@ -4,7 +4,7 @@ import { route } from 'preact-router';
 import { API_ENDPOINT } from '../config/graphql';
 
 import { listPosts, getPost, savePost } from '../queries/posts';
-import { login, findUser as findUserQuery, signup } from '../queries/users';
+import { login, findUser as findUserQuery, signup, logout } from '../queries/users';
 
 import { Extendable } from '../libs/utils';
 import { savePage } from '../libs/db';
@@ -103,6 +103,14 @@ export const findUser = username =>
 export const createUser = data =>
 	graphQLFetch(signup(data))
 		.then(resp => resp.CreateUser);
+
+export const logoutUser = () =>
+	graphQLFetch(logout())
+		.then(() => route('/', false))
+		.catch(e => {
+			console.log(e);
+			Flash.setFlash('Something went wrong', 'red', 'white');
+		});
 
 
 // Save diary page call

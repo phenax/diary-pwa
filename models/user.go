@@ -12,6 +12,14 @@ import (
 	bson "gopkg.in/mgo.v2/bson"
 )
 
+// Users - User Collection
+var Users *mgo.Collection
+
+const (
+	// UserCollectionName - Collection name
+	UserCollectionName = "users"
+)
+
 //
 // User type
 //
@@ -139,212 +147,216 @@ var GraphQLUserPosts = graphql.NewObject(graphql.ObjectConfig{
 //
 // GraphQLUsersField - GraphQL Field information for user
 //
-var GraphQLUsersField *graphql.Field
+var GraphQLUsersField = &graphql.Field{
+	Type: GraphQLUserPosts,
+	Args: graphql.FieldConfigArgument{
+		"start": &graphql.ArgumentConfig{
+			Type:         graphql.Int,
+			DefaultValue: -1,
+		},
+		"count": &graphql.ArgumentConfig{
+			Type:         graphql.Int,
+			DefaultValue: -1,
+		},
+		"search": &graphql.ArgumentConfig{
+			Type:         graphql.String,
+			DefaultValue: "",
+		},
+		"username": &graphql.ArgumentConfig{
+			Type:         graphql.String,
+			DefaultValue: "",
+		},
+	},
+	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+		var user UserWithPost
+
+		args := params.Args
+		userSession := libs.GraphQLGetSession(params)
+
+		if args["username"] == "" {
+
+			var authUser SessionUser
+
+			// User logged in checked
+			if userSession.Values["User"] != nil {
+				json.Unmarshal([]byte(userSession.Values["User"].(string)), &authUser)
+
+				Users.Find(&bson.M{"uid": authUser.ID}).One(&user.User)
+			}
+		} else {
+
+			Users.Find(&bson.M{
+				"$or": []bson.M{
+					{"email": args["username"]},
+					{"username": args["username"]},
+				},
+			}).One(&user.User)
+		}
+
+		// Session exists but user invalid
+		if user.User.ID == "" {
+			return nil, errors.New("Unauthorized")
+		}
+
+		if args["username"] == "" {
+
+			postQuery :=
+				Posts.
+					Find(&bson.M{"user_id": user.User.ID}).
+					Sort("-timestamp")
+
+			numberOfPages, err := postQuery.Count()
+			if err != nil {
+				return nil, err
+			}
+			user.TotalNumberOfPages = numberOfPages
+
+			start, _ := args["start"].(int)
+			count, _ := args["count"].(int)
+
+			if start >= 0 {
+				postQuery.Skip(start)
+			}
+			if count >= 0 {
+				postQuery.Limit(count)
+			}
+
+			user.IsFirstPage = true
+			if start >= 0 && count >= 0 {
+				user.IsFirstPage = start <= count
+			}
+
+			user.IsLastPage = true
+			if postCount, err := postQuery.Count(); count >= 0 {
+				if err != nil {
+					return nil, err
+				}
+				user.IsLastPage = postCount < count
+			}
+
+			postQuery.All(&user.Posts)
+		}
+
+		return user, nil
+	},
+}
 
 //
 // GraphQLCreateUserField - GraphQL Field information for user
 //
-var GraphQLCreateUserField *graphql.Field
+var GraphQLCreateUserField = &graphql.Field{
+	Type: GraphQLResponseType,
+	Args: graphql.FieldConfigArgument{
+		"Name":     &graphql.ArgumentConfig{Type: graphql.String},
+		"Email":    &graphql.ArgumentConfig{Type: graphql.String},
+		"Username": &graphql.ArgumentConfig{Type: graphql.String},
+		"Password": &graphql.ArgumentConfig{Type: graphql.String},
+	},
+	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+		args := params.Args
+
+		libs.Log("POST Users params", args)
+
+		user := &User{
+			ID:       bson.NewObjectId().Hex(),
+			Name:     libs.Stringify(args["Name"]),
+			Email:    libs.Stringify(args["Email"]),
+			Username: libs.Stringify(args["Username"]),
+			Password: libs.Stringify(args["Password"]),
+		}
+
+		validation := user.Validate()
+		uniqueness := user.UniqueCheck()
+
+		if validation["IsValid"] != "1" {
+			return NewResponse(400, validation["Message"]), nil
+		}
+		if uniqueness["IsUnique"] != "1" {
+			return NewResponse(409, uniqueness["Message"]), nil
+		}
+
+		user.SetPassword(user.Password)
+		// err := Users.Insert(user)
+
+		// if err != nil {
+		// 	return NewResponse(500, "Something went wrong"), nil
+		// }
+
+		userDetails, _ := json.Marshal(&SessionUser{ID: user.ID, Email: user.Email})
+
+		// libs.GraphQLSetSession(params, func(session *sessions.Session) *sessions.Session {
+		// 	session.Values["User"] = string(userDetails)
+		// 	return session
+		// })
+
+		return NewResponse(200, string(userDetails)), nil
+	},
+}
 
 //
-// GraphQLLoginUserField - GraphQL Field for loggin in a user
+// GraphQLLoginUserField - GraphQL Field for logging in a user
 //
-var GraphQLLoginUserField *graphql.Field
+var GraphQLLoginUserField = &graphql.Field{
+	Type: GraphQLResponseType,
+	Args: graphql.FieldConfigArgument{
+		"Username": &graphql.ArgumentConfig{Type: graphql.String},
+		"Password": &graphql.ArgumentConfig{Type: graphql.String},
+	},
+	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+		args := params.Args
 
-func init() {
+		var user User
 
-	GraphQLUsersField = &graphql.Field{
-		Type: GraphQLUserPosts,
-		Args: graphql.FieldConfigArgument{
-			"start": &graphql.ArgumentConfig{
-				Type:         graphql.Int,
-				DefaultValue: -1,
+		username := libs.Stringify(args["Username"])
+		password := libs.Stringify(args["Password"])
+
+		if len(username) < 4 {
+			return NewResponse(400, "Username is too short"), nil
+		}
+		if len(password) < 4 {
+			return NewResponse(400, "Password is too short"), nil
+		}
+
+		query := &bson.M{
+			"$or": []bson.M{
+				{"email": username},
+				{"username": username},
 			},
-			"count": &graphql.ArgumentConfig{
-				Type:         graphql.Int,
-				DefaultValue: -1,
-			},
-			"search": &graphql.ArgumentConfig{
-				Type:         graphql.String,
-				DefaultValue: "",
-			},
-			"username": &graphql.ArgumentConfig{
-				Type:         graphql.String,
-				DefaultValue: "",
-			},
-		},
-		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-			var user UserWithPost
+			"password": password,
+		}
 
-			args := params.Args
-			userSession := libs.GraphQLGetSession(params)
+		Users.Find(query).One(&user)
 
-			if args["username"] == "" {
+		if user.ID == "" {
+			return NewResponse(401, "Unauthorized"), nil
+		}
 
-				var authUser SessionUser
+		userDetails, _ := json.Marshal(&SessionUser{ID: user.ID, Email: user.Email})
 
-				// User logged in checked
-				if userSession.Values["User"] == nil {
-					return nil, errors.New("Unauthorized")
-				}
+		libs.GraphQLSetSession(params, func(session *sessions.Session) *sessions.Session {
+			session.Values["User"] = string(userDetails)
+			return session
+		})
 
-				json.Unmarshal([]byte(userSession.Values["User"].(string)), &authUser)
+		return NewResponse(200, string(userDetails)), nil
+	},
+}
 
-				Users.Find(&bson.M{"uid": authUser.ID}).One(&user.User)
-
-			} else {
-
-				Users.Find(&bson.M{
-					"$or": []bson.M{
-						{"email": args["username"]},
-						{"username": args["username"]},
-					},
-				}).One(&user.User)
-			}
-
-			// Session exists but user invalid
-			if user.User.ID == "" {
-				return nil, errors.New("NotFound")
-			}
-
-			if args["username"] == "" {
-
-				postQuery :=
-					Posts.
-						Find(&bson.M{"user_id": user.User.ID}).
-						Sort("-timestamp")
-
-				numberOfPages, err := postQuery.Count()
-				if err != nil {
-					return nil, err
-				}
-				user.TotalNumberOfPages = numberOfPages
-
-				start, _ := args["start"].(int)
-				count, _ := args["count"].(int)
-
-				if start >= 0 {
-					postQuery.Skip(start)
-				}
-				if count >= 0 {
-					postQuery.Limit(count)
-				}
-
-				user.IsFirstPage = true
-				if start >= 0 && count >= 0 {
-					user.IsFirstPage = start <= count
-				}
-
-				user.IsLastPage = true
-				if postCount, err := postQuery.Count(); count >= 0 {
-					if err != nil {
-						return nil, err
-					}
-					user.IsLastPage = postCount < count
-				}
-
-				postQuery.All(&user.Posts)
-			}
-
-			return user, nil
-		},
-	}
-
-	GraphQLCreateUserField = &graphql.Field{
-		Type: GraphQLResponseType,
-		Args: graphql.FieldConfigArgument{
-			"Name":     &graphql.ArgumentConfig{Type: graphql.String},
-			"Email":    &graphql.ArgumentConfig{Type: graphql.String},
-			"Username": &graphql.ArgumentConfig{Type: graphql.String},
-			"Password": &graphql.ArgumentConfig{Type: graphql.String},
-		},
-		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-			args := params.Args
-
-			libs.Log("POST Users params", args)
-
-			user := &User{
-				ID:       bson.NewObjectId().Hex(),
-				Name:     libs.Stringify(args["Name"]),
-				Email:    libs.Stringify(args["Email"]),
-				Username: libs.Stringify(args["Username"]),
-				Password: libs.Stringify(args["Password"]),
-			}
-
-			validation := user.Validate()
-			uniqueness := user.UniqueCheck()
-
-			if validation["IsValid"] != "1" {
-				return NewResponse(400, validation["Message"]), nil
-			}
-			if uniqueness["IsUnique"] != "1" {
-				return NewResponse(409, uniqueness["Message"]), nil
-			}
-
-			user.SetPassword(user.Password)
-			// err := Users.Insert(user)
-
-			// if err != nil {
-			// 	return NewResponse(500, "Something went wrong"), nil
-			// }
-
-			userDetails, _ := json.Marshal(&SessionUser{ID: user.ID, Email: user.Email})
-
-			// libs.GraphQLSetSession(params, func(session *sessions.Session) *sessions.Session {
-			// 	session.Values["User"] = string(userDetails)
-			// 	return session
-			// })
-
-			return NewResponse(200, string(userDetails)), nil
-		},
-	}
-
-	GraphQLLoginUserField = &graphql.Field{
-		Type: GraphQLResponseType,
-		Args: graphql.FieldConfigArgument{
-			"Username": &graphql.ArgumentConfig{Type: graphql.String},
-			"Password": &graphql.ArgumentConfig{Type: graphql.String},
-		},
-		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-			args := params.Args
-
-			var user User
-
-			username := libs.Stringify(args["Username"])
-			password := libs.Stringify(args["Password"])
-
-			if len(username) < 4 {
-				return NewResponse(400, "Username is too short"), nil
-			}
-			if len(password) < 4 {
-				return NewResponse(400, "Password is too short"), nil
-			}
-
-			query := &bson.M{
-				"$or": []bson.M{
-					{"email": username},
-					{"username": username},
-				},
-				"password": password,
-			}
-
-			Users.Find(query).One(&user)
-
-			if user.ID == "" {
-				return NewResponse(401, "Unauthorized"), nil
-			}
-
-			userDetails, _ := json.Marshal(&SessionUser{ID: user.ID, Email: user.Email})
-
-			libs.GraphQLSetSession(params, func(session *sessions.Session) *sessions.Session {
-				session.Values["User"] = string(userDetails)
-				return session
-			})
-
-			return NewResponse(200, string(userDetails)), nil
-		},
-	}
-
+//
+// GraphQLLogoutUserField - Graphql field for logging out
+//
+var GraphQLLogoutUserField = &graphql.Field{
+	Type: GraphQLResponseType,
+	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+		libs.GraphQLSetSession(params, func(sess *sessions.Session) *sessions.Session {
+			libs.Log("Session before logout", sess.Values["User"])
+			emptySession, _ := json.Marshal(&SessionUser{})
+			sess.Values["User"] = string(emptySession)
+			libs.Log("Session after logout", sess.Values["User"])
+			return sess
+		})
+		return NewResponse(200, ""), nil
+	},
 }
 
 //
@@ -352,14 +364,6 @@ func init() {
 //
 /// ########################  Package stuff  ######################## ///
 //
-
-// Users - User Collection
-var Users *mgo.Collection
-
-const (
-	// UserCollectionName - Collection name
-	UserCollectionName = "users"
-)
 
 func init() {
 
@@ -381,23 +385,4 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-}
-
-//
-// NewUser - Create a new user(make a copy of this user and modify for saving)
-// (mostly for triggering setters)
-//
-// params
-// -- user {*User}  User
-//
-// returns
-// -- {*User} The better and save ready user
-//
-func NewUser(user *User) *User {
-
-	newUser := *user
-
-	newUser.SetPassword(user.Password)
-
-	return &newUser
 }
