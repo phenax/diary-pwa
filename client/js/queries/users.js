@@ -1,5 +1,18 @@
 
 
+export const signup = variables => ({
+	variables,
+	query: `
+		mutation CreateUser($name: String, $email: String, $username: String, $password: String) {
+			CreateUser(Name: $name, Email: $email, Username: $username, Password: $password) {
+				Status,
+				Message,
+			}
+		}
+	`,
+});
+
+
 export const login = variables => ({
 	variables,
 	query: `
@@ -27,11 +40,11 @@ export const findUser = ({ username }) => ({
 		query UserFind${username? '($username:String)': ''} {
 			UserPosts${username? '(username:$username)': ''} {
 				User {
-					Name
-					Username
-					Email
+					Name,
+					Username,
+					Email,
 					${!username? `
-						ID
+						ID,
 					`: ''}
 				}
 			}

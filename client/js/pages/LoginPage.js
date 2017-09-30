@@ -2,7 +2,8 @@
 import { h, Component } from 'preact';
 import { route } from 'preact-router';
 
-import { loginUser, findUser, UnauthorizedError, NotFoundError } from '../libs/fetch';
+import { loginUser, findUser, createUser, UnauthorizedError, NotFoundError } from '../libs/fetch';
+import { formObject } from '../libs/utils';
 
 import Title from '../components/Title';
 
@@ -60,21 +61,19 @@ export default class LoginPage extends Component {
 		e.preventDefault();
 
 		const $form = e.currentTarget;
-
-		// TODO: Get a FormData polyfill
-		const data = new FormData($form);
+		const data = formObject($form);
 
 		if(this.isLoginPage) {
 			if(!this.state.user) {
 				// Find the user with email/username
-				this.findUser(data.get('email'));
+				this.findUser(data.email);
 			} else {
 				// Login the user
-				this.authenticate(data.get('email'), data.get('password'));
+				this.authenticate(data.email, data.password, $form);
 			}
 		} else {
-			// TODO: Signup
-			console.log('Signup');
+			// Create new user
+			this.signupUser(data, $form);
 		}
 
 		return false;
@@ -101,11 +100,37 @@ export default class LoginPage extends Component {
 	}
 
 
-	authenticate(username, password) {
+	signupUser(data, $form) {
+		return createUser(data)
+			.then(data => {
+				switch(data.Status) {
+					case 200: // Take the user to dashboard
+						$form.reset();
+						return route('/', false);
+					case 400:
+						throw new Error(data.Message);
+					case 409:
+						throw new Error(data.Message, []);
+					default:
+						throw new Error(data.Message);
+				}
+			})
+			.catch(e => {
+				console.log(e);
+
+				this.setState({
+					error: e.message || 'Something went wrong'
+				});
+			});
+	}
+
+
+	authenticate(username, password, $form) {
 		return loginUser(username, password)
 			.then(data => {
 				switch(data.Login.Status) {
 					case 200: // Take the user to dashboard
+						$form.reset();
 						return route('/', false);
 					case 400:
 						throw new Error(data.Login.Message);

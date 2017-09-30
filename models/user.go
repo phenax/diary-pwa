@@ -59,21 +59,21 @@ func err(msg string) map[string]string {
 func (user *User) Validate() map[string]string {
 
 	if user.Name == "" && len(user.Name) < 5 {
-		return err("The Name you entered was too short")
+		return err("The name you entered was too short")
 	}
 
 	// TODO: Add username validation
 	if user.Username == "" && len(user.Username) < 5 {
-		return err("The Username you entered was too short")
+		return err("The username you entered was too short")
 	}
 
 	// TODO: Email validation
 	if user.Email == "" && len(user.Email) < 5 {
-		return err("The Email you entered was too short")
+		return err("The email you entered was too short")
 	}
 
 	if user.Password == "" && len(user.Password) < 5 {
-		return err("The Password you entered was too short")
+		return err("The password you entered was too short")
 	}
 
 	return map[string]string{"Message": "", "IsValid": "1"}
@@ -95,7 +95,7 @@ func (user *User) UniqueCheck() map[string]string {
 	libs.Log("Unique user check", oldUser)
 
 	if oldUser.Username != "" {
-		return err("This user already exists")
+		return err("User already exists")
 	}
 
 	return map[string]string{"Message": "", "IsUnique": "1"}
@@ -282,13 +282,20 @@ func init() {
 			}
 
 			user.SetPassword(user.Password)
-			err := Users.Insert(user)
+			// err := Users.Insert(user)
 
-			if err != nil {
-				return NewResponse(500, "Something went wrong"), nil
-			}
+			// if err != nil {
+			// 	return NewResponse(500, "Something went wrong"), nil
+			// }
 
-			return NewResponse(200, "User saved successfully"), nil
+			userDetails, _ := json.Marshal(&SessionUser{ID: user.ID, Email: user.Email})
+
+			// libs.GraphQLSetSession(params, func(session *sessions.Session) *sessions.Session {
+			// 	session.Values["User"] = string(userDetails)
+			// 	return session
+			// })
+
+			return NewResponse(200, string(userDetails)), nil
 		},
 	}
 
@@ -327,14 +334,14 @@ func init() {
 				return NewResponse(401, "Unauthorized"), nil
 			}
 
+			userDetails, _ := json.Marshal(&SessionUser{ID: user.ID, Email: user.Email})
+
 			libs.GraphQLSetSession(params, func(session *sessions.Session) *sessions.Session {
-				userDetails, _ := json.Marshal(&SessionUser{ID: user.ID, Email: user.Email})
-				libs.Log("Saving session", string(userDetails))
 				session.Values["User"] = string(userDetails)
 				return session
 			})
 
-			return NewResponse(200, "You have been logged in"), nil
+			return NewResponse(200, string(userDetails)), nil
 		},
 	}
 

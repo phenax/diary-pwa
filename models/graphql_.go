@@ -23,22 +23,30 @@ func GetGraphQLSchema() *graphql.Schema {
 
 	if graphQLSchema == nil {
 
-		fields := graphql.Fields{
+		queryFields := graphql.Fields{
 			// User queries
-			"UserPosts": GraphQLUsersField,
-			"NewUser":   GraphQLCreateUserField,
 			"Login":     GraphQLLoginUserField,
+			"UserPosts": GraphQLUsersField,
 
 			// Post  queries
-			"Post":     GraphQLPostField,
+			"Post": GraphQLPostField,
+		}
+
+		mutationFields := graphql.Fields{
+			// User mutations
+			"CreateUser": GraphQLCreateUserField,
+
+			// Post mutations
 			"SavePost": GraphQLSavePostField,
 		}
 
-		rootQuery := graphql.ObjectConfig{Name: "RootQuery", Fields: fields}
+		rootQuery := graphql.ObjectConfig{Name: "RootQuery", Fields: queryFields}
+		rootMutation := graphql.ObjectConfig{Name: "RootMutation", Fields: mutationFields}
 
 		schema, err := graphql.NewSchema(
 			graphql.SchemaConfig{
-				Query: graphql.NewObject(rootQuery),
+				Query:    graphql.NewObject(rootQuery),
+				Mutation: graphql.NewObject(rootMutation),
 			},
 		)
 

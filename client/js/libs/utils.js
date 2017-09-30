@@ -13,3 +13,16 @@ export function Extendable(cls) {
 
 	return Extendable;
 }
+
+
+export function formObject($form) {
+
+	// TODO: Get a FormData polyfill
+
+	const data = new FormData($form);
+
+	return Array.from(data.entries()).reduce((carryObject, field) => {
+		carryObject[field[0]] = field[1];
+		return carryObject;
+	}, {});
+}

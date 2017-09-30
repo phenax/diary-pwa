@@ -158,8 +158,6 @@ func init() {
 
 			validation := post.Validate()
 
-			libs.Log("Post", post)
-
 			if validation["IsValid"] != "1" {
 				return NewResponse(400, validation["Message"]), nil
 			}
@@ -176,10 +174,7 @@ func init() {
 				return NewResponse(500, "Something went wrong"), nil
 			}
 
-			libs.Log("Before marshal", post)
-
 			postJSON, _ := json.Marshal(post)
-			libs.Log("After marshal", postJSON)
 			return NewResponse(200, string(postJSON)), nil
 		},
 	}
