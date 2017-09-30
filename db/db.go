@@ -1,30 +1,12 @@
 package db
 
 import (
-	"os"
-	"time"
-
+	appConfig "github.com/phenax/diary-pwa/config"
 	"github.com/phenax/diary-pwa/libs"
 	mgo "gopkg.in/mgo.v2"
 )
 
 var connection *mgo.Session
-var configCache *mgo.DialInfo
-
-//
-// GetConfig - Get the connection configuration for the db
-//
-// returns
-// -- {*.mgo.DialInfo}  Dial information for a connection
-//
-func GetConfig() *mgo.DialInfo {
-
-	return &mgo.DialInfo{
-		Addrs:    []string{"localhost"},
-		Timeout:  60 * time.Second,
-		Database: "diary",
-	}
-}
 
 //
 // GetConnection - Get the connection (session object) singleton
@@ -36,26 +18,14 @@ func GetConfig() *mgo.DialInfo {
 // -- {*mgo.Session} The session
 // -- {error}
 //
-func GetConnection(prods ...bool) (*mgo.Session, error) {
-
-	var config *mgo.DialInfo
-	prod := false
-
-	if len(prods) > 0 {
-		prod = prods[0]
-	}
+func GetConnection() (*mgo.Session, error) {
 
 	// If the connection was already made, use it.
 	if connection != nil {
 		return connection, nil
 	}
 
-	// Production connection
-	if prod {
-		config = GetProdConfig()
-	} else {
-		config = GetConfig()
-	}
+	config := appConfig.DBConnection
 
 	// New connection
 	session, err := mgo.DialWithInfo(config)
@@ -67,7 +37,6 @@ func GetConnection(prods ...bool) (*mgo.Session, error) {
 
 	// Save the connection
 	connection = session
-	configCache = config
 
 	return session, nil
 }
@@ -81,14 +50,12 @@ func GetConnection(prods ...bool) (*mgo.Session, error) {
 //
 func GetDB() (*mgo.Database, error) {
 
-	prod := os.Getenv("ENV") == "production"
-
 	// Get db connection
-	conn, err := GetConnection(prod)
+	conn, err := GetConnection()
 
 	if err != nil {
 		return nil, err
 	}
 
-	return conn.DB(configCache.Database), nil
+	return conn.DB(appConfig.DBConnection.Database), nil
 }
