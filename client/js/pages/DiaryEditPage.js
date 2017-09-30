@@ -3,6 +3,7 @@ import { h, Component } from 'preact';
 import { route } from 'preact-router';
 
 import { getPage } from '../libs/db';
+import { formObject } from '../libs/utils';
 import { fetchPost, saveDiaryPage, UnauthorizedError, NotFoundError } from '../libs/fetch';
 
 import PageEditor from '../components/PageEditor';
@@ -52,10 +53,7 @@ export default class DiaryEditPage extends Component {
 		e.preventDefault();
 
 		const $form = e.currentTarget;
-		const data =
-			Array.from((new FormData($form)).entries())
-				.reduce((carry, el) => { carry[el[0]] = el[1]; return carry; }, {});
-
+		const data = formObject($form);
 		data.ID = this.pageId;
 
 		saveDiaryPage(data);

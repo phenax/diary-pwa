@@ -19,10 +19,14 @@ export function formObject($form) {
 
 	// TODO: Get a FormData polyfill
 
-	const data = new FormData($form);
+	let data = new FormData($form);
 
-	return Array.from(data.entries()).reduce((carryObject, field) => {
+	data = Array.from(data.entries()).reduce((carryObject, field) => {
 		carryObject[field[0]] = field[1];
 		return carryObject;
 	}, {});
+
+	console.log(data);
+
+	return data;
 }

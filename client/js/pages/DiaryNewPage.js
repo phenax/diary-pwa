@@ -2,6 +2,7 @@
 import { h, Component } from 'preact';
 
 import { saveDiaryPage } from '../libs/fetch';
+import { formObject } from '../libs/utils';
 
 import PageEditor from '../components/PageEditor';
 import Title from '../components/Title';
@@ -19,10 +20,7 @@ export default class DiaryNewPage extends Component {
 		e.preventDefault();
 
 		const $form = e.currentTarget;
-		// TODO: Formdata polyfill
-		const data =
-			Array.from((new FormData($form)).entries())
-				.reduce((obj, el) => { obj[el[0]] = el[1]; return obj; }, {});
+		const data = formObject($form);
 
 		saveDiaryPage(data);
 

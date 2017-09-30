@@ -276,18 +276,18 @@ var GraphQLCreateUserField = &graphql.Field{
 		}
 
 		user.SetPassword(user.Password)
-		// err := Users.Insert(user)
+		err := Users.Insert(user)
 
-		// if err != nil {
-		// 	return NewResponse(500, "Something went wrong"), nil
-		// }
+		if err != nil {
+			return NewResponse(500, "Something went wrong"), nil
+		}
 
 		userDetails, _ := json.Marshal(&SessionUser{ID: user.ID, Email: user.Email})
 
-		// libs.GraphQLSetSession(params, func(session *sessions.Session) *sessions.Session {
-		// 	session.Values["User"] = string(userDetails)
-		// 	return session
-		// })
+		libs.GraphQLSetSession(params, func(session *sessions.Session) *sessions.Session {
+			session.Values["User"] = string(userDetails)
+			return session
+		})
 
 		return NewResponse(200, string(userDetails)), nil
 	},

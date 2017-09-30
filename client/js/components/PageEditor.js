@@ -97,8 +97,11 @@ export default class PageEditor extends Component {
 		} else {
 			Array.from(this.base.querySelectorAll('input,textarea'))
 				.forEach($input => {
-					$input.value = '';
-					$input.checked = true;
+					if($input.type === 'radio' || $input.type === 'checkbox') {
+						$input.checked = true;
+					} else {
+						$input.value = '';
+					}
 				});
 		}
 	}
@@ -195,8 +198,8 @@ export default class PageEditor extends Component {
 
 					<div>
 						<div class='flexy-row'>
-							{this.RATINGS.map(rating => (
-								<div class="flexy-col" style={{ width: '100%' }}>
+							{this.RATINGS.map((rating, i) => (
+								<div class="flexy-col" style={{ width: '100%' }} key={i}>
 									<label class='megacheckbox' style={PageEditor.styles.ratingLabel}>
 										<input
 											type='radio' name='Rating'
