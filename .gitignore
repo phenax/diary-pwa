@@ -3,11 +3,14 @@ node_modules
 public/js
 public/css
 
+nohup.out
+
 /vendor/*/
 
 diary-pwa
 
 db/db.production.go
+config/*.private.go
 
 # Compiled Object files, Static and Dynamic libs (Shared Objects)
 *.o

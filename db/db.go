@@ -57,8 +57,6 @@ func GetConnection(prods ...bool) (*mgo.Session, error) {
 		config = GetConfig()
 	}
 
-	libs.Log("config", config)
-
 	// New connection
 	session, err := mgo.DialWithInfo(config)
 

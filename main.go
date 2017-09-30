@@ -2,17 +2,12 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 
+	config "github.com/phenax/diary-pwa/config"
 	_ "github.com/phenax/diary-pwa/routes"
-)
-
-const (
-	// DefaultHost The Host for the server
-	DefaultHost = ""
-	// DefaultPort The server port to listen to
-	DefaultPort = "8080"
 )
 
 func main() {
@@ -21,14 +16,22 @@ func main() {
 	host := os.Getenv("HOST")
 
 	if port == "" {
-		port = DefaultPort
+		port = config.Server["Port"]
 	}
 	if host == "" {
-		host = DefaultHost
+		host = config.Server["Host"]
 	}
 
-	fmt.Println("Server has started on " + host + ":" + port)
+	fmt.Println("Server has started", ""+host+":"+port)
 
-	// Start the server
-	http.ListenAndServe(host+":"+port, nil)
+	var err error
+	if config.UseHTTPS {
+		// Start the server https
+		err = http.ListenAndServeTLS(host+":"+port, config.Server["TLSCert"], config.Server["TLSKey"], nil)
+	} else {
+		// Start the server
+		err = http.ListenAndServe(host+":"+port, nil)
+	}
+
+	log.Fatal(err)
 }
