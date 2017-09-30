@@ -27,7 +27,7 @@ func main() {
 	var err error
 	if config.UseHTTPS {
 		// Start the server https
-		err = http.ListenAndServeTLS(host+":"+port, config.Server["TLSCert"], config.Server["TLSKey"], nil)
+		err = http.ListenAndServeTLS(host+":"+port, config.TLSCert, config.TLSKey, nil)
 	} else {
 		// Start the server
 		err = http.ListenAndServe(host+":"+port, nil)

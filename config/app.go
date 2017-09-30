@@ -19,7 +19,7 @@ var (
 	}
 
 	// UseHTTPS -
-	UseHTTPS = false
+	UseHTTPS = true
 )
 
 func init() {
