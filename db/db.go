@@ -4,7 +4,8 @@ import (
 	"os"
 	"time"
 
-	"labix.org/v2/mgo"
+	"github.com/phenax/diary-pwa/libs"
+	mgo "gopkg.in/mgo.v2"
 )
 
 var connection *mgo.Session
@@ -56,10 +57,13 @@ func GetConnection(prods ...bool) (*mgo.Session, error) {
 		config = GetConfig()
 	}
 
+	libs.Log("config", config)
+
 	// New connection
 	session, err := mgo.DialWithInfo(config)
 
 	if err != nil {
+		libs.Log("DB Connection error", err)
 		return nil, err
 	}
 

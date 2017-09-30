@@ -3,10 +3,10 @@ package db
 import (
 	"time"
 
-	"labix.org/v2/mgo"
+	mgo "gopkg.in/mgo.v2"
 )
 
-// Rename the function and remove _
+// GetProdConfig_ - Rename the function and remove _
 func GetProdConfig_() *mgo.DialInfo {
 
 	return &mgo.DialInfo{

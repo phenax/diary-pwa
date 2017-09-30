@@ -9,8 +9,8 @@ import (
 	"github.com/graphql-go/graphql"
 	"github.com/phenax/diary-pwa/db"
 	"github.com/phenax/diary-pwa/libs"
-	"labix.org/v2/mgo"
-	"labix.org/v2/mgo/bson"
+	mgo "gopkg.in/mgo.v2"
+	bson "gopkg.in/mgo.v2/bson"
 )
 
 //
