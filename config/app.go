@@ -17,9 +17,6 @@ var (
 		"Port": os.Getenv("PORT"),
 		"Host": os.Getenv("HOST"),
 	}
-
-	// UseHTTPS -
-	UseHTTPS = true
 )
 
 func init() {
