@@ -4,6 +4,7 @@ import { route } from 'preact-router';
 
 import { loginUser, findUser, createUser, UnauthorizedError, NotFoundError } from '../libs/fetch';
 import { formObject } from '../libs/utils';
+import bus from '../libs/listeners';
 
 import Title from '../components/Title';
 
@@ -106,6 +107,7 @@ export default class LoginPage extends Component {
 				switch(data.Status) {
 					case 200: // Take the user to dashboard
 						$form.reset();
+						bus.setAuth(data.UserPosts.User);
 						return route('/', false);
 					case 400:
 						throw new Error(data.Message);
@@ -131,6 +133,7 @@ export default class LoginPage extends Component {
 				switch(data.Login.Status) {
 					case 200: // Take the user to dashboard
 						$form.reset();
+						bus.setAuth(data.UserPosts.User);
 						return route('/', false);
 					case 400:
 						throw new Error(data.Login.Message);

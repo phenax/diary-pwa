@@ -171,9 +171,10 @@ var GraphQLUsersField = &graphql.Field{
 		var user UserWithPost
 
 		args := params.Args
-		userSession := libs.GraphQLGetSession(params)
 
 		if args["username"] == "" {
+
+			userSession := libs.GraphQLGetSession(params)
 
 			var authUser SessionUser
 

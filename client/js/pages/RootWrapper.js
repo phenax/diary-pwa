@@ -6,6 +6,7 @@ import { Link } from 'preact-router/match';
 import AsyncRoute from 'preact-async-route';
 
 import { findUser, logoutUser, NotFoundError, UnauthorizedError } from '../libs/fetch';
+import bus from '../libs/listeners';
 
 import HomePage from './HomePage';
 import { Navbar } from '../components/Navbar';
@@ -64,10 +65,14 @@ export default class RootWrapper extends Component {
 	}
 
 	componentDidMount() {
-		findUser({})
-			.then(resp => console.log(resp))
-			// .then(user => this.setState({ user }))
+
+		bus.onAuthChange(user => this.setState({ user }));
+
+		findUser('')
+			.then(resp => resp.UserPosts.User)
+			.then(user => bus.setAuth(user))
 			.catch(e => {
+				console.log(e);
 				if(e instanceof NotFoundError || e instanceof UnauthorizedError) {
 					// TODO: Handle Not logged in
 				}
@@ -81,11 +86,18 @@ export default class RootWrapper extends Component {
 					<Flash default />
 					{this.withNavbar?
 						<Navbar minHeight={VARS.navbarMinHeight}>
-							<NavLink href="/new">New Page</NavLink>
-							<NavLink href="/login">Login</NavLink>
-							<NavLink href="/signup">Signup</NavLink>
-							<NavLink href="/notfound">Not Found</NavLink>
-							<NavLink action={logoutUser}>Logout</NavLink>
+							{
+								this.state.user?
+									(<div>
+										<NavLink href="/new">New Page</NavLink>
+										<NavLink href='/'>{this.state.user.Username}</NavLink>
+										<NavLink action={logoutUser}>Logout</NavLink>
+									</div>):
+									(<div>
+										<NavLink href="/login">Login</NavLink>
+										<NavLink href="/signup">Signup</NavLink>
+									</div>)
+							}
 						</Navbar>:
 						null}
 					<Router>

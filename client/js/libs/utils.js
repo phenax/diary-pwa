@@ -26,7 +26,5 @@ export function formObject($form) {
 		return carryObject;
 	}, {});
 
-	console.log(data);
-
 	return data;
 }
