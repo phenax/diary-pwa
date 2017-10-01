@@ -246,6 +246,11 @@ a, .siimple-a, .siimple-link {
 .siimple-btn--white {
   background-color: $siimple-white;
   color: $siimple-navy; }
+.siimple-btn--bg {
+  padding: .3em 1em;
+  height: auto;
+  text-transform: uppercase;
+}
 
 .siimple-checkbox {
   display: inline-block;

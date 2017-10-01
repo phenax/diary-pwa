@@ -1,0 +1,39 @@
+
+$mobileBreakpoint: 500px;
+$tabletBreakpoint: 800px;
+
+@media (max-width: #{$mobileBreakpoint}) {
+
+	.flexy {
+
+		&-row__sm-block {
+			display: block !important;
+		}
+
+		&-col--6 {
+			width: 100% !important;
+		}
+	}
+
+	.hide-sm {
+		display: none !important;
+	}
+
+	.login-sidebar-wrapper {
+		padding: 1.3em 1.4em;
+		font-size: .8em;
+
+		small {
+			font-size: .6em;
+		}
+	}
+
+
+	.siimple-input--bg {
+		font-size: 1.5em;
+	}
+
+	.post-happy-scale {
+		font-size: .7em;
+	}
+}

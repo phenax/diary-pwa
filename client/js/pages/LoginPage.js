@@ -24,10 +24,12 @@ export default class LoginPage extends Component {
 			width: '100%',
 		},
 		sidebarWrapper: {
-			padding: '3em 1.5em',
+			display: 'block',
+			width: '100%',
+			height: '100%',
 		},
 		sidebarContent: {
-			fontSize: '1em',
+			fontSize: '.9em',
 			padding: '1em 0',
 			opacity: '.6',
 			lineHeight: '1.7em',
@@ -43,20 +45,15 @@ export default class LoginPage extends Component {
 	constructor(props) {
 		super(props);
 
-		const action = this.props.path;
-
 		this.isLoginPage = false;
 
-		switch(action) {
-			case '/login': {
-				this.isLoginPage = true;
-				break;
-			}
+		const action = this.props.path;
+		if(/^\/login$/.test(action)) {
+			this.isLoginPage = true;
 		}
 
 		this.onFormSubmit = this.onFormSubmit.bind(this);
 	}
-
 
 	onFormSubmit(e) {
 		e.preventDefault();
@@ -81,6 +78,7 @@ export default class LoginPage extends Component {
 	}
 
 	findUser(username) {
+
 		return findUser(username)
 			.then(data => {
 				if(!data.UserPosts || !data.UserPosts.User)
@@ -102,17 +100,14 @@ export default class LoginPage extends Component {
 
 
 	signupUser(data, $form) {
+
 		return createUser(data)
 			.then(data => {
 				switch(data.Status) {
 					case 200: // Take the user to dashboard
 						$form.reset();
-						bus.setAuth(data.UserPosts.User);
+						bus.setAuth(JSON.parse(data.Message));
 						return route('/', false);
-					case 400:
-						throw new Error(data.Message);
-					case 409:
-						throw new Error(data.Message, []);
 					default:
 						throw new Error(data.Message);
 				}
@@ -120,14 +115,13 @@ export default class LoginPage extends Component {
 			.catch(e => {
 				console.log(e);
 
-				this.setState({
-					error: e.message || 'Something went wrong'
-				});
+				this.setState({ error: e.message || 'Something went wrong' });
 			});
 	}
 
 
 	authenticate(username, password, $form) {
+
 		return loginUser(username, password)
 			.then(data => {
 				switch(data.Login.Status) {
@@ -135,8 +129,6 @@ export default class LoginPage extends Component {
 						$form.reset();
 						bus.setAuth(data.UserPosts.User);
 						return route('/', false);
-					case 400:
-						throw new Error(data.Login.Message);
 					case 401:
 						throw new UnauthorizedError(data.Login.Message, []);
 					default:
@@ -163,8 +155,8 @@ export default class LoginPage extends Component {
 
 				<br />
 				<div class='siimple-bg--white siimple-shadow--1'>
-					<div class='flexy-row'>
-						<div class='flexy-col flexy-col--6 vertical-center' style={{ padding: '0', margin: '0' }}>
+					<div class='flexy-row flexy-row__sm-block'>
+						<div class='flexy-col flexy-col--6 vertical-center'>
 							<LoginSidebar isLoginPage={this.isLoginPage} />
 						</div>
 						<div class='flexy-col flexy-col--6 vertical-center siimple-color--navy'>
@@ -187,14 +179,14 @@ export const LoginForm = ({ user = null, ctx }) => (
 	<div>
 		<Title>Log in to your account</Title>
 
+		<br />
+
 		<div>
 			<div class='slide-in' style={{ display: (user? 'none': 'block') }}>
-				<h4 class='siimple-h4 siimple-color--navy'>
-					Login
-				</h4>
+				
 				<div>
 					<label style={{ fontSize: '.9em' }}>
-						Enter your email
+						Enter your username or email
 					</label>
 					<input
 						type='text' name='email'
@@ -203,7 +195,7 @@ export const LoginForm = ({ user = null, ctx }) => (
 					/>
 				</div>
 				<div style={{ padding: '1em 0' }}>
-					<button class='siimple-btn siimple-btn--primary' type='submit' style={{ display: 'block', width: '100%' }}>
+					<button class='siimple-btn siimple-btn--primary siimple-btn--bg' type='submit' style={{ display: 'block', width: '100%' }}>
 						Continue
 					</button>
 				</div>
@@ -239,7 +231,7 @@ export const LoginForm = ({ user = null, ctx }) => (
 					/>
 				</div>
 				<div style={{ padding: '1em 0' }}>
-					<button class='siimple-btn siimple-btn--primary' type='submit' style={{ display: 'block', width: '100%' }}>
+					<button class='siimple-btn siimple-btn--primary siimple-btn--bg' type='submit' style={{ display: 'block', width: '100%' }}>
 						Login
 					</button>
 				</div>
@@ -252,9 +244,7 @@ export const SignupForm = () => (
 	<div class='slide-in'>
 		<Title>Create an account</Title>
 
-		<h4 class='siimple-h4 siimple-color--navy'>
-			Create an account
-		</h4>
+		<br />
 
 		<div style={LoginPage.styles.inputWrap}>
 			<label style={{ fontSize: '.9em', }}>
@@ -302,45 +292,32 @@ export const SignupForm = () => (
 
 
 		<div style={{ padding: '1em 0' }}>
-			<button class='siimple-btn siimple-btn--primary' type='submit' style={{ display: 'block', width: '100%' }}>
-				Login
+			<button class='siimple-btn siimple-btn--primary siimple-btn--bg' type='submit' style={{ display: 'block', width: '100%' }}>
+				Register
 			</button>
 		</div>
 	</div>
 );
 
 export const LoginSidebar = ({ isLoginPage = true }) => (
-	<div style={LoginPage.styles.sidebarWrapper} class='siimple-bg--navy'>
-		<br />
-
+	<div style={LoginPage.styles.sidebarWrapper} class='login-sidebar-wrapper siimple-bg--navy'>
 		<h3 class='siimple-h3' style={{ textTransform: 'uppercase' }}>
 			<div>
 				Welcome!
 			</div>
 			<small class='siimple-small' style={{ opacity: '.5' }}>
 				{isLoginPage?
-					'Log in to your diary account':
-					'Register for an account to use diary'}
+					'Log in to your account':
+					'Register for an account'}
 			</small>
 		</h3>
 
 		<div>
-			<p class='siimple-p' style={LoginPage.styles.sidebarContent}>
+			<p class='siimple-p hide-sm' style={LoginPage.styles.sidebarContent}>
 				<p class='siimple-p'>
-					Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-				</p>
-				<p class='siimple-p'>
-					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-				</p>
-				<p class='siimple-p'>
-					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-					proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					Join diary to create your own online diary
 				</p>
 			</p>
 		</div>
-
-		<br />
 	</div>
 );

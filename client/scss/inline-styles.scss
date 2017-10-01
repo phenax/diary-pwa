@@ -193,11 +193,35 @@ $outerBallSize: 50px;
 .flexy-row {
 	display: flex;
 	flex-direction: row;
+	flex-wrap: wrap;
 
 	.flexy-col {
 
 		&--6 {
 			width: 50%;
 		}
+
+		&--3 {
+			width: 25%;
+		}
 	}
+}
+
+.login-sidebar-wrapper {
+	padding: 3em 1.5em;
+	font-size: 1em;
+
+	h3 {
+		font-size: 1.6em;
+		line-height: .8em;
+	}
+
+	small {
+		font-size: .5em;
+		line-height: .3em;
+	}
+}
+
+.post-happy-scale {
+	font-size: 1em;
 }

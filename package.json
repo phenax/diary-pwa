@@ -7,8 +7,10 @@
     "start": "npm run build && ./diary-pwa",
     "build": "go build",
     "build:js": "webpack -p",
+    "build:css": "gulp prod:css",
     "watch": "fresh",
     "watch:js": "webpack -w",
+    "watch:css": "gulp watch:css",
     "test": "__"
   },
   "repository": {

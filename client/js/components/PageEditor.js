@@ -10,13 +10,7 @@ export default class PageEditor extends Component {
 		wrapper: {
 			padding: '1em 0',
 		},
-		titleField: {
-			fontSize: '2em',
-			height: 'auto',
-			padding: '.3em .5em',
-			display: 'block',
-			width: '100%',
-		},
+		titleField: { },
 		contentField: {
 			height: '300px',
 			minHeight: '160px',
@@ -50,10 +44,10 @@ export default class PageEditor extends Component {
 	};
 
 	RATINGS = [
-		{ value: 1, class: 'fa fa-frown-o' },
-		{ value: 2, class: 'fa fa-meh-o' },
-		{ value: 3, class: 'fa fa-smile-o' },
-		{ value: 4, class: 'fa fa-x-laughing' },
+		{ value: 1, icon: '😞', class: 'fa fa-frown-o' },
+		{ value: 2, icon: '😐', class: 'fa fa-meh-o' },
+		{ value: 3, icon: '☺', class: 'fa fa-smile-o' },
+		{ value: 4, icon: '😄', class: 'fa fa-x-laughing' },
 	];
 
 
@@ -165,7 +159,7 @@ export default class PageEditor extends Component {
 					<div>
 						<input
 							type='text' name='Title'
-							class='siimple-input'
+							class='siimple-input siimple-input--bg'
 							placeholder='Enter the page title'
 							style={PageEditor.styles.titleField}
 						/>
@@ -197,9 +191,9 @@ export default class PageEditor extends Component {
 					<br />
 
 					<div>
-						<div class='flexy-row'>
+						<div class='flexy-row post-happy-scale'>
 							{this.RATINGS.map((rating, i) => (
-								<div class="flexy-col" style={{ width: '100%' }} key={i}>
+								<div class="flexy-col flexy-col--3" key={i}>
 									<label class='megacheckbox' style={PageEditor.styles.ratingLabel}>
 										<input
 											type='radio' name='Rating'
@@ -208,7 +202,7 @@ export default class PageEditor extends Component {
 											style={{ display: 'none' }}
 										/>
 										<div class='megacheckbox--text' style={PageEditor.styles.ratingText}>
-											<i class={rating.class} />
+											{rating.icon? rating.icon: <i class={rating.class} />}
 										</div>
 									</label>
 								</div>

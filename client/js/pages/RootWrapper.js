@@ -1,9 +1,9 @@
 
 import { h, Component } from 'preact';
-import { Promise } from 'es6-promise';
 import { Router } from 'preact-router';
 import { Link } from 'preact-router/match';
 import AsyncRoute from 'preact-async-route';
+import assign from 'object-assign';
 
 import { findUser, logoutUser, NotFoundError, UnauthorizedError } from '../libs/fetch';
 import bus from '../libs/listeners';
@@ -25,20 +25,6 @@ const styles = {
 };
 
 
-const asyncComponents = {
-	LoginPage: () => new Promise((resolve) =>
-		require.ensure([], () => resolve(require('./LoginPage').default))),
-	DiaryPage: () => new Promise((resolve) =>
-		require.ensure([], () => resolve(require('./DiaryPage').default))),
-	DiaryNewPage: () => new Promise((resolve) =>
-		require.ensure([], () => resolve(require('./DiaryNewPage').default))),
-	DiaryEditPage: () => new Promise((resolve) =>
-		require.ensure([], () => resolve(require('./DiaryEditPage').default))),
-	ErrorPage: () => new Promise((resolve) =>
-		require.ensure([], () => resolve(require('./ErrorPage').default))),
-};
-
-
 export const NavLink = ({ children, href, action }) =>
 	action?
 		<a class='siimple-btn'
@@ -54,6 +40,21 @@ export const NavLink = ({ children, href, action }) =>
 
 export default class RootWrapper extends Component {
 
+
+	asyncComponents = {
+		LoginPage: () => new Promise((resolve) =>
+			require.ensure([], () => resolve(require('./LoginPage').default))),
+		DiaryPage: () => new Promise((resolve) =>
+			require.ensure([], () => resolve(require('./DiaryPage').default))),
+		DiaryNewPage: () => new Promise((resolve) =>
+			require.ensure([], () => resolve(require('./DiaryNewPage').default))),
+		DiaryEditPage: () => new Promise((resolve) =>
+			require.ensure([], () => resolve(require('./DiaryEditPage').default))),
+		ErrorPage: () => new Promise((resolve) =>
+			require.ensure([], () => resolve(require('./ErrorPage').default))),
+	};
+
+
 	state = {
 		user: null,
 	};
@@ -68,15 +69,9 @@ export default class RootWrapper extends Component {
 
 		bus.onAuthChange(user => this.setState({ user }));
 
-		findUser('')
+		findUser()
 			.then(resp => resp.UserPosts.User)
-			.then(user => bus.setAuth(user))
-			.catch(e => {
-				console.log(e);
-				if(e instanceof NotFoundError || e instanceof UnauthorizedError) {
-					// TODO: Handle Not logged in
-				}
-			});
+			.then(user => bus.setAuth(user));
 	}
 
 	render() {
@@ -103,27 +98,27 @@ export default class RootWrapper extends Component {
 					<Router>
 						<HomePage path='/' />
 						<AsyncRoute path='/login'
-							getComponent={asyncComponents.LoginPage}
+							getComponent={this.asyncComponents.LoginPage}
 							loading={LoadingSpinner}
 						/>
 						<AsyncRoute path='/signup'
-							getComponent={asyncComponents.LoginPage}
+							getComponent={this.asyncComponents.LoginPage}
 							loading={LoadingSpinner}
 						/>
 						<AsyncRoute path='/page/:pageId'
-							getComponent={asyncComponents.DiaryPage}
+							getComponent={this.asyncComponents.DiaryPage}
 							loading={LoadingSpinner}
 						/>
 						<AsyncRoute path='/new'
-							getComponent={asyncComponents.DiaryNewPage}
+							getComponent={this.asyncComponents.DiaryNewPage}
 							loading={LoadingSpinner}
 						/>
 						<AsyncRoute path='/page/:pageId/edit'
-							getComponent={asyncComponents.DiaryEditPage}
+							getComponent={this.asyncComponents.DiaryEditPage}
 							loading={LoadingSpinner}
 						/>
 						<AsyncRoute default
-							getComponent={asyncComponents.ErrorPage}
+							getComponent={this.asyncComponents.ErrorPage}
 							loading={LoadingSpinner}
 						/>
 					</Router>
