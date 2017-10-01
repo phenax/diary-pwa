@@ -27,8 +27,7 @@ export default class PageEditor extends Component {
 
 		ratingText: {
 			textAlign: 'center',
-			fontSize: '2.5em',
-			padding: '.6em',
+			padding: '.6em 0',
 			borderRadius: '5px',
 			cursor: 'pointer',
 		},

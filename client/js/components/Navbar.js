@@ -28,12 +28,22 @@ export class Navbar extends Component {
 			fontSize: '1.3em',
 			color: '#fff',
 		},
-
-		navbar_links: {
-			textAlign: 'right',
-			width: '100%',
-		},
 	};
+
+	constructor(props) {
+		super(props);
+
+		this.navbarToggle = this.navbarToggle.bind(this);
+	}
+
+	navbarToggle(e) {
+
+		const $navbarLinks = this.base.querySelector('.js-navbar-links-wrapper');
+
+		if($navbarLinks) {
+			$navbarLinks.classList.toggle('navbar-links__visible');
+		}
+	}
 
 	render() {
 
@@ -48,7 +58,13 @@ export class Navbar extends Component {
 						</Link>
 					</div>
 
-					<div style={Navbar.styles.navbar_links} class='siimple-color--grey'>
+					<div style={{ textAlign: 'right', width: '100%' }}>
+						<button class='siimple-btn navbar-links-action' onClick={this.navbarToggle}>
+							<i class='fa fa-bars' />
+						</button>
+					</div>
+
+					<div style={Navbar.styles.navbar_links} class='navbar-links js-navbar-links-wrapper siimple-color--grey'>
 						{this.props.children}
 					</div>
 				</div>
