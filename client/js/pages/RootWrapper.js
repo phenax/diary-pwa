@@ -1,7 +1,7 @@
 
 import { h, Component } from 'preact';
 import { Router } from 'preact-router';
-import { Link } from 'preact-router/match';
+import { Link, Match } from 'preact-router/match';
 import AsyncRoute from 'preact-async-route';
 import assign from 'object-assign';
 
@@ -63,6 +63,8 @@ export default class RootWrapper extends Component {
 		super(props);
 
 		this.withNavbar = (typeof this.props.withNavbar !== 'undefined')? this.props.withNavbar: true;
+
+		this.onRouteChange = this.onRouteChange.bind(this);
 	}
 
 	componentDidMount() {
@@ -72,6 +74,18 @@ export default class RootWrapper extends Component {
 		findUser()
 			.then(resp => resp.UserPosts.User)
 			.then(user => bus.setAuth(user));
+
+		this.$navbarLinks = document.querySelector('.js-navbar-links-wrapper');
+	}
+
+	hideNavbar() {
+		if(this.$navbarLinks && this.$navbarLinks.classList.contains('navbar-links__visible')) {
+			this.$navbarLinks.classList.remove('navbar-links__visible');
+		}
+	}
+
+	onRouteChange() {
+		this.hideNavbar();
 	}
 
 	render() {
@@ -79,6 +93,7 @@ export default class RootWrapper extends Component {
 			<div>
 				<div style={styles.wrapper}>
 					<Flash default />
+					<Match default>{this.onRouteChange}</Match>
 					{this.withNavbar?
 						<Navbar minHeight={VARS.navbarMinHeight}>
 							{

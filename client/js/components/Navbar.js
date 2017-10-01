@@ -3,7 +3,6 @@ import { h, Component } from 'preact';
 import { Link } from 'preact-router/match';
 import assign from 'object-assign';
 
-
 export class Navbar extends Component {
 
 	static styles = {
@@ -34,14 +33,23 @@ export class Navbar extends Component {
 		super(props);
 
 		this.navbarToggle = this.navbarToggle.bind(this);
+		this.hideNavbar = this.hideNavbar.bind(this);
+		this.showNavbar = this.showNavbar.bind(this);
 	}
 
-	navbarToggle(e) {
+	componentDidMount() {
+		this.$navbarLinks = this.base.querySelector('.js-navbar-links-wrapper');
+	}
 
-		const $navbarLinks = this.base.querySelector('.js-navbar-links-wrapper');
+	showNavbar() { this.$navbarLinks.classList.add('navbar-links__visible'); }
+	hideNavbar() { this.$navbarLinks.classList.remove('navbar-links__visible'); }
 
-		if($navbarLinks) {
-			$navbarLinks.classList.toggle('navbar-links__visible');
+	navbarToggle() {
+
+		if(this.$navbarLinks && this.$navbarLinks.classList.contains('navbar-links__visible')) {
+			this.hideNavbar();
+		} else {
+			this.showNavbar();
 		}
 	}
 
@@ -64,7 +72,9 @@ export class Navbar extends Component {
 						</button>
 					</div>
 
-					<div style={Navbar.styles.navbar_links} class='navbar-links js-navbar-links-wrapper siimple-color--grey'>
+					<div
+						style={Navbar.styles.navbar_links}
+						class='navbar-links js-navbar-links-wrapper siimple-color--grey'>
 						{this.props.children}
 					</div>
 				</div>
