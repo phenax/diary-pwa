@@ -23,7 +23,7 @@ func init() {
 	router.HandleFunc("/json", ctrlr.Call(ctrlr.JSONTest))
 
 	// gzip test
-	router.HandleFunc("/gzip", ctrlr.Call(ctrlr.GzipTest))
+	router.HandleFunc("/sw.js", ctrlr.Call(ctrlr.ServeServiceWorker))
 
 	// gzip test
 	router.HandleFunc("/verify", ctrlr.Call(ctrlr.Encrypt))

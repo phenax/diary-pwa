@@ -8,6 +8,12 @@ const (
 
 	// AppName -
 	AppName = "diary-pwa"
+
+	// StaticFileVersion -
+	StaticFileVersion = "0.0.0"
+
+	// ServiceWorkerPath -
+	ServiceWorkerPath = "public/js/serviceworker.js"
 )
 
 var (

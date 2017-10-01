@@ -13,11 +13,12 @@ const webpackConfig= {
 
 	entry: {
 		script: [ 'script' ].map(k => _s(k)),
+		serviceworker: [ _s('serviceworker') ],
 	},
 
 	output: {
 		path: BUILD_DIR,
-		filename: 'script.js',
+		filename: '[name].js',
 		publicPath: '/public/js/',
 	},
 

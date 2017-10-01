@@ -28,3 +28,13 @@ while($renderHook.firstChild) {
 
 // Render root component to hook
 render(<RootWrapper />, $renderHook);
+
+
+// Service worker registrations
+if('serviceWorker' in window.navigator) {
+	window.navigator.serviceWorker
+		.register('/sw.js')
+		.then(console.log)
+		.catch(console.error);
+}
+

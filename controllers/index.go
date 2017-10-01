@@ -5,8 +5,10 @@ import (
 	// "net/http"
 	// "fmt"
 	// "reflect"
+	"io/ioutil"
 
 	// "labix.org/v2/mgo/bson"
+	"github.com/phenax/diary-pwa/config"
 	"github.com/phenax/diary-pwa/libs"
 	"github.com/phenax/diary-pwa/models"
 	// "github.com/gorilla/mux"
@@ -83,23 +85,28 @@ func JSONTest(ctx *Context) {
 }
 
 //
-// GzipTest - Testing gzip compression on a string of content
+// ServeServiceWorker - Serve the service worker js file
 //
 // params
 // -- ctx {*Context}
 //
-func GzipTest(ctx *Context) {
+func ServeServiceWorker(ctx *Context) {
 
-	content := `
-		Disposable city market rain pistol saturation point hacker grenade engine range-rover.
-		Neural gang dome nano-faded beef noodles bicycle footage kanji advert courier garage singularity.
-		Rain concrete weathered industrial grade knife tank-traps sign RAF nodal point alcohol tower.
-		Ablative spook neural military-grade engine cyber-carbon media shoes Kowloon knife.
-		Numinous fluidity into market silent physical crypto-sprawl tanto euro-pop.
-	`
+	swScript := `self.STATIC_BASE_URL = '` + libs.GetStaticURL("") + `';
+self.STATIC_CACHE_VERSION = '` + config.StaticFileVersion + `';
+`
+
+	data, err := ioutil.ReadFile(config.ServiceWorkerPath)
+
+	if err != nil {
+		ctx.ErrorMessage(500, err)
+		return
+	}
+
+	swScript += string(data)
 
 	// Gzip the string
-	gzipppedContent, err := libs.GzipString(content)
+	gzipppedContent, err := libs.GzipString(swScript)
 
 	if err != nil {
 		ctx.ErrorMessage(500, err)
@@ -107,7 +114,7 @@ func GzipTest(ctx *Context) {
 	}
 
 	ctx.Send(string(gzipppedContent), &ResponseConfig{
-		ContentType:     "text/plain",
+		ContentType:     "application/javascript",
 		ContentEncoding: "gzip",
 	})
 }
