@@ -51,6 +51,7 @@
     "preact": "^8.2.5",
     "preact-async-route": "^2.0.0",
     "preact-router": "^2.5.7",
+    "sw-toolbox": "^3.6.0",
     "webpack": "1.14.0",
     "whatwg-fetch": "^2.0.3"
   }
