@@ -74,12 +74,13 @@ export default class OfflinePosts extends Component {
 				<div class='center-wrapper'>
 					<div>
 						<h2 class='siimple-h2'>
-							<div>Offline posts</div>
+							<div>Unsaved drafts</div>
+							<small class='siimple-small'>Offline posts that need to be synced to the server</small>
 						</h2>
 						<div style={{ padding: '1.5em 0' }}>
 							{
 								this.state.posts.length === 0?
-									(<div><em>Looks like you don't have any posts. <Link href='/new'>Create one now!</Link></em></div>):
+									(<div><em>You have no unsaved drafts.</em></div>):
 									<div>
 										<div style={{ textAlign: 'right', padding: '.5em 0 1.5em' }}>
 											<button

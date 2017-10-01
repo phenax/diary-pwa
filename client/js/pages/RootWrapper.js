@@ -124,6 +124,7 @@ export default class RootWrapper extends Component {
 								this.state.user?
 									(<div>
 										<NavLink href="/new">New Page</NavLink>
+										<NavLink href="/offline">Offline Drafts</NavLink>
 										<NavLink href='/'>{this.state.user.Username}</NavLink>
 										<NavLink action={logoutUser}>Logout</NavLink>
 									</div>):
