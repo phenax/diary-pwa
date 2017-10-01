@@ -118,17 +118,22 @@ export const logoutUser = () =>
 
 
 // Save diary page call
-export const saveDiaryPage = data =>
+export const saveDiaryPage = (data, isSyncRequest = false) =>
 	graphQLFetch(savePost(data))
 		.then(resp => resp.SavePost)
 		.then(data => {
 			let post;
+
 			switch(data.Status) {
 				case 200:  // Take the user to dashboard
 					// TODO: Add some kind of flash to notify user that its saved
 					post = JSON.parse(data.Message);
 					savePage(post);
-					return route('/', false);
+
+					if(!isSyncRequest) {
+						route('/', false);
+					}
+					return post;
 				case 400:
 					throw new Error(data.Message);
 				case 401:
@@ -137,7 +142,6 @@ export const saveDiaryPage = data =>
 			}
 		})
 		.catch(e => {
-
 			console.log(e);
 
 			let errorMessage = 'Something went wrong';
@@ -145,10 +149,14 @@ export const saveDiaryPage = data =>
 			if(e instanceof UnauthorizedError) {
 				errorMessage = 'You are not logged in. Please log in to continue.';
 			} else {
-				data.IsOffline = true;
-				savePage(data);
-				Flash.setFlash('Your post has been saved offline. It will be synced once you are back online.', 'green', 'white');
-				return route('/', false);
+				if(!isSyncRequest) {
+					data.IsOffline = true;
+					savePage(data);
+					Flash.setFlash('Your post has been saved offline. It will be synced once you are back online.', 'green', 'white');
+					return route('/', false);
+				} else {
+					errorMessage = 'Operation failed. Cannot connect to server';
+				}
 			}
 
 			Flash.setFlash(errorMessage, 'red', 'white');

@@ -35,6 +35,10 @@ export const savePage = (post) => {
 export const getPage = (ID) =>
 	DB.pages.get(ID);
 
+// Get a page
+export const deletePage = (ID) =>
+	DB.pages.delete(ID);
+
 // Get a list of all saved pages
 export const listPages = () =>
 	DB.pages
@@ -44,6 +48,7 @@ export const listPages = () =>
 // Get a list of all pages that are not synced
 export const listOfflinePages = () =>
 	DB.pages
-		.where('IsOffline').equals(true)
-		.toArray();
+		.filter(page => page.IsOffline)
+		.reverse()
+		.sortBy('Timestamp');
 

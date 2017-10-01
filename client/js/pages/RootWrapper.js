@@ -9,6 +9,7 @@ import { findUser, logoutUser, NotFoundError, UnauthorizedError } from '../libs/
 import bus from '../libs/listeners';
 
 import HomePage from './HomePage';
+
 import { Navbar } from '../components/Navbar';
 import LoadingSpinner from '../components/LoadingSpinner';
 import Flash from '../components/Flash';
@@ -52,6 +53,8 @@ export default class RootWrapper extends Component {
 			require.ensure([], () => resolve(require('./DiaryEditPage').default))),
 		ErrorPage: () => new Promise((resolve) =>
 			require.ensure([], () => resolve(require('./ErrorPage').default))),
+		OfflinePosts: () => new Promise((resolve) =>
+			require.ensure([], () => resolve(require('./OfflinePosts').default))),
 	};
 
 
@@ -133,6 +136,10 @@ export default class RootWrapper extends Component {
 						null}
 					<Router>
 						<HomePage path='/' />
+						<AsyncRoute path='/offline'
+							getComponent={this.asyncComponents.OfflinePosts}
+							loading={LoadingSpinner}
+						/>
 						<AsyncRoute path='/login'
 							getComponent={this.asyncComponents.LoginPage}
 							loading={LoadingSpinner}
