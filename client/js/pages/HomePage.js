@@ -3,6 +3,7 @@ import { h, Component } from 'preact';
 import { Link } from 'preact-router/match';
 
 import { fetchUserPosts, UnauthorizedError } from '../libs/fetch';
+import { listPages } from '../libs/db';
 
 import { Card, CardTitle, CardContent } from '../components/Card';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -45,6 +46,12 @@ export default class HomePage extends Component {
 				console.error(error);
 				if(error instanceof UnauthorizedError) {
 					this.setState({ isLoggedIn: false, isLoaded: true });
+				} else {
+					listPages()
+						.then(posts =>
+							this.setState({ posts, pageNumber: page, isLoggedIn: true, isLoaded: true }))
+						.catch(() =>
+							this.setState({ isLoggedIn: true, isLoaded: true }));
 				}
 			});
 	}
@@ -69,8 +76,15 @@ export default class HomePage extends Component {
 								this.state.posts.map(post => (
 									<div>
 										<Link href={`/page/${post.ID}`} style={{ color: 'inherit', textDecoration: 'none', display: 'block', }}>
-											<Card isAction={true} cardClass='siimple-bg--navy'>
-												<CardTitle>{post.Title}</CardTitle>
+											<Card isAction={true} cardClass={'siimple-bg--navy'}>
+												<CardTitle>
+													{post.IsOffline?
+														<i title='Offline post'
+															class='fa fa-exclamation-triangle siimple-color--red'
+															style={{ paddingRight: '.5em' }}
+														/>: ''}
+													{post.Title}
+												</CardTitle>
 												<CardContent>{post.Content.slice(0, 150)}{post.Content.length > 150? '...': ''}</CardContent>
 											</Card>
 										</Link>

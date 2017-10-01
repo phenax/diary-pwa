@@ -46,6 +46,10 @@ export default class Flash extends Component {
 		window.localStorage.setItem(Flash.STORAGE_KEY, '');
 	}
 
+	static closeFlash() {
+		Flash.flashListener.emit('flash-close');
+	}
+
 
 	state = {
 		flash: null,
@@ -60,6 +64,11 @@ export default class Flash extends Component {
 			const flash = Flash.getFlash();
 			this.setState({ flash });
 			setTimeout(() => Flash.unsetFlash(), 100);
+		});
+
+		Flash.flashListener.on('flash-close', () => {
+			this.closeFlash();
+			Flash.unsetFlash();
 		});
 
 		Flash.flashListener.emit('flash');

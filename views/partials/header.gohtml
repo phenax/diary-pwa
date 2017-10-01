@@ -24,5 +24,6 @@
 	<style>{{template "inline-styles.gohtml" .}}</style>
 	<script>
 		window.staticLink = function(path) { return '{{Static ""}}' + path; };
+		window.staticVersion = '{{.StaticVersion}}';
 	</script>
 </head>

@@ -144,6 +144,11 @@ export const saveDiaryPage = data =>
 
 			if(e instanceof UnauthorizedError) {
 				errorMessage = 'You are not logged in. Please log in to continue.';
+			} else {
+				data.IsOffline = true;
+				savePage(data);
+				Flash.setFlash('Your post has been saved offline. It will be synced once you are back online.', 'green', 'white');
+				return route('/', false);
 			}
 
 			Flash.setFlash(errorMessage, 'red', 'white');

@@ -3,6 +3,7 @@ import { h, Component } from 'preact';
 import { Link } from 'preact-router/match';
 
 import { fetchPost, UnauthorizedError, NotFoundError } from '../libs/fetch';
+import { getPage } from '../libs/db';
 
 import LoadingSpinner from '../components/LoadingSpinner';
 import DiaryPost from '../components/DiaryPost';
@@ -18,10 +19,10 @@ export default class DiaryPage extends Component {
 
 	componentDidMount() {
 		const postId = this.props.matches.pageId;
-		this._fetchPost(postId);
+		this.fetchPost(postId);
 	}
 
-	_fetchPost(postId) {
+	fetchPost(postId) {
 		fetchPost(postId)
 			.then(post => this.setState({ post, isNotFound: false }))
 			.catch(e => {
@@ -30,10 +31,16 @@ export default class DiaryPage extends Component {
 					this.setState({ isNotFound: true });
 				} else if(e instanceof UnauthorizedError) {
 					Flash.setFlash('You are not logged in. Log in to continue.', 'red');
+				} else {
+					getPage(postId)
+						.then(post =>
+							post?
+								this.setState({ post, isNotFound: false }):
+								this.setState({ isNotFound: true })
+						);
 				}
 			});
 	}
-
 
 	render() {
 		return (

@@ -75,6 +75,27 @@ export default class RootWrapper extends Component {
 			.then(resp => resp.UserPosts.User)
 			.then(user => bus.setAuth(user));
 
+
+
+		let onlineTimeout = null;
+
+		bus.onConnectivityChange((isOnline) => {
+
+			const FLASH_MESSAGE = 'You are offline';
+			const DELAY = 2000; // Wait 2000ms before declaring the network state
+
+			clearTimeout(onlineTimeout);
+
+			onlineTimeout = setTimeout(() => {
+				if(!isOnline) {
+					Flash.setFlash(FLASH_MESSAGE, 'red', 'white');
+				} else {
+					Flash.closeFlash();
+				}
+			}, DELAY);
+		});
+
+
 		this.$navbarLinks = document.querySelector('.js-navbar-links-wrapper');
 	}
 

@@ -32,9 +32,10 @@ func HomePage(ctx *Context) {
 	models.Users.Find(nil).All(&users)
 
 	options := &map[string]interface{}{
-		"Ctx":   ctx,
-		"Users": users,
-		"Title": "",
+		"Ctx":           ctx,
+		"Users":         users,
+		"Title":         "",
+		"StaticVersion": config.StaticFileVersion,
 	}
 
 	ctx.Render("index", options)
@@ -93,8 +94,7 @@ func JSONTest(ctx *Context) {
 func ServeServiceWorker(ctx *Context) {
 
 	swScript := `self.STATIC_BASE_URL = '` + libs.GetStaticURL("") + `';
-self.STATIC_CACHE_VERSION = '` + config.StaticFileVersion + `';
-`
+self.STATIC_CACHE_VERSION = '` + config.StaticFileVersion + `';`
 
 	data, err := ioutil.ReadFile(config.ServiceWorkerPath)
 
@@ -105,16 +105,20 @@ self.STATIC_CACHE_VERSION = '` + config.StaticFileVersion + `';
 
 	swScript += string(data)
 
-	// Gzip the string
-	gzipppedContent, err := libs.GzipString(swScript)
-
-	if err != nil {
-		ctx.ErrorMessage(500, err)
-		return
-	}
-
-	ctx.Send(string(gzipppedContent), &ResponseConfig{
-		ContentType:     "application/javascript",
-		ContentEncoding: "gzip",
+	ctx.Send(string(swScript), &ResponseConfig{
+		ContentType: "application/javascript",
 	})
+
+	// Gzip the string
+	// gzipppedContent, err := libs.GzipString(swScript)
+
+	// if err != nil {
+	// 	ctx.ErrorMessage(500, err)
+	// 	return
+	// }
+
+	// ctx.Send(string(gzipppedContent), &ResponseConfig{
+	// 	ContentType:     "application/javascript",
+	// 	ContentEncoding: "gzip",
+	// })
 }
