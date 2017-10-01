@@ -1,6 +1,6 @@
 
 import { h, Component } from 'preact';
-import { Router } from 'preact-router';
+import { Router, route } from 'preact-router';
 import { Link, Match } from 'preact-router/match';
 import AsyncRoute from 'preact-async-route';
 import assign from 'object-assign';
@@ -166,6 +166,15 @@ export default class RootWrapper extends Component {
 							loading={LoadingSpinner}
 						/>
 					</Router>
+
+					<div>
+						{
+							this.state.user?
+								(<button onClick={() => route('/new', false)} class='floating-action-button'>
+									+{ /* <i class='fa fa-plus' /> */ }
+								</button>): null
+						}
+					</div>
 				</div>
 			</div>
 		);
