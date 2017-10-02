@@ -67,7 +67,10 @@ export class Navbar extends Component {
 					</div>
 
 					<div style={{ textAlign: 'right', width: '100%' }}>
-						<button class='siimple-btn navbar-links-action' onClick={this.navbarToggle}>
+						<button
+							role="button" aria-label="Navigation menu button"
+							class='siimple-btn navbar-links-action'
+							onClick={this.navbarToggle}>
 							<i class='fa fa-bars' />
 						</button>
 					</div>
