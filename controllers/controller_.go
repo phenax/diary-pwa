@@ -7,6 +7,7 @@ import (
 	// "io/ioutil"
 	// "strings"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 	graphQLHandler "github.com/graphql-go/handler"
@@ -66,8 +67,8 @@ func GetGraphQLHandlerConfig() *graphQLHandler.Handler {
 
 	return graphQLHandler.New(&graphQLHandler.Config{
 		Schema:   models.GetGraphQLSchema(),
-		Pretty:   true,
-		GraphiQL: true,
+		Pretty:   false,
+		GraphiQL: (os.Getenv("ENV") != "production"),
 	})
 }
 
