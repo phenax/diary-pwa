@@ -3,7 +3,7 @@ import { h, Component } from 'preact';
 import { Link } from 'preact-router/match';
 
 import { fetchUserPosts, UnauthorizedError } from '../libs/fetch';
-import { listPages } from '../libs/db';
+import { listPages, getUser } from '../libs/db';
 
 import { Card, CardTitle, CardContent } from '../components/Card';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -49,9 +49,26 @@ export default class HomePage extends Component {
 				} else {
 					listPages()
 						.then(posts =>
-							this.setState({ posts, pageNumber: page, isLoggedIn: true, isLoaded: true }))
+							getUser()
+								.then(user =>
+									user?
+										this.setState({
+											posts,
+											pageNumber: page,
+											isLoggedIn: true,
+											isLoaded: true,
+										}):
+										this.setState({
+											isLoggedIn: false,
+											isLoaded: true,
+										})
+								)
+						)
 						.catch(() =>
-							this.setState({ isLoggedIn: true, isLoaded: true }));
+							this.setState({
+								isLoggedIn: true,
+								isLoaded: true,
+							}));
 				}
 			});
 	}

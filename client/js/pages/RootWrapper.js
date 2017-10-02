@@ -3,9 +3,8 @@ import { h, Component } from 'preact';
 import { Router, route } from 'preact-router';
 import { Link, Match } from 'preact-router/match';
 import AsyncRoute from 'preact-async-route';
-import assign from 'object-assign';
 
-import { findUser, logoutUser, NotFoundError, UnauthorizedError } from '../libs/fetch';
+import { findUser, logoutUser, UnauthorizedError } from '../libs/fetch';
 import bus from '../libs/listeners';
 import { getUser, setUser } from '../libs/db';
 

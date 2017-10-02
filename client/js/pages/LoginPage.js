@@ -5,6 +5,7 @@ import { route } from 'preact-router';
 import { loginUser, findUser, createUser, UnauthorizedError, NotFoundError } from '../libs/fetch';
 import { formObject } from '../libs/utils';
 import bus from '../libs/listeners';
+import { setUser } from '../libs/db';
 
 import Title from '../components/Title';
 
@@ -103,18 +104,26 @@ export default class LoginPage extends Component {
 
 		return createUser(data)
 			.then(data => {
+				let user;
+
 				switch(data.Status) {
 					case 200: // Take the user to dashboard
 						$form.reset();
-						bus.setAuth(JSON.parse(data.Message));
-						return route('/', false);
+						user = JSON.parse(data.Message);
+						bus.setAuth(user);
+						if(user) {
+							setUser(user);
+						}
+						route('/', false);
+						break;
 					default:
 						throw new Error(data.Message);
 				}
+
+				return user;
 			})
 			.catch(e => {
 				console.log(e);
-
 				this.setState({ error: e.message || 'Something went wrong' });
 			});
 	}
@@ -124,16 +133,25 @@ export default class LoginPage extends Component {
 
 		return loginUser(username, password)
 			.then(data => {
+
 				switch(data.Login.Status) {
 					case 200: // Take the user to dashboard
-						$form.reset();
-						bus.setAuth(data.UserPosts.User);
-						return route('/', false);
+						if(data.UserPosts) {
+							$form.reset();
+							bus.setAuth(data.UserPosts.User);
+							setUser(data.UserPosts.User);
+							route('/', false);
+						} else {
+							throw new Error('Something went wrong');
+						}
+						break;
 					case 401:
 						throw new UnauthorizedError(data.Login.Message, []);
 					default:
 						throw new Error(data.Login.Message);
 				}
+
+				return data.UserPosts.User;
 			})
 			.catch(e => {
 				console.log(e);
