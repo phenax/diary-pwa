@@ -4,7 +4,9 @@
   "description": "Diary web app",
   "main": "_",
   "scripts": {
-    "start": "npm run build && ./diary-pwa",
+    "start": "npm run build . && ./diary-pwa",
+    "start-bg": "./start.sh",
+    "search": "netstat -anp | grep '8080'",
     "build": "go build",
     "build:js": "webpack -p",
     "build:css": "gulp prod:css",
