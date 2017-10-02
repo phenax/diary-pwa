@@ -31,7 +31,7 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.35"
-     inkscape:cx="203.57142"
+     inkscape:cx="-282.14287"
      inkscape:cy="209.38814"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -74,15 +74,17 @@
        y="379.59961"
        rx="28.080008"
        ry="27.855366"
-       inkscape:export-xdpi="27.1402"
-       inkscape:export-ydpi="27.1402" />
+       inkscape:export-xdpi="69.478889"
+       inkscape:export-ydpi="69.478889"
+       inkscape:export-filename="/run/media/phenax/dev/go/src/github.com/phenax/diary-pwa/public/img/logo_512.png" />
     <flowRoot
        xml:space="preserve"
        id="flowRoot4136"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        transform="matrix(1.0897377,0,0,1.0897377,685.24175,169.48256)"
-       inkscape:export-xdpi="27.1402"
-       inkscape:export-ydpi="27.1402"><flowRegion
+       inkscape:export-xdpi="69.478889"
+       inkscape:export-ydpi="69.478889"
+       inkscape:export-filename="/run/media/phenax/dev/go/src/github.com/phenax/diary-pwa/public/img/logo_512.png"><flowRegion
          id="flowRegion4138"><rect
            id="rect4140"
            width="957.14288"
@@ -99,8 +101,9 @@
        y="849.21198"
        id="text4138"
        sodipodi:linespacing="125%"
-       inkscape:export-xdpi="27.1402"
-       inkscape:export-ydpi="27.1402"><tspan
+       inkscape:export-xdpi="69.478889"
+       inkscape:export-ydpi="69.478889"
+       inkscape:export-filename="/run/media/phenax/dev/go/src/github.com/phenax/diary-pwa/public/img/logo_512.png"><tspan
          sodipodi:role="line"
          id="tspan4140"
          x="97.971581"
