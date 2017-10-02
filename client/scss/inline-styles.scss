@@ -15,7 +15,15 @@ html, html body {
 
 .vertical-center {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
+}
+
+.flexy-direction--x {
+	flex-direction: row;
+}
+.flexy-direction--y {
+	flex-direction: column;
 }
 
 
@@ -102,6 +110,14 @@ $outerBallSize: 50px;
   -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+
+
+  &--long {
+  	height: auto;
+  	padding: .2em 1.4em !important;
+  	font-size: 1em;
+  	margin-right: .4em;
+  }
 }
 
 

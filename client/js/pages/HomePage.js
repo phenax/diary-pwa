@@ -9,6 +9,8 @@ import { Card, CardTitle, CardContent } from '../components/Card';
 import LoadingSpinner from '../components/LoadingSpinner';
 import Title from '../components/Title';
 
+import LandingPage from './LandingPage';
+
 export default class HomePage extends Component {
 
 	state = {
@@ -82,7 +84,8 @@ export default class HomePage extends Component {
 		if(this.state.isLoaded) {
 			if(this.state.isLoggedIn) {
 				$component = (
-					<div>
+					<div class='center-wrapper'>
+						<br />
 						<Title>My Diary</Title>
 						<h2 class='siimple-h2'>
 							<div>My Diary</div>
@@ -113,22 +116,14 @@ export default class HomePage extends Component {
 					</div>
 				);
 			} else {
-				$component = (
-					<div>
-						<Title>You need to login bro</Title>
-						<h2 class='siimple-h2'>
-							Not logged in. Login to continue
-						</h2>
-					</div>
-				);
+				$component = <LandingPage />;
 			}
 		}
 
 
 		return (
-			<div class='center-wrapper'>
+			<div>
 				<Title>Welcome</Title>
-				<br />
 				{$component}
 			</div>
 		);
