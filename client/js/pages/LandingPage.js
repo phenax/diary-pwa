@@ -33,7 +33,7 @@ export default () => (
 					</div>
 					<small class='siimple-small' style={{ opacity: '.8', lineHeight: '0', textTransform: 'uppercase', }}>
 						Your diary in your pocket<br />
-						Keep your thoughts and ideas of the day in one place. 
+						Keep your thoughts and ideas for the day in one place. 
 					</small>
 				</h2>
 				<div>

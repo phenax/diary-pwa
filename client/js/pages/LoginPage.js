@@ -335,6 +335,9 @@ export const LoginSidebar = ({ isLoginPage = true }) => (
 				<p class='siimple-p'>
 					Join diary to create your own online diary
 				</p>
+				<p class='siimple-p'>
+					You can use DiaryPWA to make your own personal journal of daily events, memories, ideas, secrets and thoughts.
+				</p>
 			</p>
 		</div>
 	</div>
