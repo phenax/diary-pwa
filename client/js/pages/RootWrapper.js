@@ -182,7 +182,11 @@ export default class RootWrapper extends Component {
 					<div>
 						{
 							(this.state.user && this.state.user.ID)?
-								(<button onClick={() => route('/new', false)} class='floating-action-button'>
+								(<button
+									role='button' aria-label='Create new post button'
+									title='Create new post button'
+									onClick={() => route('/new', false)}
+									class='floating-action-button'>
 									+{ /* <i class='fa fa-plus' /> */ }
 								</button>): null
 						}
