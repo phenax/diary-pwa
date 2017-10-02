@@ -28,3 +28,11 @@ export function formObject($form) {
 
 	return data;
 }
+
+
+
+export const randId = () =>
+	(parseInt(Math.round(Math.random()*100000) + ('' + Date.now()))).toString(16);
+
+export const timestamp = () =>
+	'' + (Date.now()/1000);

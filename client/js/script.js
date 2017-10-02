@@ -2,9 +2,6 @@
 import { h, render } from 'preact';
 import { loadCSS } from 'fg-loadcss';
 
-// Load it in the first script so that the other chunks are smaller
-import './libs/db';
-
 import RootWrapper from './pages/RootWrapper';
 
 
