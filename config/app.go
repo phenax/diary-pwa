@@ -14,6 +14,9 @@ const (
 
 	// ServiceWorkerPath -
 	ServiceWorkerPath = "public/js/serviceworker.js"
+
+	// BundleStatsFilepath -
+	BundleStatsFilepath = "client/bundle-stats.json"
 )
 
 var (

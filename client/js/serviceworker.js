@@ -9,16 +9,22 @@ const OTHER_CACHE_NAME = `diary-cache-others--${self.STATIC_CACHE_VERSION}`;
 const NETWORK_TIMEOUT = 5;
 
 
-const precacheFiles = [
-	// 'js/1.1.js',
-	// 'js/2.2.js',
-	// 'js/3.3.js',
-	// 'js/4.4.js',
-	// 'js/5.5.js',
+// JS file chunks to precache
+let chunksPrecache = [];
+
+try {
+	chunksPrecache =
+		self.BUNDLE_STATS.assets
+			.filter(chunk => !chunk.chunkNames.length)
+			.map(chunk => chunk.name)
+			.map(file => `${BASE_URL}js/${file}`);
+} catch(e) { console.error('Couldn\'t precache chunks'); }
+
+sw.precache([
 	'/manifest.json',
 	'/',
-].map(file => BASE_URL + file);
-sw.precache(precacheFiles);
+	...chunksPrecache,
+]);
 
 
 

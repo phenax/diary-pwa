@@ -93,17 +93,20 @@ func JSONTest(ctx *Context) {
 //
 func ServeServiceWorker(ctx *Context) {
 
-	swScript := `self.STATIC_BASE_URL = '` + libs.GetStaticURL("") + `';
-self.STATIC_CACHE_VERSION = '` + config.StaticFileVersion + `';`
+	bundleStatsData, err := ioutil.ReadFile(config.BundleStatsFilepath)
 
-	data, err := ioutil.ReadFile(config.ServiceWorkerPath)
+	swScript := `self.STATIC_BASE_URL = '` + libs.GetStaticURL("") + `';
+self.STATIC_CACHE_VERSION = '` + config.StaticFileVersion + `';
+self.BUNDLE_STATS=` + string(bundleStatsData) + `;`
+
+	serviceWorkerJsFile, err := ioutil.ReadFile(config.ServiceWorkerPath)
 
 	if err != nil {
 		ctx.ErrorMessage(500, err)
 		return
 	}
 
-	swScript += string(data)
+	swScript += string(serviceWorkerJsFile)
 
 	ctx.Send(string(swScript), &ResponseConfig{
 		ContentType: "application/javascript",

@@ -1,6 +1,7 @@
 
-const webpack= require('webpack');
-const path= require('path');
+const webpack = require('webpack');
+const path = require('path');
+const fs = require('fs');
 
 const SOURCE_DIR= path.resolve('./client/js');
 const BUILD_DIR= path.resolve('./public/js');
@@ -45,6 +46,21 @@ const webpackConfig= {
 			'Promise': 'es6-promise',
 			'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
 		}),
+		function() {
+			this.plugin('done', function(stats) {
+
+				const assets = stats.toJson().assets.filter(f => /\.js$/.test(f.name));
+
+				const bundleStats = {
+					assets
+				};
+
+				fs.writeFileSync(
+					path.join(__dirname, 'client', 'bundle-stats.json'),
+					JSON.stringify(bundleStats)
+				);
+			});
+		},
 	],
 };
 

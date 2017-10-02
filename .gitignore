@@ -2,6 +2,7 @@ tmp
 node_modules
 public/js
 public/css
+client/bundle-stats.json
 
 nohup.out
 
@@ -9,8 +10,9 @@ nohup.out
 
 diary-pwa
 
-db/db.production.go
 config/*.private.go
+
+
 
 # Compiled Object files, Static and Dynamic libs (Shared Objects)
 *.o

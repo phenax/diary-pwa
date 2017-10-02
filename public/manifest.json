@@ -10,7 +10,7 @@
 	"display": "standalone",
 	"orientation": "portrait",
 
-	"start_url": "/?utm_source=from_manifest",
+	"start_url": "/",
 	"scope": "/",
 
 	"icons": [{
