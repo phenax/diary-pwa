@@ -40,6 +40,11 @@ export class NotFoundError extends Extendable(Error) {
 // Fetch the graphql api with the passed query
 const graphQLFetch = query => {
 
+	query.query =
+		query.query
+			.replace(/\s+/gi, ' ')
+			.replace(/(^\s+|\s+$)/gi, '');
+
 	const config = {
 		method: 'POST',
 		body: JSON.stringify(query),
