@@ -8,6 +8,7 @@ export const DB_VERSION = 1;
 // Schema
 DB.version(DB_VERSION).stores({
 	pages: 'ID, Title, Content, Rating, Timestamp, IsOffline',
+	users: 'ID, Name, Username, Email',
 });
 
 export const randId = () =>
@@ -52,3 +53,19 @@ export const listOfflinePages = () =>
 		.reverse()
 		.sortBy('Timestamp');
 
+
+// Get the logged in user from the db
+export const getUser = () =>
+	DB.users
+		.filter(user => user.ID.length)
+		.first();
+
+// Add a new user/update the current user
+export const setUser = user =>
+	DB.users.put(user);
+
+// Clear the users info stored from the db
+export const removeUsers = () =>
+	DB.users
+		.filter(user => user.ID.length)
+		.delete();

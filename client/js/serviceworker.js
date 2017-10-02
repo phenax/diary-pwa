@@ -10,11 +10,13 @@ const NETWORK_TIMEOUT = 5;
 
 
 const precacheFiles = [
-	'js/1.1.js',
-	'js/2.2.js',
-	'js/3.3.js',
-	'js/4.4.js',
-	'js/5.5.js',
+	// 'js/1.1.js',
+	// 'js/2.2.js',
+	// 'js/3.3.js',
+	// 'js/4.4.js',
+	// 'js/5.5.js',
+	'/manifest.json',
+	'/',
 ].map(file => BASE_URL + file);
 sw.precache(precacheFiles);
 

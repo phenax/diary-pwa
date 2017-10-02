@@ -31,7 +31,7 @@ render(<RootWrapper />, $renderHook);
 
 
 // Service worker registrations
-if(process.env.NODE_ENV === 'production' && 'serviceWorker' in window.navigator) {
+if(/*process.env.NODE_ENV === 'production' && */'serviceWorker' in window.navigator) {
 	window.navigator.serviceWorker
 		.register('/sw.js')
 		.then(console.log)

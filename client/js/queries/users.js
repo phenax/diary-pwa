@@ -40,12 +40,10 @@ export const findUser = ({ username }) => ({
 		query UserFind${username? '($username:String)': ''} {
 			UserPosts${username? '(username:$username)': ''} {
 				User {
+					ID,
 					Name,
 					Username,
 					Email,
-					${!username? `
-						ID,
-					`: ''}
 				}
 			}
 		}

@@ -7,6 +7,7 @@ import assign from 'object-assign';
 
 import { findUser, logoutUser, NotFoundError, UnauthorizedError } from '../libs/fetch';
 import bus from '../libs/listeners';
+import { getUser, setUser } from '../libs/db';
 
 import HomePage from './HomePage';
 
@@ -72,11 +73,21 @@ export default class RootWrapper extends Component {
 
 	componentDidMount() {
 
-		bus.onAuthChange(user => this.setState({ user }));
+		bus.onAuthChange(user => this.setState({ user: user? user: {} }));
 
 		findUser()
 			.then(resp => resp.UserPosts.User)
-			.then(user => bus.setAuth(user));
+			.then(user => {
+				bus.setAuth(user);
+				setUser(user);
+			})
+			.catch(e => {
+				if(e instanceof UnauthorizedError) {
+					bus.setAuth(null);
+				} else {
+					getUser().then(user => bus.setAuth(user));
+				}
+			});
 
 
 
@@ -122,16 +133,18 @@ export default class RootWrapper extends Component {
 						<Navbar minHeight={VARS.navbarMinHeight}>
 							{
 								this.state.user?
-									(<div>
-										<NavLink href="/new">New Page</NavLink>
-										<NavLink href="/offline">Offline Drafts</NavLink>
-										<NavLink href='/'>{this.state.user.Username}</NavLink>
-										<NavLink action={logoutUser}>Logout</NavLink>
-									</div>):
-									(<div>
-										<NavLink href="/login">Login</NavLink>
-										<NavLink href="/signup">Signup</NavLink>
-									</div>)
+									(this.state.user.ID?
+										<div>
+											<NavLink href="/new">New Page</NavLink>
+											<NavLink href="/offline">Offline Drafts</NavLink>
+											<NavLink href='/'>{this.state.user.Username}</NavLink>
+											<NavLink action={logoutUser}>Logout</NavLink>
+										</div>:
+										<div>
+											<NavLink href="/login">Login</NavLink>
+											<NavLink href="/signup">Signup</NavLink>
+										</div>):
+									null
 							}
 						</Navbar>:
 						null}
@@ -169,7 +182,7 @@ export default class RootWrapper extends Component {
 
 					<div>
 						{
-							this.state.user?
+							(this.state.user && this.state.user.ID)?
 								(<button onClick={() => route('/new', false)} class='floating-action-button'>
 									+{ /* <i class='fa fa-plus' /> */ }
 								</button>): null

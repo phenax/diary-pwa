@@ -8,7 +8,7 @@ import { login, findUser as findUserQuery, signup, logout } from '../queries/use
 
 import { Extendable } from '../libs/utils';
 import bus from '../libs/listeners';
-import { savePage } from '../libs/db';
+import { savePage, removeUsers } from '../libs/db';
 
 import Flash from '../components/Flash';
 
@@ -107,13 +107,12 @@ export const createUser = data =>
 
 export const logoutUser = () =>
 	graphQLFetch(logout())
-		.then(() => {
-			bus.setAuth(null);
-			route('/', false);
-		})
+		.then(() => bus.setAuth(null))
+		.then(() => route('/', false))
+		.then(() => removeUsers())
 		.catch(e => {
-			console.log(e);
-			Flash.setFlash('Something went wrong', 'red', 'white');
+			console.error(e);
+			Flash.setFlash('Something went wrong. Check your connection.', 'red', 'white');
 		});
 
 
