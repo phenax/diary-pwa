@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="700"
+   height="700"
+   viewBox="0 0 700.00001 700.00001"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="diary.svg"
+   inkscape:export-filename="/home/phenax/Desktop/logo_256.png"
+   inkscape:export-xdpi="34.739445"
+   inkscape:export-ydpi="34.739445">
+  <title
+     id="title4142">DiaryPWA Logo</title>
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#7b8293"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="203.57142"
+     inkscape:cy="209.38814"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1366"
+     inkscape:window-height="722"
+     inkscape:window-x="0"
+     inkscape:window-y="23"
+     inkscape:window-maximized="1"
+     units="px"
+     showguides="true" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>DiaryPWA Logo</dc:title>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Akshay Nair&lt;phenax5@gmail.com&gt;</dc:title>
+          </cc:Agent>
+        </dc:creator>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-352.36216)">
+    <rect
+       style="opacity:1;fill:#151922;fill-opacity:1;stroke:none;stroke-width:50;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect4144"
+       width="663.22302"
+       height="663.22302"
+       x="19.817057"
+       y="379.59961"
+       rx="28.080008"
+       ry="27.855366"
+       inkscape:export-xdpi="27.1402"
+       inkscape:export-ydpi="27.1402" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4136"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       transform="matrix(1.0897377,0,0,1.0897377,685.24175,169.48256)"
+       inkscape:export-xdpi="27.1402"
+       inkscape:export-ydpi="27.1402"><flowRegion
+         id="flowRegion4138"><rect
+           id="rect4140"
+           width="957.14288"
+           height="680.00006"
+           x="-794.28571"
+           y="303.79077" /></flowRegion><flowPara
+         id="flowPara4142"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:180px;line-height:110.00000238%;font-family:Montserrat;-inkscape-font-specification:Montserrat;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1">Diary</flowPara><flowPara
+         id="flowPara4144"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:180px;line-height:110.00000238%;font-family:Montserrat;-inkscape-font-specification:'Montserrat Bold';text-align:center;text-anchor:middle;fill:#b490f5;fill-opacity:1" /></flowRoot>    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:43.58950806px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="97.971581"
+       y="849.21198"
+       id="text4138"
+       sodipodi:linespacing="125%"
+       inkscape:export-xdpi="27.1402"
+       inkscape:export-ydpi="27.1402"><tspan
+         sodipodi:role="line"
+         id="tspan4140"
+         x="97.971581"
+         y="849.21198"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:196.15278625px;font-family:Montserrat;-inkscape-font-specification:'Montserrat Bold';fill:#b490f5;fill-opacity:1">PWA</tspan></text>
+  </g>
+</svg>
