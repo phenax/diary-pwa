@@ -3,6 +3,7 @@ import { h, Component } from 'preact';
 import { Router, route } from 'preact-router';
 import { Link, Match } from 'preact-router/match';
 import AsyncRoute from 'preact-async-route';
+import assign from 'object-assign';
 
 import { findUser, logoutUser, UnauthorizedError } from '../libs/fetch';
 import bus from '../libs/listeners';
@@ -39,22 +40,23 @@ export const NavLink = ({ children, href, action }) =>
 			{children}
 		</Link>;
 
+
 export default class RootWrapper extends Component {
 
 
 	asyncComponents = {
-		LoginPage: () => new Promise((resolve) =>
-			require.ensure([], () => resolve(require('./LoginPage').default))),
-		DiaryPage: () => new Promise((resolve) =>
-			require.ensure([], () => resolve(require('./DiaryPage').default))),
-		DiaryNewPage: () => new Promise((resolve) =>
-			require.ensure([], () => resolve(require('./DiaryNewPage').default))),
-		DiaryEditPage: () => new Promise((resolve) =>
-			require.ensure([], () => resolve(require('./DiaryEditPage').default))),
-		ErrorPage: () => new Promise((resolve) =>
-			require.ensure([], () => resolve(require('./ErrorPage').default))),
-		OfflinePosts: () => new Promise((resolve) =>
-			require.ensure([], () => resolve(require('./OfflinePosts').default))),
+		LoginPage: (props = {}) => () => new Promise((resolve) =>
+			require.ensure([], () => resolve((p) => h(require('./LoginPage').default, assign(p, props))))),
+		DiaryPage: (props = {}) => () => new Promise((resolve) =>
+			require.ensure([], () => resolve((p) => h(require('./DiaryPage').default, assign(p, props))))),
+		DiaryNewPage: (props = {}) => () => new Promise((resolve) =>
+			require.ensure([], () => resolve((p) => h(require('./DiaryNewPage').default, assign(p, props))))),
+		DiaryEditPage: (props = {}) => () => new Promise((resolve) =>
+			require.ensure([], () => resolve((p) => h(require('./DiaryEditPage').default, assign(p, props))))),
+		ErrorPage: (props = {}) => () => new Promise((resolve) =>
+			require.ensure([], () => resolve((p) => h(require('./ErrorPage').default, assign(p, props))))),
+		OfflinePosts: (props = {}) => () => new Promise((resolve) =>
+			require.ensure([], () => resolve((p) => h(require('./OfflinePosts').default, assign(p, props))))),
 	};
 
 
@@ -68,6 +70,15 @@ export default class RootWrapper extends Component {
 		this.withNavbar = (typeof this.props.withNavbar !== 'undefined')? this.props.withNavbar: true;
 
 		this.onRouteChange = this.onRouteChange.bind(this);
+		this.logoutUser = this.logoutUser.bind(this);
+	}
+
+
+	authenticateOffline() {
+		return getUser().then(user => {
+			bus.setAuth(user);
+			return user;
+		});
 	}
 
 	componentDidMount() {
@@ -84,7 +95,7 @@ export default class RootWrapper extends Component {
 				if(e instanceof UnauthorizedError) {
 					bus.setAuth(null);
 				} else {
-					getUser().then(user => bus.setAuth(user));
+					this.authenticateOffline();
 				}
 			});
 
@@ -122,6 +133,14 @@ export default class RootWrapper extends Component {
 		this.hideNavbar();
 	}
 
+	logoutUser() {
+		logoutUser();
+
+		// Force reload page
+		route('/logout', false);
+		route('/', false);
+	}
+
 	render() {
 		return (
 			<div>
@@ -137,7 +156,7 @@ export default class RootWrapper extends Component {
 											<NavLink href="/new">New Page</NavLink>
 											<NavLink href="/offline">Offline Drafts</NavLink>
 											<NavLink href='/'>{this.state.user.Username}</NavLink>
-											<NavLink action={logoutUser}>Logout</NavLink>
+											<NavLink action={this.logoutUser}>Logout</NavLink>
 										</div>:
 										<div>
 											<NavLink href="/login">Login</NavLink>
@@ -148,33 +167,33 @@ export default class RootWrapper extends Component {
 						</Navbar>:
 						null}
 					<Router>
-						<HomePage path='/' />
+						<HomePage path='/' user={this.state.user} />
 						<AsyncRoute path='/offline'
-							getComponent={this.asyncComponents.OfflinePosts}
+							getComponent={this.asyncComponents.OfflinePosts({ user: this.state.user })}
 							loading={LoadingSpinner}
 						/>
 						<AsyncRoute path='/login'
-							getComponent={this.asyncComponents.LoginPage}
+							getComponent={this.asyncComponents.LoginPage({ user: this.state.user })}
 							loading={LoadingSpinner}
 						/>
 						<AsyncRoute path='/signup'
-							getComponent={this.asyncComponents.LoginPage}
+							getComponent={this.asyncComponents.LoginPage({ user: this.state.user })}
 							loading={LoadingSpinner}
 						/>
 						<AsyncRoute path='/page/:pageId'
-							getComponent={this.asyncComponents.DiaryPage}
+							getComponent={this.asyncComponents.DiaryPage({ user: this.state.user })}
 							loading={LoadingSpinner}
 						/>
 						<AsyncRoute path='/new'
-							getComponent={this.asyncComponents.DiaryNewPage}
+							getComponent={this.asyncComponents.DiaryNewPage({ user: this.state.user })}
 							loading={LoadingSpinner}
 						/>
 						<AsyncRoute path='/page/:pageId/edit'
-							getComponent={this.asyncComponents.DiaryEditPage}
+							getComponent={this.asyncComponents.DiaryEditPage({ user: this.state.user })}
 							loading={LoadingSpinner}
 						/>
 						<AsyncRoute default
-							getComponent={this.asyncComponents.ErrorPage}
+							getComponent={this.asyncComponents.ErrorPage({ user: this.state.user })}
 							loading={LoadingSpinner}
 						/>
 					</Router>
