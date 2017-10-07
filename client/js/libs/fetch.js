@@ -164,11 +164,11 @@ export const saveDiaryPage = (data, isSyncRequest = false) =>
 
 			switch(data.Status) {
 				case 200:  // Take the user to dashboard
-					// TODO: Add some kind of flash to notify user that its saved
 					post = JSON.parse(data.Message);
 					savePage(post);
 
 					if(!isSyncRequest) {
+						Flash.setFlash('Your post has been saved', 'green', 'white');
 						route('/', false);
 					}
 					return post;
