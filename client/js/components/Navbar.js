@@ -39,10 +39,17 @@ export class Navbar extends Component {
 
 	componentDidMount() {
 		this.$navbarLinks = this.base.querySelector('.js-navbar-links-wrapper');
+		this.$navbarBtnIcon = this.base.querySelector('.js-navbar-btn-icon');
 	}
 
-	showNavbar() { this.$navbarLinks.classList.add('navbar-links__visible'); }
-	hideNavbar() { this.$navbarLinks.classList.remove('navbar-links__visible'); }
+	showNavbar() {
+		this.$navbarLinks.classList.add('navbar-links__visible');
+		this.$navbarBtnIcon.classList.add('icon-ham__cross');
+	}
+	hideNavbar() {
+		this.$navbarLinks.classList.remove('navbar-links__visible');
+		this.$navbarBtnIcon.classList.remove('icon-ham__cross');
+	}
 
 	navbarToggle() {
 
@@ -62,7 +69,8 @@ export class Navbar extends Component {
 				<div class='vertical-center siimple-bg--navy siimple-shadow--2' style={navbarStyles}>
 					<div style={Navbar.styles.navbar_logo}>
 						<Link href='/' style={{ color: 'inherit', textDecoration: 'none' }}>
-							<span style={{ fontWeight: 'lighter' }}>Diary</span><span class='siimple-color--purple' style={{ fontWeight: 'bold' }}>PWA</span>
+							<span style={{ fontWeight: 'lighter' }}>Diary</span>
+							<span class='siimple-color--purple' style={{ fontWeight: 'bold' }}>PWA</span>
 						</Link>
 					</div>
 
@@ -71,7 +79,7 @@ export class Navbar extends Component {
 							role="button" aria-label="Navigation menu button"
 							class='siimple-btn navbar-links-action'
 							onClick={this.navbarToggle}>
-							<span class='icon-ham'>
+							<span class='icon-ham js-navbar-btn-icon'>
 								<span class='icon-ham--bar' />
 								<span class='icon-ham--bar' />
 								<span class='icon-ham--bar' />
