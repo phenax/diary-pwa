@@ -6,6 +6,7 @@ import { fetchPost, UnauthorizedError, NotFoundError } from '../libs/fetch';
 import { getPage } from '../libs/db';
 
 import LoadingSpinner from '../components/LoadingSpinner';
+import InlineLoadingSpinner from '../components/InlineLoadingSpinner';
 import DiaryPost from '../components/DiaryPost';
 import Title from '../components/Title';
 import Flash from '../components/Flash';
@@ -15,6 +16,7 @@ export default class DiaryPage extends Component {
 	state = {
 		post: null,
 		isNotFound: false,
+		isSaving: true,
 	};
 
 	componentDidMount() {
@@ -23,6 +25,9 @@ export default class DiaryPage extends Component {
 	}
 
 	fetchPost(postId) {
+
+		this.setState({ isSaving: true });
+
 		fetchPost(postId)
 			.then(post => this.setState({ post, isNotFound: false }))
 			.catch(e => {
@@ -32,6 +37,7 @@ export default class DiaryPage extends Component {
 				} else if(e instanceof UnauthorizedError) {
 					Flash.setFlash('You are not logged in. Log in to continue.', 'red');
 				} else {
+
 					getPage(postId)
 						.then(post =>
 							post?
@@ -39,7 +45,9 @@ export default class DiaryPage extends Component {
 								this.setState({ isNotFound: true })
 						);
 				}
-			});
+			})
+			.then(() =>
+				setTimeout(() => this.setState({ isSaving: false }), 1500));
 	}
 
 	render() {
@@ -66,6 +74,12 @@ export default class DiaryPage extends Component {
 											Edit
 										</Link>
 									</div>
+									{this.state.isSaving?
+										<div>
+											<InlineLoadingSpinner style={{ margin: '0 1em 0 0' }} />
+											Saving offline...
+										</div>: null
+									}
 									<DiaryPost post={this.state.post} />
 								</div>
 							);

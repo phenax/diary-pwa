@@ -55,9 +55,10 @@ export default class OfflinePosts extends Component {
 
 				return { post, ID: postID };
 			}))
-			.then(posts => posts.map(post =>
-				saveDiaryPage(post.post, true)
-					.then(newPost => { newPost.OldID = post.ID; return newPost; })))
+			.then(posts =>
+				posts.map(post =>
+					saveDiaryPage(post.post, true)
+						.then(newPost => { newPost.OldID = post.ID; return newPost; })))
 			.then(posts => Promise.all(posts))
 			.then(posts => posts.map(post => {
 				if(post && post.OldID) {
