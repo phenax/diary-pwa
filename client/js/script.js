@@ -7,7 +7,7 @@ import RootWrapper from './pages/RootWrapper';
 
 // Load the stylesheets asynchronously
 const stylesheets = [
-	window.staticLink('css/style.css') + '?v=' + window.staticVersion,
+	window.staticLink('css/style.css'),
 	'https://fonts.googleapis.com/css?family=Montserrat:400,700',
 ];
 
@@ -17,7 +17,7 @@ stylesheets.map(href =>
 
 const $renderHook = document.getElementById('render-hook');
 
-// Empty div
+// Empty the div
 while($renderHook.firstChild) {
 	$renderHook.removeChild($renderHook.firstChild);
 }
@@ -27,7 +27,7 @@ render(<RootWrapper />, $renderHook);
 
 
 // Service worker registrations
-if(/*process.env.NODE_ENV === 'production' && */'serviceWorker' in window.navigator) {
+if('serviceWorker' in window.navigator) {
 	window.navigator.serviceWorker
 		.register('/sw.js')
 		.then(console.log)
