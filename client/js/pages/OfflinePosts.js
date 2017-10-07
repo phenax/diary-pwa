@@ -10,6 +10,7 @@ import { saveDiaryPage } from '../libs/fetch';
 
 import { Card, CardTitle, CardContent } from '../components/Card';
 import Title from '../components/Title';
+import InlineLoadingSpinner from '../components/InlineLoadingSpinner';
 
 export default class OfflinePosts extends Component {
 
@@ -63,8 +64,9 @@ export default class OfflinePosts extends Component {
 					deletePage(post.OldID);
 				}
 			}))
-			.then(() => this.setState({ isLoading: false }))
-			.then(() => route('/', false));
+			.then(() => route('/', false))
+			.catch(() => null)
+			.then(() => this.setState({ isLoading: false }));
 	}
 
 	render() {
@@ -86,8 +88,10 @@ export default class OfflinePosts extends Component {
 											<button
 												onClick={this.syncPosts}
 												class='siimple-btn siimple-btn--purple'>
-												{this.state.isLoading? <i class='fa fa-spinner fa-spin' />: null}
-												<span style={{ paddingRight: '.5em' }} />
+												<InlineLoadingSpinner
+													hide={!this.state.isLoading}
+													style={{ margin: '0 .5em 0 0', fontSize: '.8rem' }}
+												/>
 												Sync with server
 											</button>
 										</div>

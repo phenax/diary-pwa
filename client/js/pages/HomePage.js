@@ -99,10 +99,7 @@ export default class HomePage extends Component {
 											<Card isAction={true} cardClass={'siimple-bg--navy'}>
 												<CardTitle>
 													{post.IsOffline?
-														<i title='Offline post'
-															class='fa fa-exclamation-triangle siimple-color--red'
-															style={{ paddingRight: '.5em' }}
-														/>: ''}
+														<span class='siimple-color--red'>{'⚠  '}</span>: ''}
 													{post.Title}
 												</CardTitle>
 												<CardContent>{post.Content.slice(0, 150)}{post.Content.length > 150? '...': ''}</CardContent>

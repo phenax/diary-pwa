@@ -206,7 +206,7 @@ export default class RootWrapper extends Component {
 									title='Create new post button'
 									onClick={() => route('/new', false)}
 									class='floating-action-button'>
-									+{ /* <i class='fa fa-plus' /> */ }
+									+
 								</button>): null
 						}
 					</div>
