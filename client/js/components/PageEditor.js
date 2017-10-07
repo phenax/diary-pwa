@@ -2,7 +2,7 @@
 import {h, Component} from 'preact';
 
 import SpeechRecognitionLib from '../libs/speech-recognition';
-
+import { ratingFaces } from '../libs/icons';
 
 export default class PageEditor extends Component {
 
@@ -42,13 +42,7 @@ export default class PageEditor extends Component {
 		},
 	};
 
-	RATINGS = [
-		{ value: 1, icon: '😞', class: 'fa fa-frown-o' },
-		{ value: 2, icon: '😐', class: 'fa fa-meh-o' },
-		{ value: 3, icon: '☺', class: 'fa fa-smile-o' },
-		{ value: 4, icon: '😄', class: 'fa fa-x-laughing' },
-	];
-
+	RATINGS = ratingFaces;
 
 
 	state = {
@@ -179,9 +173,13 @@ export default class PageEditor extends Component {
 										for='contentTextarea'
 										type='button'
 										class='siimple-btn siimple-btn--navy'
-										style={{ padding: '0 1.3em', height: 'auto', border: 'none' }}
+										style={{
+											padding: '0 1.3em',
+											height: 'auto',
+											border: 'none',
+										}}
 										onClick={this.toggleSpeechRecognition}>
-										<i class={`fa fa-${this.state.isSpeechRecognitionOn? 'microphone-slash': 'microphone'}`}></i>
+										{this.state.isSpeechRecognitionOn? 'Turn off mic': 'Turn on mic'}
 									</label>
 								</div>): null
 						}

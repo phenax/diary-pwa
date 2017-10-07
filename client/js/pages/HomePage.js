@@ -4,6 +4,7 @@ import { Link } from 'preact-router/match';
 
 import { fetchUserPosts, UnauthorizedError } from '../libs/fetch';
 import { listPages, getUser } from '../libs/db';
+import * as icons from '../libs/icons';
 
 import { Card, CardTitle, CardContent } from '../components/Card';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -99,7 +100,7 @@ export default class HomePage extends Component {
 											<Card isAction={true} cardClass={'siimple-bg--navy'}>
 												<CardTitle>
 													{post.IsOffline?
-														<span class='siimple-color--red'>{'⚠  '}</span>: ''}
+														<span class='siimple-color--red'>{`${icons.WARNING}  `}</span>: ''}
 													{post.Title}
 												</CardTitle>
 												<CardContent>{post.Content.slice(0, 150)}{post.Content.length > 150? '...': ''}</CardContent>

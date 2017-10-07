@@ -53,12 +53,6 @@ sw.router.get(/\.(png|ico|jpg)$/, sw.cacheFirst, {
 	cache: { name: OTHER_CACHE_NAME },
 });
 
-// Other(images) files will be cached here
-sw.router.get(/\.(png|ico|jpg)$/, sw.cacheFirst, {
-	networkTimeoutSeconds: NETWORK_TIMEOUT,
-	cache: { name: OTHER_CACHE_NAME },
-});
-
 sw.router.get(/(diary-pwa\.ml|localhost(:\d+)?)\/(([A-Za-z0-9/]+)+)?$/, (request) => {
 
 	// TODO: Add a check for accepts text/html

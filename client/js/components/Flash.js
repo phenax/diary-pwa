@@ -4,6 +4,8 @@ import { EventEmitter } from 'events';
 
 import { APP_NAME } from '../config/app';
 
+import * as icons from '../libs/icons';
+
 
 export default class Flash extends Component {
 
@@ -87,7 +89,7 @@ export default class Flash extends Component {
 			<div
 				style={Flash.styles.wrapper}
 				class={`siimple-shadow--2 slide-in siimple-color--${this.state.flash.textColor} siimple-bg--${this.state.flash.color}`}>
-				<button class='siimple-btn' style={Flash.styles.closeBtn} onClick={this.closeFlash}>x</button>
+				<button class='siimple-btn' style={Flash.styles.closeBtn} onClick={this.closeFlash}>{icons.CROSS}</button>
 				<div style={{ textAlign: 'center' }}>
 					{this.state.flash.message}
 				</div>

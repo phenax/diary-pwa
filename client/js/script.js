@@ -9,7 +9,6 @@ import RootWrapper from './pages/RootWrapper';
 const stylesheets = [
 	window.staticLink('css/style.css') + '?v=' + window.staticVersion,
 	'https://fonts.googleapis.com/css?family=Montserrat:400,700',
-	'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css',
 ];
 
 stylesheets.map(href =>

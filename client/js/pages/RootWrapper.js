@@ -8,6 +8,7 @@ import assign from 'object-assign';
 import { findUser, logoutUser, UnauthorizedError } from '../libs/fetch';
 import bus from '../libs/listeners';
 import { getUser, setUser } from '../libs/db';
+import * as icons from '../libs/icons';
 
 import HomePage from './HomePage';
 
@@ -206,7 +207,7 @@ export default class RootWrapper extends Component {
 									title='Create new post button'
 									onClick={() => route('/new', false)}
 									class='floating-action-button'>
-									+
+									{icons.PLUS}
 								</button>): null
 						}
 					</div>

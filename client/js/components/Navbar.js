@@ -71,7 +71,11 @@ export class Navbar extends Component {
 							role="button" aria-label="Navigation menu button"
 							class='siimple-btn navbar-links-action'
 							onClick={this.navbarToggle}>
-							<i class='fa fa-bars' />
+							<span class='icon-ham'>
+								<span class='icon-ham--bar' />
+								<span class='icon-ham--bar' />
+								<span class='icon-ham--bar' />
+							</span>
 						</button>
 					</div>
 
