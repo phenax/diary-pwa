@@ -37,9 +37,22 @@ export class NotFoundError extends Extendable(Error) {
 	}
 }
 
+// Network timeout exception
+export class TimeoutError extends Extendable(Error) {
+	isTimeoutError = true;
+	name = 'TimeoutError';
+
+	constructor(message = 'Request timed out', errors) {
+		super(message);
+		if(errors) this.errors = errors;
+	}
+}
+
+
 // Fetch the graphql api with the passed query
 const graphQLFetch = query => {
 
+	// Minify query(strip whitespaces)
 	query.query =
 		query.query
 			.replace(/\s+/gi, ' ')
@@ -53,27 +66,48 @@ const graphQLFetch = query => {
 			'Content-Type': 'applications/json',
 		},
 		credentials: 'same-origin',
+		timeout: 5000,
 	};
 
-	return fetch(API_ENDPOINT, config)
-		.then(resp => resp.json())
-		.then(resp => {
-			if(resp.errors && resp.errors.length) {
-				switch(resp.errors[0].message) {
-					case 'Unauthorized':
-						throw new UnauthorizedError(resp.errors[0].message, resp.errors);
-					case 'NotFound':
-						throw new NotFoundError(resp.errors[0].message, resp.errors);
-					default: {
-						const e = new Error(resp.errors[0].message);
-						e.errors = resp.errors;
-						throw e;
+	return new Promise((resolve, reject) => {
+
+		let isTimedOut = false;
+
+		// Manual timeout
+		setTimeout(() => {
+			isTimedOut = true;
+			reject(new TimeoutError());
+		}, config.timeout);
+
+
+		fetch(API_ENDPOINT, config)
+			.then(resp => {
+				// So that event after the response happens, it is ignored
+				if(isTimedOut)
+					throw new TimeoutError();
+				return resp;
+			})
+			.then(resp => resp.json())
+			.then(resp => {
+				if(resp.errors && resp.errors.length) {
+					switch(resp.errors[0].message) {
+						case 'Unauthorized':
+							throw new UnauthorizedError(resp.errors[0].message, resp.errors);
+						case 'NotFound':
+							throw new NotFoundError(resp.errors[0].message, resp.errors);
+						default: {
+							const e = new Error(resp.errors[0].message);
+							e.errors = resp.errors;
+							throw e;
+						}
 					}
 				}
-			}
 
-			return resp.data;
-		});
+				return resp.data;
+			})
+			.then(resolve)
+			.catch(reject);
+	});
 };
 export default graphQLFetch;
 
