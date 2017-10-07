@@ -66,3 +66,37 @@ input:focus {
 	will-change: opacity, transform;
 	animation: slideInY .7s ease-in-out forwards;
 }
+
+
+@keyframes spinner {
+	0% { transform: rotate(0deg); }
+	50% { transform: rotate(180deg); }
+	100% { transform: rotate(360deg); }
+}
+
+$spinnerSize: 1em;
+
+.inline-spinner {
+	position: relative;
+
+	width: $spinnerSize;
+	height: $spinnerSize;
+	display: inline-block;
+
+	font-size: 1em;
+
+	&::before {
+		content: ' ';
+		position: absolute;
+		top: 0;
+		left: 0;
+
+		width: $spinnerSize;
+		height: $spinnerSize;
+		border: 2px solid transparent;
+		border-left-color: #fff;
+		border-radius: 50%;
+
+		animation: spinner .5s linear infinite;
+	}
+}

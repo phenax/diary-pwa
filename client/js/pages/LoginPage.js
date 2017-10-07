@@ -8,6 +8,7 @@ import bus from '../libs/listeners';
 import { setUser } from '../libs/db';
 
 import Title from '../components/Title';
+import InlineLoadingSpinner from '../components/InlineLoadingSpinner';
 
 export default class LoginPage extends Component {
 
@@ -41,6 +42,7 @@ export default class LoginPage extends Component {
 	state = {
 		user: null,
 		error: null,
+		isRequestProccessing: false,
 	};
 
 	constructor(props) {
@@ -62,17 +64,24 @@ export default class LoginPage extends Component {
 		const $form = e.currentTarget;
 		const data = formObject($form);
 
+		this.setState({ isRequestProccessing: true });
+		const stopSpinner = () =>
+			this.setState({ isRequestProccessing: false });
+
 		if(this.isLoginPage) {
 			if(!this.state.user) {
 				// Find the user with email/username
-				this.findUser(data.email);
+				this.findUser(data.email)
+					.then(() => stopSpinner());
 			} else {
 				// Login the user
-				this.authenticate(data.email, data.password, $form);
+				this.authenticate(data.email, data.password, $form)
+					.then(() => stopSpinner());
 			}
 		} else {
 			// Create new user
-			this.signupUser(data, $form);
+			this.signupUser(data, $form)
+				.then(() => stopSpinner());
 		}
 
 		return false;
@@ -180,7 +189,7 @@ export default class LoginPage extends Component {
 						<div class='flexy-col flexy-col--6 vertical-center siimple-color--navy'>
 							<div style={{ padding: '1.5em', width: '100%' }}>
 								<form onSubmit={this.onFormSubmit} style={{ display: 'block', width: '100%' }}>
-									{this.isLoginPage? <LoginForm user={this.state.user} ctx={this} />: <SignupForm />}
+									{this.isLoginPage? <LoginForm user={this.state.user} ctx={this} />: <SignupForm ctx={this} />}
 									{this.state.error? <div class='siimple-color--red-1'>{this.state.error}</div>: null}
 								</form>
 							</div>
@@ -213,8 +222,15 @@ export const LoginForm = ({ user = null, ctx }) => (
 					/>
 				</div>
 				<div style={{ padding: '1em 0' }}>
-					<button class='siimple-btn siimple-btn--primary siimple-btn--bg' type='submit' style={{ display: 'block', width: '100%' }}>
-						Continue
+					<button
+						type='submit'
+						class='siimple-btn siimple-btn--primary siimple-btn--bg'
+						style={{ display: 'block', width: '100%' }}>
+						<InlineLoadingSpinner
+							hide={!ctx.state.isRequestProccessing}
+							style={{ margin: '0 1em 0 0', fontSize: '.8rem' }}
+						/>
+						<span>Continue</span>
 					</button>
 				</div>
 			</div>
@@ -249,7 +265,14 @@ export const LoginForm = ({ user = null, ctx }) => (
 					/>
 				</div>
 				<div style={{ padding: '1em 0' }}>
-					<button class='siimple-btn siimple-btn--primary siimple-btn--bg' type='submit' style={{ display: 'block', width: '100%' }}>
+					<button
+						type='submit'
+						class='siimple-btn siimple-btn--primary siimple-btn--bg'
+						style={{ display: 'block', width: '100%' }}>
+						<InlineLoadingSpinner
+							hide={!ctx.state.isRequestProccessing}
+							style={{ margin: '0 1em 0 0', fontSize: '.8rem' }}
+						/>
 						Login
 					</button>
 				</div>
@@ -258,7 +281,7 @@ export const LoginForm = ({ user = null, ctx }) => (
 	</div>
 );
 
-export const SignupForm = () => (
+export const SignupForm = ({ ctx }) => (
 	<div class='slide-in'>
 		<Title>Create an account</Title>
 
@@ -310,7 +333,14 @@ export const SignupForm = () => (
 
 
 		<div style={{ padding: '1em 0' }}>
-			<button class='siimple-btn siimple-btn--primary siimple-btn--bg' type='submit' style={{ display: 'block', width: '100%' }}>
+			<button
+				type='submit'
+				class='siimple-btn siimple-btn--primary siimple-btn--bg'
+				style={{ display: 'block', width: '100%' }}>
+				<InlineLoadingSpinner
+					hide={!ctx.state.isRequestProccessing}
+					style={{ margin: '0 1em 0 0', fontSize: '.8rem' }}
+				/>
 				Register
 			</button>
 		</div>
