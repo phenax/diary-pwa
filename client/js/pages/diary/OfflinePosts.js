@@ -4,13 +4,13 @@ import { route } from 'preact-router';
 import { Link } from 'preact-router/match';
 
 
-import listeners from '../libs/listeners';
-import { listOfflinePages, deletePage }  from '../libs/db';
-import { saveDiaryPage } from '../libs/fetch';
+import listeners from '../../libs/listeners';
+import { listOfflinePages, deletePage }  from '../../libs/db';
+import { saveDiaryPage } from '../../libs/fetch';
 
-import { Card, CardTitle, CardContent } from '../components/Card';
-import Title from '../components/Title';
-import InlineLoadingSpinner from '../components/InlineLoadingSpinner';
+import { Card, CardTitle, CardContent } from '../../components/Card';
+import Title from '../../components/Title';
+import InlineLoadingSpinner from '../../components/InlineLoadingSpinner';
 
 export default class OfflinePosts extends Component {
 

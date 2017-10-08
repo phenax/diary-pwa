@@ -1,11 +1,11 @@
 
 import { h, Component } from 'preact';
 
-import { saveDiaryPage } from '../libs/fetch';
-import { formObject } from '../libs/utils';
+import { saveDiaryPage } from '../../libs/fetch';
+import { formObject } from '../../libs/utils';
 
-import PageEditor from '../components/PageEditor';
-import Title from '../components/Title';
+import PageEditor from '../../components/PageEditor';
+import Title from '../../components/Title';
 
 
 export default class DiaryNewPage extends Component {

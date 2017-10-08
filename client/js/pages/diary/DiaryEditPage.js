@@ -2,14 +2,14 @@
 import { h, Component } from 'preact';
 import { route } from 'preact-router';
 
-import { getPage } from '../libs/db';
-import { formObject } from '../libs/utils';
-import { fetchPost, saveDiaryPage, UnauthorizedError, NotFoundError } from '../libs/fetch';
+import { getPage } from '../../libs/db';
+import { formObject } from '../../libs/utils';
+import { fetchPost, saveDiaryPage, UnauthorizedError, NotFoundError } from '../../libs/fetch';
 
-import PageEditor from '../components/PageEditor';
-import LoadingSpinner from '../components/LoadingSpinner';
-import Title from '../components/Title';
-import Flash from '../components/Flash';
+import PageEditor from '../../components/PageEditor';
+import LoadingSpinner from '../../components/LoadingSpinner';
+import Title from '../../components/Title';
+import Flash from '../../components/Flash';
 
 
 export default class DiaryEditPage extends Component {

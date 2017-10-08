@@ -9,13 +9,13 @@ import { findUser, logoutUser, UnauthorizedError } from '../libs/fetch';
 import bus from '../libs/listeners';
 import { getUser, setUser } from '../libs/db';
 import * as icons from '../libs/icons';
-import PatternLock from '../libs/pattern-lock';
 
 import HomePage from './HomePage';
 
 import { Navbar } from '../components/Navbar';
 import LoadingSpinner from '../components/LoadingSpinner';
 import Flash from '../components/Flash';
+import PatternLock from '../components/PatternLock';
 
 
 const VARS = {
@@ -48,22 +48,24 @@ export default class RootWrapper extends Component {
 
 	asyncComponents = {
 		LoginPage: (props = {}) => () => new Promise((resolve) =>
-			require.ensure([], () => resolve((p) => h(require('./LoginPage').default, assign(p, props))))),
+			require.ensure([], () => resolve((p) => h(require('./user/LoginPage').default, assign(p, props))))),
+		UserEditPage: (props = {}) => () => new Promise((resolve) =>
+			require.ensure([], () => resolve((p) => h(require('./user/UserEditPage').default, assign(p, props))))),
 		DiaryPage: (props = {}) => () => new Promise((resolve) =>
-			require.ensure([], () => resolve((p) => h(require('./DiaryPage').default, assign(p, props))))),
+			require.ensure([], () => resolve((p) => h(require('./diary/DiaryPage').default, assign(p, props))))),
 		DiaryNewPage: (props = {}) => () => new Promise((resolve) =>
-			require.ensure([], () => resolve((p) => h(require('./DiaryNewPage').default, assign(p, props))))),
+			require.ensure([], () => resolve((p) => h(require('./diary/DiaryNewPage').default, assign(p, props))))),
 		DiaryEditPage: (props = {}) => () => new Promise((resolve) =>
-			require.ensure([], () => resolve((p) => h(require('./DiaryEditPage').default, assign(p, props))))),
+			require.ensure([], () => resolve((p) => h(require('./diary/DiaryEditPage').default, assign(p, props))))),
 		ErrorPage: (props = {}) => () => new Promise((resolve) =>
 			require.ensure([], () => resolve((p) => h(require('./ErrorPage').default, assign(p, props))))),
 		OfflinePosts: (props = {}) => () => new Promise((resolve) =>
-			require.ensure([], () => resolve((p) => h(require('./OfflinePosts').default, assign(p, props))))),
+			require.ensure([], () => resolve((p) => h(require('./diary/OfflinePosts').default, assign(p, props))))),
 	};
 
 	state = {
 		user: null,
-		isLocked: true,
+		isLocked: false,
 	};
 
 	onlineSubscription = {};
@@ -75,54 +77,39 @@ export default class RootWrapper extends Component {
 		this.withNavbar = (typeof this.props.withNavbar !== 'undefined')? this.props.withNavbar: true;
 
 		this.onRouteChange = this.onRouteChange.bind(this);
+		this.onPatternComplete = this.onPatternComplete.bind(this);
 	}
 
 
 	initPatternLock() {
-
 		this.setState({ isLocked: true });
+	}
 
-		const lock = new PatternLock({
-			el: '#patternLock',
-			dimens: { width: 300, height: 430 },
-		});
-
-		lock.setTheme({
-			accent: '#905cf0',
-			primary: '#ffffff',
-			bg: '#252932',
-			dimens: {
-				node_radius: 20,
-				line_width: 6,
-				node_core: 8,
-				node_ring: 1,
-			}
-		});
-
-		lock.generateGrid(3, 3);
-		lock.start();
-
-		lock.onPatternComplete = nodes => {
-
-			let password = PatternLock.patternToWords(nodes);
-			password = PatternLock.hashCode(password);
-
-			console.log(password);
-			this.setState({ isLocked: false });
-		};
+	onPatternComplete(password, locker) {
+		if(password === this.state.user.SessionPassword) {
+			locker.onSuccess();
+			setTimeout(() =>
+				this.setState({ isLocked: false }), 300);
+		} else {
+			locker.onError();
+		}
 	}
 
 
 	componentDidMount() {
 
-		this.initPatternLock();
-
 		this.$navbarLinks = document.querySelector('.js-navbar-links-wrapper');
 		this.$navbarBtnIcon = this.base.querySelector('.js-navbar-btn-icon');
 
 		this.authChangeSubscription =
-			bus.onAuthChange(user =>
-				this.setState({ user: user? user: {} }));
+			bus.onAuthChange(user => {
+				this.setState({ user: user? user: {} });
+
+				// Initiate password lock
+				if(user && user.SessionPassword) {
+					this.initPatternLock();
+				}
+			});
 
 		this.getLoggedInUser();
 
@@ -214,6 +201,10 @@ export default class RootWrapper extends Component {
 					getComponent={this.asyncComponents.DiaryEditPage({ user: this.state.user })}
 					loading={LoadingSpinner}
 				/>
+				<AsyncRoute path='/edit-profile'
+					getComponent={this.asyncComponents.UserEditPage({ user: this.state.user })}
+					loading={LoadingSpinner}
+				/>
 				<AsyncRoute default
 					getComponent={this.asyncComponents.ErrorPage({ user: this.state.user })}
 					loading={LoadingSpinner}
@@ -236,7 +227,7 @@ export default class RootWrapper extends Component {
 
 		if(this.state.isLocked) {
 			$component = <div style={{ textAlign: 'center' }}>
-				<canvas id='patternLock'></canvas>
+				<PatternLock onPatternComplete={this.onPatternComplete} />
 			</div>;
 		}
 
@@ -253,7 +244,7 @@ export default class RootWrapper extends Component {
 										<div>
 											<NavLink href="/new">New Page</NavLink>
 											<NavLink href="/offline">Offline Drafts</NavLink>
-											<NavLink href='/'>{this.state.user.Username}</NavLink>
+											<NavLink href='/edit-profile'>Edit profile</NavLink>
 											<NavLink action={logoutUser}>Logout</NavLink>
 										</div>:
 										<div>

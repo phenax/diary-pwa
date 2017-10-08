@@ -4,7 +4,7 @@ import { route } from 'preact-router';
 import { API_ENDPOINT } from '../config/graphql';
 
 import { listPosts, getPost, savePost } from '../queries/posts';
-import { login, findUser as findUserQuery, signup, logout } from '../queries/users';
+import { login, findUser as findUserQuery, signup, logout, editUser as editUserQuery } from '../queries/users';
 
 import { Extendable } from '../libs/utils';
 import bus from '../libs/listeners';
@@ -143,6 +143,10 @@ export const findUser = username =>
 export const createUser = data =>
 	graphQLFetch(signup(data))
 		.then(resp => resp.CreateUser);
+
+export const editUser = data =>
+	graphQLFetch(editUserQuery(data))
+		.then(resp => resp.EditUser);
 
 export const logoutUser = () =>
 	graphQLFetch(logout())

@@ -171,15 +171,30 @@ export default class PatternLock {
 		this.selectedNodes= [];
 	}
 
+	reset() {
+		this._isDragging = true;
+
+		this.setInitialState();
+		this.calculationLoop(false);
+		this.renderLoop(false);
+
+		this._isDragging = false;
+	}
+
+	forceRender() {
+		this._isDragging = true;
+		this.renderLoop(false);
+		this._isDragging = false;
+	}
+
+
 	/**
 	 * Mouse start handler
 	 */
 	_mouseStartHandler(e) {
 		if(e) e.preventDefault();
 
-		this.setInitialState();
-		this.calculationLoop(false);
-		this.renderLoop(false);
+		this.reset();
 
 		this._isDragging= true;
 	}
@@ -211,8 +226,8 @@ export default class PatternLock {
 		if(this._isDragging) {
 
 			const mousePoint= {
-				x: (e.pageX || e.pageX == 0)? e.pageX: e.touches[0].pageX,
-				y: (e.pageY || e.pageY == 0)? e.pageY: e.touches[0].pageY,
+				x: (e.clientX || e.clientX == 0)? e.clientX: e.touches[0].clientX,
+				y: (e.clientY || e.clientY == 0)? e.clientY: e.touches[0].clientY,
 			};
 
 			mousePoint.x-= this.bounds.left;

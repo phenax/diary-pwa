@@ -2,14 +2,14 @@
 import { h, Component } from 'preact';
 import { Link } from 'preact-router/match';
 
-import { fetchPost, UnauthorizedError, NotFoundError } from '../libs/fetch';
-import { getPage } from '../libs/db';
+import { fetchPost, UnauthorizedError, NotFoundError } from '../../libs/fetch';
+import { getPage } from '../../libs/db';
 
-import LoadingSpinner from '../components/LoadingSpinner';
-import InlineLoadingSpinner from '../components/InlineLoadingSpinner';
-import DiaryPost from '../components/DiaryPost';
-import Title from '../components/Title';
-import Flash from '../components/Flash';
+import LoadingSpinner from '../../components/LoadingSpinner';
+import InlineLoadingSpinner from '../../components/InlineLoadingSpinner';
+import DiaryPost from '../../components/DiaryPost';
+import Title from '../../components/Title';
+import Flash from '../../components/Flash';
 
 export default class DiaryPage extends Component {
 

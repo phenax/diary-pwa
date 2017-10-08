@@ -24,12 +24,13 @@ const (
 // User type
 //
 type User struct {
-	OID      bson.ObjectId `bson:"_id,omitempty"`
-	ID       string        `bson:"uid,omitempty"`
-	Name     string        `bson:"name"`
-	Username string        `bson:"username"`
-	Email    string        `bson:"email"`
-	Password string        `bson:"password"`
+	OID             bson.ObjectId `bson:"_id,omitempty"`
+	ID              string        `bson:"uid,omitempty"`
+	Name            string        `bson:"name"`
+	Username        string        `bson:"username"`
+	Email           string        `bson:"email"`
+	Password        string        `bson:"password"`
+	SessionPassword string        `bson:"session_password"`
 }
 
 // SessionUser - User type to be stored in session
@@ -122,10 +123,11 @@ var GraphQLUser = graphql.NewObject(graphql.ObjectConfig{
 	Name:        "User",
 	Description: "User of this app",
 	Fields: graphql.Fields{
-		"ID":       &graphql.Field{Type: graphql.String},
-		"Name":     &graphql.Field{Type: graphql.String},
-		"Username": &graphql.Field{Type: graphql.String},
-		"Email":    &graphql.Field{Type: graphql.String},
+		"ID":              &graphql.Field{Type: graphql.String},
+		"Name":            &graphql.Field{Type: graphql.String},
+		"Username":        &graphql.Field{Type: graphql.String},
+		"Email":           &graphql.Field{Type: graphql.String},
+		"SessionPassword": &graphql.Field{Type: graphql.String},
 	},
 })
 
@@ -353,12 +355,61 @@ var GraphQLLogoutUserField = &graphql.Field{
 	Type: GraphQLResponseType,
 	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 		libs.GraphQLSetSession(params, func(sess *sessions.Session) *sessions.Session {
-			libs.Log("Session before logout", sess.Values["User"])
 			emptySession, _ := json.Marshal(&SessionUser{})
 			sess.Values["User"] = string(emptySession)
-			libs.Log("Session after logout", sess.Values["User"])
 			return sess
 		})
+		return NewResponse(200, ""), nil
+	},
+}
+
+//
+// GraphQLEditUserField - Graphql field for logging out
+//
+var GraphQLEditUserField = &graphql.Field{
+	Type: GraphQLResponseType,
+	Args: graphql.FieldConfigArgument{
+		"SessionPassword": &graphql.ArgumentConfig{Type: graphql.String},
+		// "Password": &graphql.ArgumentConfig{Type: graphql.String},
+		// "ConfirmPassword": &graphql.ArgumentConfig{Type: graphql.String}, // TODO: Add edit profile page
+		// "Name": &graphql.ArgumentConfig{Type: graphql.String},
+	},
+	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+		var user User
+		args := params.Args
+		userSession := libs.GraphQLGetSession(params)
+
+		var sessionPassword string
+
+		if libs.Stringify(args["SessionPassword"]) != "" {
+			sessionPassword = libs.Stringify(args["SessionPassword"])
+		}
+
+		var authUser SessionUser
+
+		// User logged in checked
+		if userSession.Values["User"] != nil {
+			json.Unmarshal([]byte(userSession.Values["User"].(string)), &authUser)
+			Users.Find(&bson.M{"uid": authUser.ID}).One(&user)
+		} else {
+			return NewResponse(401, "Unauthorized"), nil
+		}
+
+		// Session exists but user invalid
+		if user.ID == "" {
+			return NewResponse(401, "Unauthorized"), nil
+		}
+
+		// Set the session password
+		user.SessionPassword = sessionPassword
+
+		err := Users.Update(&bson.M{"uid": user.ID}, user)
+
+		if err != nil {
+			libs.Log("Save Error", err)
+			return NewResponse(500, "Something went wrong"), nil
+		}
+
 		return NewResponse(200, ""), nil
 	},
 }

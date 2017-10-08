@@ -12,6 +12,18 @@ export const signup = variables => ({
 	`,
 });
 
+export const editUser = variables => ({
+	variables,
+	query: `
+		mutation EditUser($SessionPassword: String) {
+			EditUser(SessionPassword: $SessionPassword) {
+				Status,
+				Message,
+			}
+		}
+	`,
+});
+
 
 export const login = variables => ({
 	variables,
@@ -27,6 +39,7 @@ export const login = variables => ({
 					Name,
 					Email,
 					Username,
+					SessionPassword,
 				}
 			}
 		}
@@ -44,6 +57,7 @@ export const findUser = ({ username }) => ({
 					Name,
 					Username,
 					Email,
+					SessionPassword,
 				}
 			}
 		}

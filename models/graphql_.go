@@ -43,6 +43,7 @@ func GetGraphQLSchema() *graphql.Schema {
 			Name: "RootMutation",
 			Fields: graphql.Fields{
 				"CreateUser": GraphQLCreateUserField,
+				"EditUser":   GraphQLEditUserField,
 				"Logout":     GraphQLLogoutUserField,
 				"SavePost":   GraphQLSavePostField,
 			},

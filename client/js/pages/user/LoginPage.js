@@ -2,13 +2,13 @@
 import { h, Component } from 'preact';
 import { route } from 'preact-router';
 
-import { loginUser, findUser, createUser, UnauthorizedError, NotFoundError } from '../libs/fetch';
-import { formObject } from '../libs/utils';
-import bus from '../libs/listeners';
-import { setUser } from '../libs/db';
+import { loginUser, findUser, createUser, UnauthorizedError, NotFoundError } from '../../libs/fetch';
+import { formObject } from '../../libs/utils';
+import bus from '../../libs/listeners';
+import { setUser } from '../../libs/db';
 
-import Title from '../components/Title';
-import InlineLoadingSpinner from '../components/InlineLoadingSpinner';
+import Title from '../../components/Title';
+import InlineLoadingSpinner from '../../components/InlineLoadingSpinner';
 
 export default class LoginPage extends Component {
 
