@@ -76,34 +76,15 @@ export default class RootWrapper extends Component {
 	}
 
 
-	authenticateOffline() {
-		return getUser().then(user => {
-			bus.setAuth(user);
-			return user;
-		});
-	}
-
 	componentDidMount() {
+
+		this.$navbarLinks = document.querySelector('.js-navbar-links-wrapper');
 
 		this.authChangeSubscription =
 			bus.onAuthChange(user =>
 				this.setState({ user: user? user: {} }));
 
-		// Fetch users
-		findUser()
-			.then(resp => resp.UserPosts.User)
-			.then(user => {
-				bus.setAuth(user);
-				setUser(user);
-			})
-			.catch(e => {
-				if(e instanceof UnauthorizedError) {
-					bus.setAuth(null);
-				} else {
-					this.authenticateOffline();
-				}
-			});
-
+		this.getLoggedInUser();
 
 		let onlineTimeout = null;
 
@@ -122,9 +103,6 @@ export default class RootWrapper extends Component {
 				}
 			}, DELAY);
 		});
-
-
-		this.$navbarLinks = document.querySelector('.js-navbar-links-wrapper');
 	}
 
 	componentWillUnmount() {
@@ -132,6 +110,29 @@ export default class RootWrapper extends Component {
 		this.authChangeSubscription.unsubscribe();
 	}
 
+	getLoggedInUser() {
+		// Fetch users
+		findUser()
+			.then(resp => resp.UserPosts.User)
+			.then(user => {
+				bus.setAuth(user);
+				setUser(user);
+			})
+			.catch(e => {
+				if(e instanceof UnauthorizedError) {
+					bus.setAuth(null);
+				} else {
+					this.authenticateOffline();
+				}
+			});
+	}
+
+	authenticateOffline() {
+		return getUser().then(user => {
+			bus.setAuth(user);
+			return user;
+		});
+	}
 
 	hideNavbar() {
 		if(this.$navbarLinks && this.$navbarLinks.classList.contains('navbar-links__visible')) {

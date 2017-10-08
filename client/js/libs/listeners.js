@@ -35,6 +35,8 @@ export class GlobalEventHandler extends EventEmitter {
 		window.addEventListener('online', _onlineStateHandler);
 		window.addEventListener('offline', _onlineStateHandler);
 
+		requestAnimationFrame(() => _onlineStateHandler({}));
+
 		return (new Subscription('online', 'offline')).setUnsubscribeCallback(() => {
 			window.removeEventListener('online', _onlineStateHandler);
 			window.removeEventListener('offline', _onlineStateHandler);
