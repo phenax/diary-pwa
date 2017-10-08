@@ -73,7 +73,6 @@ export default class RootWrapper extends Component {
 		this.withNavbar = (typeof this.props.withNavbar !== 'undefined')? this.props.withNavbar: true;
 
 		this.onRouteChange = this.onRouteChange.bind(this);
-		this.logoutUser = this.logoutUser.bind(this);
 	}
 
 
@@ -144,14 +143,6 @@ export default class RootWrapper extends Component {
 		this.hideNavbar();
 	}
 
-	logoutUser() {
-		logoutUser();
-
-		// Force reload page
-		route('/logout', false);
-		route('/', false);
-	}
-
 	render() {
 		return (
 			<div>
@@ -167,7 +158,7 @@ export default class RootWrapper extends Component {
 											<NavLink href="/new">New Page</NavLink>
 											<NavLink href="/offline">Offline Drafts</NavLink>
 											<NavLink href='/'>{this.state.user.Username}</NavLink>
-											<NavLink action={this.logoutUser}>Logout</NavLink>
+											<NavLink action={logoutUser}>Logout</NavLink>
 										</div>:
 										<div>
 											<NavLink href="/login">Login</NavLink>

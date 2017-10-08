@@ -4,6 +4,7 @@ import { Link } from 'preact-router/match';
 
 import { fetchUserPosts, UnauthorizedError } from '../libs/fetch';
 import { listPages, getUser } from '../libs/db';
+import bus from '../libs/listeners';
 import * as icons from '../libs/icons';
 
 import { Card, CardTitle, CardContent } from '../components/Card';
@@ -23,6 +24,8 @@ export default class HomePage extends Component {
 
 	MAX_POSTS = this.props.numberOfPostsPerPage;
 
+	authChangeSubscription = {};
+
 	constructor(props) {
 		super(props);
 
@@ -30,6 +33,11 @@ export default class HomePage extends Component {
 	}
 
 	componentDidMount() {
+
+		this.authChangeSubscription =
+			bus.onAuthChange(user =>
+				this.setState({ isLoggedIn: user && user.ID? true: false }));
+
 		this.fetchPosts();
 	}
 
