@@ -79,6 +79,7 @@ export default class RootWrapper extends Component {
 	componentDidMount() {
 
 		this.$navbarLinks = document.querySelector('.js-navbar-links-wrapper');
+		this.$navbarBtnIcon = this.base.querySelector('.js-navbar-btn-icon');
 
 		this.authChangeSubscription =
 			bus.onAuthChange(user =>
@@ -137,6 +138,7 @@ export default class RootWrapper extends Component {
 	hideNavbar() {
 		if(this.$navbarLinks && this.$navbarLinks.classList.contains('navbar-links__visible')) {
 			this.$navbarLinks.classList.remove('navbar-links__visible');
+			this.$navbarBtnIcon.classList.remove('icon-ham__cross');
 		}
 	}
 
