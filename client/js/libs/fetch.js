@@ -149,7 +149,7 @@ export const logoutUser = () =>
 		.then(() => bus.setAuth(null))
 		.then(() => route('/', false))
 		.then(() => { removeUsers(); })
-		.then(() => { console.log('Removing posts'); removeAllPosts(); })
+		.then(() => { removeAllPosts(); })
 		.catch(e => {
 			console.error(e);
 			Flash.setFlash('Something went wrong. Check your connection.', 'red', 'white');

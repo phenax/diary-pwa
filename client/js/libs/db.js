@@ -19,7 +19,7 @@ require.ensure([], () => {
 	// Schema
 	DB.version(DB_VERSION).stores({
 		pages: 'ID, Title, Content, Rating, Timestamp, IsOffline',
-		users: 'ID, Name, Username, Email',
+		users: 'ID, Name, Username, Email, SessionPassword',
 	});
 
 	eventBus.emit(LOAD_EVENT_NAME, DB);

@@ -9,6 +9,7 @@ import { findUser, logoutUser, UnauthorizedError } from '../libs/fetch';
 import bus from '../libs/listeners';
 import { getUser, setUser } from '../libs/db';
 import * as icons from '../libs/icons';
+import PatternLock from '../libs/pattern-lock';
 
 import HomePage from './HomePage';
 
@@ -62,6 +63,7 @@ export default class RootWrapper extends Component {
 
 	state = {
 		user: null,
+		isLocked: true,
 	};
 
 	onlineSubscription = {};
@@ -76,7 +78,44 @@ export default class RootWrapper extends Component {
 	}
 
 
+	initPatternLock() {
+
+		this.setState({ isLocked: true });
+
+		const lock = new PatternLock({
+			el: '#patternLock',
+			dimens: { width: 300, height: 430 },
+		});
+
+		lock.setTheme({
+			accent: '#905cf0',
+			primary: '#ffffff',
+			bg: '#252932',
+			dimens: {
+				node_radius: 20,
+				line_width: 6,
+				node_core: 8,
+				node_ring: 1,
+			}
+		});
+
+		lock.generateGrid(3, 3);
+		lock.start();
+
+		lock.onPatternComplete = nodes => {
+
+			let password = PatternLock.patternToWords(nodes);
+			password = PatternLock.hashCode(password);
+
+			console.log(password);
+			this.setState({ isLocked: false });
+		};
+	}
+
+
 	componentDidMount() {
+
+		this.initPatternLock();
 
 		this.$navbarLinks = document.querySelector('.js-navbar-links-wrapper');
 		this.$navbarBtnIcon = this.base.querySelector('.js-navbar-btn-icon');
@@ -147,6 +186,60 @@ export default class RootWrapper extends Component {
 	}
 
 	render() {
+
+		let $component = (<div>
+			<Router>
+				<HomePage path='/' user={this.state.user} />
+				<AsyncRoute path='/offline'
+					getComponent={this.asyncComponents.OfflinePosts({ user: this.state.user })}
+					loading={LoadingSpinner}
+				/>
+				<AsyncRoute path='/login'
+					getComponent={this.asyncComponents.LoginPage({ user: this.state.user })}
+					loading={LoadingSpinner}
+				/>
+				<AsyncRoute path='/signup'
+					getComponent={this.asyncComponents.LoginPage({ user: this.state.user })}
+					loading={LoadingSpinner}
+				/>
+				<AsyncRoute path='/page/:pageId'
+					getComponent={this.asyncComponents.DiaryPage({ user: this.state.user })}
+					loading={LoadingSpinner}
+				/>
+				<AsyncRoute path='/new'
+					getComponent={this.asyncComponents.DiaryNewPage({ user: this.state.user })}
+					loading={LoadingSpinner}
+				/>
+				<AsyncRoute path='/page/:pageId/edit'
+					getComponent={this.asyncComponents.DiaryEditPage({ user: this.state.user })}
+					loading={LoadingSpinner}
+				/>
+				<AsyncRoute default
+					getComponent={this.asyncComponents.ErrorPage({ user: this.state.user })}
+					loading={LoadingSpinner}
+				/>
+			</Router>
+
+			<div>
+				{
+					(this.state.user && this.state.user.ID)?
+						(<button
+							role='button' aria-label='Create new post button'
+							title='Create new post button'
+							onClick={() => route('/new', false)}
+							class='floating-action-button'>
+							{icons.PLUS}
+						</button>): null
+				}
+			</div>
+		</div>);
+
+		if(this.state.isLocked) {
+			$component = <div style={{ textAlign: 'center' }}>
+				<canvas id='patternLock'></canvas>
+			</div>;
+		}
+
 		return (
 			<div>
 				<div style={styles.wrapper}>
@@ -169,52 +262,9 @@ export default class RootWrapper extends Component {
 										</div>):
 									null
 							}
-						</Navbar>:
-						null}
-					<Router>
-						<HomePage path='/' user={this.state.user} />
-						<AsyncRoute path='/offline'
-							getComponent={this.asyncComponents.OfflinePosts({ user: this.state.user })}
-							loading={LoadingSpinner}
-						/>
-						<AsyncRoute path='/login'
-							getComponent={this.asyncComponents.LoginPage({ user: this.state.user })}
-							loading={LoadingSpinner}
-						/>
-						<AsyncRoute path='/signup'
-							getComponent={this.asyncComponents.LoginPage({ user: this.state.user })}
-							loading={LoadingSpinner}
-						/>
-						<AsyncRoute path='/page/:pageId'
-							getComponent={this.asyncComponents.DiaryPage({ user: this.state.user })}
-							loading={LoadingSpinner}
-						/>
-						<AsyncRoute path='/new'
-							getComponent={this.asyncComponents.DiaryNewPage({ user: this.state.user })}
-							loading={LoadingSpinner}
-						/>
-						<AsyncRoute path='/page/:pageId/edit'
-							getComponent={this.asyncComponents.DiaryEditPage({ user: this.state.user })}
-							loading={LoadingSpinner}
-						/>
-						<AsyncRoute default
-							getComponent={this.asyncComponents.ErrorPage({ user: this.state.user })}
-							loading={LoadingSpinner}
-						/>
-					</Router>
-
-					<div>
-						{
-							(this.state.user && this.state.user.ID)?
-								(<button
-									role='button' aria-label='Create new post button'
-									title='Create new post button'
-									onClick={() => route('/new', false)}
-									class='floating-action-button'>
-									{icons.PLUS}
-								</button>): null
-						}
-					</div>
+						</Navbar>: null
+					}
+					{$component}
 				</div>
 			</div>
 		);
