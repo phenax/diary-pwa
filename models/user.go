@@ -379,11 +379,7 @@ var GraphQLEditUserField = &graphql.Field{
 		args := params.Args
 		userSession := libs.GraphQLGetSession(params)
 
-		var sessionPassword string
-
-		if libs.Stringify(args["SessionPassword"]) != "" {
-			sessionPassword = libs.Stringify(args["SessionPassword"])
-		}
+		sessionPassword := libs.Stringify(args["SessionPassword"])
 
 		var authUser SessionUser
 
@@ -410,7 +406,10 @@ var GraphQLEditUserField = &graphql.Field{
 			return NewResponse(500, "Something went wrong"), nil
 		}
 
-		return NewResponse(200, ""), nil
+		user.Password = ""
+		userDetails, _ := json.Marshal(user)
+
+		return NewResponse(200, string(userDetails)), nil
 	},
 }
 

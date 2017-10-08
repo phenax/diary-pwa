@@ -34,13 +34,20 @@ export default class UserEditPage extends Component {
 			return false;
 		}
 
-		editUser({ SessionPassword: this.state.password })
+		this.savePassword(this.state.password);
+
+		return false;
+	}
+
+	savePassword(password) {
+		return editUser({ SessionPassword: password })
 			.then(resp => {
-				console.log(resp);
+
 				switch(resp.Status) {
 					case 200:
 						Flash.setFlash('You session password has been activated', 'green' ,'navy');
 						route('/', false);
+						// TODO: Save user to local db
 						return resp;
 					case 401:
 						throw new UnauthorizedError();
@@ -56,8 +63,6 @@ export default class UserEditPage extends Component {
 					Flash.setFlash('Something went wrong', 'red', 'white');
 				}
 			});
-
-		return false;
 	}
 
 	render() {
