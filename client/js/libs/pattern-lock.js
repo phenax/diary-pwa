@@ -91,7 +91,9 @@ export default class PatternLock {
 
 	constructor(config) {
 
-		this.$canvas = document.querySelector(config.el);
+		this.$canvas =
+			(typeof config.el === 'string')?
+				document.querySelector(config.el): config.el;
 		this.ctx = this.$canvas.getContext('2d');
 
 		const ratio = PatternLock.DEVICE_PIXEL_RATIO;
