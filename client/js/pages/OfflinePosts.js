@@ -14,6 +14,8 @@ import InlineLoadingSpinner from '../components/InlineLoadingSpinner';
 
 export default class OfflinePosts extends Component {
 
+	onlineSubscription = {};
+
 	state = {
 		posts: [],
 		isOnline: false,
@@ -27,11 +29,15 @@ export default class OfflinePosts extends Component {
 	}
 
 	componentDidMount() {
-		listeners.onConnectivityChange((isOnline) => {
+		this.onlineSubscription = listeners.onConnectivityChange((isOnline) => {
 			this.setState({ isOnline });
 		});
 
 		this.listOfflinePosts();
+	}
+
+	componentWillUnmount() {
+		this.onlineSubscription.unsubscribe();
 	}
 
 	listOfflinePosts() {

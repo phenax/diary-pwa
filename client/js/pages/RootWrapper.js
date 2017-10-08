@@ -60,10 +60,12 @@ export default class RootWrapper extends Component {
 			require.ensure([], () => resolve((p) => h(require('./OfflinePosts').default, assign(p, props))))),
 	};
 
-
 	state = {
 		user: null,
 	};
+
+	onlineSubscription = {};
+	authChangeSubscription = {};
 
 	constructor(props) {
 		super(props);
@@ -84,8 +86,11 @@ export default class RootWrapper extends Component {
 
 	componentDidMount() {
 
-		bus.onAuthChange(user => this.setState({ user: user? user: {} }));
+		this.authChangeSubscription =
+			bus.onAuthChange(user =>
+				this.setState({ user: user? user: {} }));
 
+		// Fetch users
 		findUser()
 			.then(resp => resp.UserPosts.User)
 			.then(user => {
@@ -101,13 +106,12 @@ export default class RootWrapper extends Component {
 			});
 
 
-
 		let onlineTimeout = null;
 
-		bus.onConnectivityChange((isOnline) => {
+		this.onlineSubscription = bus.onConnectivityChange((isOnline) => {
 
 			const FLASH_MESSAGE = 'You are offline';
-			const DELAY = 2000; // Wait 2000ms before declaring the network state
+			const DELAY = 2000; // Wait 2s before declaring the network state
 
 			clearTimeout(onlineTimeout);
 
@@ -123,6 +127,12 @@ export default class RootWrapper extends Component {
 
 		this.$navbarLinks = document.querySelector('.js-navbar-links-wrapper');
 	}
+
+	componentWillUnmount() {
+		this.onlineSubscription.unsubscribe();
+		this.authChangeSubscription.unsubscribe();
+	}
+
 
 	hideNavbar() {
 		if(this.$navbarLinks && this.$navbarLinks.classList.contains('navbar-links__visible')) {

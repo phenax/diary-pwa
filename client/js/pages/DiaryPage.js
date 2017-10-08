@@ -37,7 +37,6 @@ export default class DiaryPage extends Component {
 				} else if(e instanceof UnauthorizedError) {
 					Flash.setFlash('You are not logged in. Log in to continue.', 'red');
 				} else {
-
 					getPage(postId)
 						.then(post =>
 							post?
