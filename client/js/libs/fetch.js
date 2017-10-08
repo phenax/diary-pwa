@@ -8,7 +8,7 @@ import { login, findUser as findUserQuery, signup, logout } from '../queries/use
 
 import { Extendable } from '../libs/utils';
 import bus from '../libs/listeners';
-import { savePage, removeUsers } from '../libs/db';
+import { savePage, removeUsers, removeAllPosts } from '../libs/db';
 
 import Flash from '../components/Flash';
 
@@ -148,7 +148,8 @@ export const logoutUser = () =>
 	graphQLFetch(logout())
 		.then(() => bus.setAuth(null))
 		.then(() => route('/', false))
-		.then(() => removeUsers())
+		.then(() => { removeUsers(); })
+		.then(() => { console.log('Removing posts'); removeAllPosts(); })
 		.catch(e => {
 			console.error(e);
 			Flash.setFlash('Something went wrong. Check your connection.', 'red', 'white');

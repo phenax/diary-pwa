@@ -65,6 +65,15 @@ export const getPage = (ID) =>
 export const deletePage = (ID) =>
 	onDBLoad(() => DB.pages.delete(ID));
 
+// Clear the posts stored in the db
+export const removeAllPosts = () =>
+	onDBLoad(() =>
+		DB.users
+			.filter(post => post.ID.length)
+			.delete()
+	);
+
+
 // Get a list of all saved pages
 export const listPages = () =>
 	onDBLoad(() =>
