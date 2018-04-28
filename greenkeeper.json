@@ -1,0 +1,11 @@
+{
+  "groups": {
+    "default": {
+      "packages": [
+        "client/scss/components/siimple-colors/package.json",
+        "client/scss/components/siimple/package.json",
+        "package.json"
+      ]
+    }
+  }
+}
