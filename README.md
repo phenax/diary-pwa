@@ -1,5 +1,7 @@
 
 # Dairy PWA
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/phenax/diary-pwa.svg)](https://greenkeeper.io/)
 It's a pwa. A really cool one actually.
 
 
